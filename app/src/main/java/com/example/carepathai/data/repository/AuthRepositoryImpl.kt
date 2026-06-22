@@ -24,9 +24,11 @@ class AuthRepositoryImpl @Inject constructor(
                 result.user?.let {
                     trySend(Result.success(it))
                 } ?: trySend(Result.failure(Exception("User is null")))
+                close()
             }
             .addOnFailureListener {
                 trySend(Result.failure(it))
+                close()
             }
         awaitClose()
     }
@@ -45,16 +47,20 @@ class AuthRepositoryImpl @Inject constructor(
                     firestore.collection("users").document(user.uid).set(userData)
                         .addOnSuccessListener {
                             trySend(Result.success(user))
+                            close()
                         }
                         .addOnFailureListener {
                             trySend(Result.failure(it))
+                            close()
                         }
                 } else {
                     trySend(Result.failure(Exception("User is null")))
+                    close()
                 }
             }
             .addOnFailureListener {
                 trySend(Result.failure(it))
+                close()
             }
         awaitClose()
     }
@@ -67,9 +73,11 @@ class AuthRepositoryImpl @Inject constructor(
         firebaseAuth.sendPasswordResetEmail(email)
             .addOnSuccessListener {
                 trySend(Result.success(Unit))
+                close()
             }
             .addOnFailureListener {
                 trySend(Result.failure(it))
+                close()
             }
         awaitClose()
     }

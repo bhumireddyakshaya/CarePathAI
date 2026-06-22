@@ -15,9 +15,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.carepathai.ui.theme.CarePathAITheme
 import com.example.carepathai.ui.viewmodel.AuthState
 import com.example.carepathai.ui.viewmodel.AuthViewModel
 
@@ -27,12 +29,6 @@ fun SignUpScreen(
     onNavigateToLogin: () -> Unit,
     viewModel: AuthViewModel = hiltViewModel()
 ) {
-    var fullName by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var mobile by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-
     val context = LocalContext.current
     val authState by viewModel.authState.collectAsState()
 
@@ -49,6 +45,27 @@ fun SignUpScreen(
             else -> {}
         }
     }
+
+    SignUpContent(
+        authState = authState,
+        onSignUpClick = { email, password, fullName -> viewModel.signUp(email, password, fullName) },
+        onNavigateToLogin = onNavigateToLogin
+    )
+}
+
+@Composable
+fun SignUpContent(
+    authState: AuthState,
+    onSignUpClick: (String, String, String) -> Unit,
+    onNavigateToLogin: () -> Unit
+) {
+    var fullName by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var mobile by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -136,7 +153,7 @@ fun SignUpScreen(
         Button(
             onClick = {
                 if (password == confirmPassword) {
-                    viewModel.signUp(email, password, fullName)
+                    onSignUpClick(email, password, fullName)
                 } else {
                     Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show()
                 }
@@ -171,5 +188,17 @@ fun SignUpScreen(
                 Text("Login", fontWeight = FontWeight.Bold)
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SignUpScreenPreview() {
+    CarePathAITheme {
+        SignUpContent(
+            authState = AuthState.Idle,
+            onSignUpClick = { _, _, _ -> },
+            onNavigateToLogin = {}
+        )
     }
 }

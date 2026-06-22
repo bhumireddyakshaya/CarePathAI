@@ -15,14 +15,19 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.carepathai.ui.theme.CarePathAITheme
 import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(onNext: () -> Unit) {
     val scale = remember { Animatable(0f) }
     
+    // Use a flag to ensure onNext is only called once
+    var navigateTriggered by remember { mutableStateOf(false) }
+
     LaunchedEffect(key1 = true) {
         scale.animateTo(
             targetValue = 1.2f,
@@ -34,7 +39,10 @@ fun SplashScreen(onNext: () -> Unit) {
             )
         )
         delay(2000L)
-        onNext()
+        if (!navigateTriggered) {
+            navigateTriggered = true
+            onNext()
+        }
     }
 
     Box(
@@ -74,6 +82,14 @@ fun SplashScreen(onNext: () -> Unit) {
                 color = Color.White.copy(alpha = 0.8f)
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SplashScreenPreview() {
+    CarePathAITheme {
+        SplashScreen(onNext = {})
     }
 }
 

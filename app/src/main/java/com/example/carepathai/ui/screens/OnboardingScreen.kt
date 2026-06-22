@@ -10,8 +10,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.carepathai.ui.theme.CarePathAITheme
 import kotlinx.coroutines.launch
 
 data class OnboardingPage(
@@ -95,5 +97,13 @@ fun OnboardingScreen(onFinished: () -> Unit) {
                 Text(if (pagerState.currentPage == pages.size - 1) "Get Started" else "Next")
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun OnboardingScreenPreview() {
+    CarePathAITheme {
+        OnboardingScreen(onFinished = {})
     }
 }

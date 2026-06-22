@@ -1,26 +1,65 @@
 {
   "project_info": {
-    "project_number": "1234567890",
-    "project_id": "carepathai-placeholder",
-    "storage_bucket": "carepathai-placeholder.appspot.com"
+    "project_number": "444560361811",
+    "project_id": "carepathai-5714b",
+    "storage_bucket": "carepathai-5714b.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1234567890:android:abcdef123456",
+        "mobilesdk_app_id": "1:444560361811:android:8ef8db5c5ca2633195b9a6",
         "android_client_info": {
-          "package_name": "com.example.carepathai"
+          "package_name": "Care.Path"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "444560361811-gafmfo1gnf2ootrg1n44fvsusp0fmsbv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "PLACEHOLDER_KEY"
+          "current_key": "AIzaSyB-mximOd6pSfN2pc4qVng7fX8BvsPFzLs"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "444560361811-gafmfo1gnf2ootrg1n44fvsusp0fmsbv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:444560361811:android:ebf583a45a375a7f95b9a6",
+        "android_client_info": {
+          "package_name": "com.example.carepathai"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "444560361811-gafmfo1gnf2ootrg1n44fvsusp0fmsbv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-mximOd6pSfN2pc4qVng7fX8BvsPFzLs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "444560361811-gafmfo1gnf2ootrg1n44fvsusp0fmsbv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

@@ -1,5 +1,6 @@
 package com.example.carepathai.ui.screens
 
+import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -11,7 +12,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.carepathai.ui.theme.CarePathAITheme
 import androidx.navigation.NavHostController
 
 sealed class BottomNavItem(val title: String, val icon: ImageVector, val route: String) {
@@ -22,6 +25,7 @@ sealed class BottomNavItem(val title: String, val icon: ImageVector, val route: 
     object Profile : BottomNavItem("Profile", Icons.Default.Person, "profile_tab")
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavHostController) {
     var selectedItem by remember { mutableIntStateOf(0) }
@@ -47,7 +51,7 @@ fun HomeScreen(navController: NavHostController) {
             }
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { /* Open AI Chatbot */ }) {
+            FloatingActionButton(onClick = { navController.navigate("ai_chatbot") }) {
                 Icon(Icons.Default.Chat, contentDescription = "AI Assistant")
             }
         }
@@ -58,12 +62,16 @@ fun HomeScreen(navController: NavHostController) {
                     onSymptomCheckerClick = { selectedItem = 1 },
                     onMedicineClick = { navController.navigate("medicine_reminder") },
                     onEmergencyClick = { navController.navigate("emergency") },
-                    onHistoryClick = { selectedItem = 3 }
+                    onHistoryClick = { selectedItem = 3 },
+                    onFoodClick = { navController.navigate("food_recommendations") },
+                    onExerciseClick = { navController.navigate("exercise_recommendations") }
                 )
                 1 -> SymptomAssessmentScreen(
                     onBack = { selectedItem = 0 },
                     onAnalyze = { symptoms ->
-                        navController.navigate("ai_analysis")
+                        val symptomsStr = symptoms.joinToString(",")
+                        val encodedSymptoms = Uri.encode(symptomsStr)
+                        navController.navigate("ai_analysis/$encodedSymptoms")
                     }
                 )
                 2 -> WellnessTrackerScreen(
@@ -86,7 +94,9 @@ fun DashboardScreen(
     onSymptomCheckerClick: () -> Unit,
     onMedicineClick: () -> Unit,
     onEmergencyClick: () -> Unit,
-    onHistoryClick: () -> Unit
+    onHistoryClick: () -> Unit,
+    onFoodClick: () -> Unit,
+    onExerciseClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -125,7 +135,8 @@ fun DashboardScreen(
         // Adherence Card
         Card(
             modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f))
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f)),
+            onClick = onMedicineClick
         ) {
             Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
                 CircularProgressIndicator(
@@ -150,7 +161,10 @@ fun DashboardScreen(
         )
         Spacer(modifier = Modifier.height(12.dp))
         
-        Card(modifier = Modifier.fillMaxWidth()) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = onMedicineClick
+        ) {
             Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
                 Icon(Icons.Default.Medication, contentDescription = null, tint = MaterialTheme.colorScheme.primary)
                 Spacer(modifier = Modifier.width(16.dp))
@@ -174,13 +188,13 @@ fun DashboardScreen(
         // Grid of cards
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             DashboardCard("Symptom Analysis", Icons.Default.Troubleshoot, Modifier.weight(1f), onSymptomCheckerClick)
-            DashboardCard("Recommended Food", Icons.Default.Restaurant, Modifier.weight(1f), {})
+            DashboardCard("Recommended Food", Icons.Default.Restaurant, Modifier.weight(1f), onFoodClick)
         }
         
         Spacer(modifier = Modifier.height(16.dp))
         
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            DashboardCard("Exercise Plan", Icons.Default.FitnessCenter, Modifier.weight(1f), {})
+            DashboardCard("Exercise Plan", Icons.Default.FitnessCenter, Modifier.weight(1f), onExerciseClick)
             DashboardCard("Health History", Icons.Default.History, Modifier.weight(1f), onHistoryClick)
         }
 
@@ -213,5 +227,20 @@ fun DashboardCard(title: String, icon: ImageVector, modifier: Modifier = Modifie
             Spacer(modifier = Modifier.height(8.dp))
             Text(title, style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Medium, textAlign = androidx.compose.ui.text.style.TextAlign.Center)
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DashboardScreenPreview() {
+    CarePathAITheme {
+        DashboardScreen(
+            onSymptomCheckerClick = {},
+            onMedicineClick = {},
+            onEmergencyClick = {},
+            onHistoryClick = {},
+            onFoodClick = {},
+            onExerciseClick = {}
+        )
     }
 }

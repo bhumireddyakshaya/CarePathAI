@@ -34,21 +34,25 @@ fun SymptomAssessmentScreen(onBack: () -> Unit, onAnalyze: (List<String>) -> Uni
     var duration by remember { mutableStateOf("") }
     var notes by remember { mutableStateOf("") }
 
-    val bodyParts = listOf(
-        BodyPart("Head", Icons.Default.Face),
-        BodyPart("Chest", Icons.Default.Favorite),
-        BodyPart("Abdomen", Icons.Default.Restaurant), // Placeholder icon
-        BodyPart("Arms", Icons.Default.PanTool),
-        BodyPart("Legs", Icons.AutoMirrored.Filled.DirectionsRun)
-    )
+    val bodyParts = remember {
+        listOf(
+            BodyPart("Head", Icons.Default.Face),
+            BodyPart("Chest", Icons.Default.Favorite),
+            BodyPart("Abdomen", Icons.Default.Restaurant), // Placeholder icon
+            BodyPart("Arms", Icons.Default.PanTool),
+            BodyPart("Legs", Icons.AutoMirrored.Filled.DirectionsRun)
+        )
+    }
 
-    val symptomCategories = mapOf(
-        "General" to listOf("Fever", "Chills", "Fatigue", "Weakness", "Weight Loss"),
-        "Respiratory" to listOf("Cough", "Shortness of Breath", "Wheezing", "Chest Tightness"),
-        "Digestive" to listOf("Nausea", "Vomiting", "Stomach Pain", "Diarrhea", "Constipation"),
-        "Neurological" to listOf("Headache", "Migraine", "Dizziness"),
-        "Cardiovascular" to listOf("Chest Pain", "Palpitations")
-    )
+    val symptomCategories = remember {
+        mapOf(
+            "General" to listOf("Fever", "Chills", "Fatigue", "Weakness", "Weight Loss"),
+            "Respiratory" to listOf("Cough", "Shortness of Breath", "Wheezing", "Chest Tightness"),
+            "Digestive" to listOf("Nausea", "Vomiting", "Stomach Pain", "Diarrhea", "Constipation"),
+            "Neurological" to listOf("Headache", "Migraine", "Dizziness"),
+            "Cardiovascular" to listOf("Chest Pain", "Palpitations")
+        )
+    }
 
     Scaffold(
         topBar = {

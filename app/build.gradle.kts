@@ -55,8 +55,6 @@ dependencies {
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.firebase.inappmessaging.display)
-    implementation(libs.google.firebase.auth)
     implementation(libs.googleid)
 
     // Hilt
@@ -79,6 +77,7 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
+    implementation(libs.firebase.inappmessaging.display)
 
     // Google Maps
     implementation(libs.google.maps)

@@ -16,8 +16,9 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.example.carepathai.ui.theme.CarePathAITheme
 
 @Composable
 fun WellnessTrackerScreen(
@@ -170,5 +171,16 @@ fun TrackingCard(title: String, value: String, icon: ImageVector, color: Color, 
                 Icon(Icons.Default.AddCircle, contentDescription = "Add", tint = MaterialTheme.colorScheme.primary)
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun WellnessTrackerScreenPreview() {
+    CarePathAITheme {
+        WellnessTrackerScreen(
+            onFoodRecommendationClick = {},
+            onExerciseRecommendationClick = {}
+        )
     }
 }

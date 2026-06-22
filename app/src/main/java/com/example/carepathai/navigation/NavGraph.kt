@@ -89,5 +89,14 @@ fun SetupNavGraph(navController: NavHostController) {
         composable(route = Screen.Emergency.route) {
             EmergencyScreen(onBack = { navController.popBackStack() })
         }
+        composable(route = Screen.AIChatbot.route) {
+            AIChatbotScreen(onBack = { navController.popBackStack() })
+        }
+        composable(route = Screen.WellnessTracker.route) {
+            WellnessTrackerScreen(
+                onFoodRecommendationClick = { navController.navigate(Screen.FoodRecommendations.route) },
+                onExerciseRecommendationClick = { navController.navigate(Screen.ExerciseRecommendations.route) }
+            )
+        }
     }
 }

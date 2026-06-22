@@ -17,9 +17,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.carepathai.ui.theme.CarePathAITheme
 import com.example.carepathai.ui.viewmodel.AuthState
 import com.example.carepathai.ui.viewmodel.AuthViewModel
 
@@ -29,12 +31,8 @@ fun LoginScreen(
     onNavigateToSignUp: () -> Unit,
     viewModel: AuthViewModel = hiltViewModel()
 ) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
-    
-    val context = LocalContext.current
     val authState by viewModel.authState.collectAsState()
+    val context = LocalContext.current
 
     LaunchedEffect(authState) {
         when (authState) {
@@ -49,6 +47,23 @@ fun LoginScreen(
             else -> {}
         }
     }
+
+    LoginContent(
+        authState = authState,
+        onLoginClick = { email, password -> viewModel.login(email, password) },
+        onNavigateToSignUp = onNavigateToSignUp
+    )
+}
+
+@Composable
+fun LoginContent(
+    authState: AuthState,
+    onLoginClick: (String, String) -> Unit,
+    onNavigateToSignUp: () -> Unit
+) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -113,7 +128,7 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
-            onClick = { viewModel.login(email, password) },
+            onClick = { onLoginClick(email, password) },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
@@ -144,5 +159,17 @@ fun LoginScreen(
                 Text("Sign Up", fontWeight = FontWeight.Bold)
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LoginScreenPreview() {
+    CarePathAITheme {
+        LoginContent(
+            authState = AuthState.Idle,
+            onLoginClick = { _, _ -> },
+            onNavigateToSignUp = {}
+        )
     }
 }

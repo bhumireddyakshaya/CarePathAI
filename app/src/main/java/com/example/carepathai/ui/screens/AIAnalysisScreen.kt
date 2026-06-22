@@ -92,19 +92,19 @@ fun AIAnalysisScreen(
                         }
                         Spacer(modifier = Modifier.height(16.dp))
                         Text("Possible Condition", style = MaterialTheme.typography.labelLarge, color = Color.Gray)
-                        Text(result!!.diagnosis, style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = Color(0xFF2E7D32))
+                        Text(result?.diagnosis ?: "Analyzing...", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = Color(0xFF2E7D32))
                         
                         Spacer(modifier = Modifier.height(8.dp))
                         
                         Surface(
                             shape = CircleShape,
-                            color = if(result!!.riskLevel == "High") Color(0xFFFFEBEE) else Color(0xFFE8F5E9),
+                            color = if(result?.riskLevel == "High") Color(0xFFFFEBEE) else Color(0xFFE8F5E9),
                             modifier = Modifier.padding(vertical = 4.dp)
                         ) {
                             Row(modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
-                                Box(modifier = Modifier.size(8.dp).clip(CircleShape).background(if(result!!.riskLevel == "High") Color.Red else Color.Green))
+                                Box(modifier = Modifier.size(8.dp).clip(CircleShape).background(if(result?.riskLevel == "High") Color.Red else Color.Green))
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text("Risk Level: ${result!!.riskLevel}", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+                                Text("Risk Level: ${result?.riskLevel ?: "Unknown"}", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
                             }
                         }
                     }
@@ -124,7 +124,7 @@ fun AIAnalysisScreen(
                         Icon(Icons.Default.Psychology, contentDescription = null, tint = Color(0xFF2E7D32))
                         Spacer(modifier = Modifier.width(16.dp))
                         Text(
-                            "Based on your symptoms (${symptoms.joinToString(", ")}), the AI suggests this might be related to ${result!!.diagnosis.lowercase()}. We recommend monitoring your temperature.",
+                            "Based on your symptoms (${symptoms.joinToString(", ")}), the AI suggests this might be related to ${result?.diagnosis?.lowercase() ?: "the condition identified"}. We recommend monitoring your temperature.",
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
