@@ -1,0 +1,58 @@
+{
+  "authentication": {
+    "validUser": {
+      "username": "test@carepathai.com",
+      "password": "password123",
+      "fullName": "Test CarePath User",
+      "phone": "9876543210"
+    },
+    "invalidUser": {
+      "username": "wronguser@invalid.com",
+      "password": "wrongpassword"
+    },
+    "emptyUser": {
+      "username": "",
+      "password": ""
+    },
+    "malformedUser": {
+      "username": "user@@carepath..com",
+      "password": "123"
+    }
+  },
+  "symptoms": {
+    "feverAssessment": {
+      "description": "High fever, body chills, severe headache",
+      "severity": 8,
+      "durationDays": "3",
+      "bodyPart": "Head"
+    },
+    "chestPainAssessment": {
+      "description": "Sharp chest tightness and shortness of breath",
+      "severity": 9,
+      "durationDays": "1",
+      "bodyPart": "Chest"
+    },
+    "emptySymptom": {
+      "description": "",
+      "severity": 0,
+      "durationDays": "0",
+      "bodyPart": ""
+    }
+  },
+  "medicines": [
+    { "name": "Paracetamol 500mg", "dosage": "1 tablet", "frequency": "Daily at 8:00 AM" },
+    { "name": "Amoxicillin 250mg", "dosage": "2 capsules", "frequency": "Every 12 hours" },
+    { "name": "Vitamin D3", "dosage": "1 pill", "frequency": "Weekly on Sunday" }
+  ],
+  "wellness": {
+    "waterMl": 250,
+    "targetWaterMl": 2500,
+    "sleepHours": "7.5",
+    "moodRating": "Energetic"
+  },
+  "emergency": {
+    "primaryContact": "+1-800-555-0199",
+    "secondaryContact": "+1-800-555-0200",
+    "hospitalName": "City Central Emergency Care"
+  }
+}
