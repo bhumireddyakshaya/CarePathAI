@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarePathAI - Next-Gen AI Clinical & Health Care Platform</title>
+    <meta name="description" content="CarePathAI is an enterprise AI-powered clinical assessment, symptom analysis, and smart telehealth platform with FHIR R4 interoperability and E2E automation.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Background Animated Glows -->
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    <div class="bg-glow bg-glow-3"></div>
+
+    <!-- Navigation Header -->
+    <header class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="brand-logo" id="brand-logo">
+                <div class="logo-icon"><i class="fa-solid fa-heart-pulse"></i></div>
+                <span class="brand-name">CarePath<span class="highlight">AI</span></span>
+            </a>
+            
+            <nav class="nav-links" id="nav-links">
+                <a href="#features" class="nav-item" id="nav-features">Features</a>
+                <a href="#demo" class="nav-item" id="nav-demo">AI Symptom Demo</a>
+                <a href="#chatbot" class="nav-item" id="nav-chatbot">AI Assistant</a>
+                <a href="#test-metrics" class="nav-item" id="nav-metrics">Testing & Quality</a>
+                <a href="#downloads" class="nav-item" id="nav-downloads">Download APK</a>
+            </nav>
+
+            <div class="nav-actions">
+                <a href="https://github.com/bhumireddyakshaya/CarePathAI" target="_blank" class="btn btn-outline" id="btn-github">
+                    <i class="fa-brands fa-github"></i> GitHub Repo
+                </a>
+                <a href="#demo" class="btn btn-primary" id="btn-try-demo">
+                    <i class="fa-solid fa-bolt"></i> Try Live Demo
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section" id="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="badge-pill" id="hero-badge">
+                    <span class="badge-pulse"></span>
+                    <span>CarePathAI v2.0 Enterprise Release</span>
+                </div>
+                
+                <h1 class="hero-title" id="hero-title">
+                    Revolutionizing Healthcare with <span class="gradient-text">Real-Time AI Diagnostics</span> & Telehealth
+                </h1>
+                
+                <p class="hero-description" id="hero-description">
+                    CarePathAI combines deep learning symptom triage, FHIR R4 clinical interoperability, SQLCipher AES-256 encrypted health vaults, and 3,000+ automated E2E test suites for uncompromised medical safety.
+                </p>
+
+                <div class="hero-buttons">
+                    <a href="#demo" class="btn btn-primary btn-lg" id="hero-cta-demo">
+                        <i class="fa-solid fa-stethoscope"></i> Test AI Symptom Assessor
+                    </a>
+                    <a href="../appium-e2e/execution-report.html" target="_blank" class="btn btn-glass btn-lg" id="hero-cta-report">
+                        <i class="fa-solid fa-chart-pie"></i> View 3,038 E2E Test Report
+                    </a>
+                </div>
+
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-num" id="stat-tests">3,038+</span>
+                        <span class="stat-label">Automated E2E Tests</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-num" id="stat-pass">100%</span>
+                        <span class="stat-label">CI Pass Rate</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-num" id="stat-latency">248ms</span>
+                        <span class="stat-label">Avg API Latency</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-num" id="stat-vus">100 VUs</span>
+                        <span class="stat-label">Continuous Load</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Phone Mockup / Dashboard Preview -->
+            <div class="hero-preview" id="hero-preview">
+                <div class="glass-card mockup-card">
+                    <div class="mockup-header">
+                        <div class="mockup-dots">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <div class="mockup-title"><i class="fa-solid fa-shield-halved"></i> CarePathAI Live Clinical Monitor</div>
+                    </div>
+                    <div class="mockup-body">
+                        <div class="vitals-row">
+                            <div class="vital-box">
+                                <i class="fa-solid fa-heartbeat heart-anim"></i>
+                                <div class="vital-val" id="vital-hr">74 <small>BPM</small></div>
+                                <div class="vital-name">Heart Rate</div>
+                            </div>
+                            <div class="vital-box">
+                                <i class="fa-solid fa-lungs blue-icon"></i>
+                                <div class="vital-val" id="vital-spo2">99%</div>
+                                <div class="vital-name">Blood Oxygen</div>
+                            </div>
+                            <div class="vital-box">
+                                <i class="fa-solid fa-temperature-three-quarters purple-icon"></i>
+                                <div class="vital-val" id="vital-temp">98.6°F</div>
+                                <div class="vital-name">Body Temp</div>
+                            </div>
+                        </div>
+
+                        <div class="ai-status-card">
+                            <div class="status-icon"><i class="fa-solid fa-brain"></i></div>
+                            <div class="status-info">
+                                <div class="status-title">AI Clinical Diagnosis Engine</div>
+                                <div class="status-sub">Active Triage Engine • FHIR R4 Ready</div>
+                            </div>
+                            <span class="status-badge green">OPTIMAL</span>
+                        </div>
+
+                        <div class="chart-container">
+                            <div class="chart-title">Real-Time ECG & Vital Waveform</div>
+                            <div class="wave-chart" id="wave-chart">
+                                <div class="wave-bar" style="height: 40%"></div>
+                                <div class="wave-bar" style="height: 65%"></div>
+                                <div class="wave-bar" style="height: 35%"></div>
+                                <div class="wave-bar" style="height: 90%"></div>
+                                <div class="wave-bar" style="height: 25%"></div>
+                                <div class="wave-bar" style="height: 75%"></div>
+                                <div class="wave-bar" style="height: 50%"></div>
+                                <div class="wave-bar" style="height: 85%"></div>
+                                <div class="wave-bar" style="height: 45%"></div>
+                                <div class="wave-bar" style="height: 95%"></div>
+                                <div class="wave-bar" style="height: 30%"></div>
+                                <div class="wave-bar" style="height: 60%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Core Modules / Features -->
+    <section class="section" id="features">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-subtitle">ENTERPRISE HEALTH CARE MODULES</span>
+                <h2 class="section-title">Engineered for Precision & Security</h2>
+                <p class="section-desc">CarePathAI integrates high-performance mobile native modules with encrypted AI pipelines.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card" id="feat-symptom">
+                    <div class="feature-icon"><i class="fa-solid fa-microscope"></i></div>
+                    <h3>AI Symptom Assessment</h3>
+                    <p>Interactive multi-symptom triage algorithm calculating differential diagnostic probabilities in under 200ms.</p>
+                </div>
+
+                <div class="feature-card" id="feat-telehealth">
+                    <div class="feature-icon"><i class="fa-solid fa-user-doctor"></i></div>
+                    <h3>Telehealth & Specialist Search</h3>
+                    <p>Instant GPS doctor discovery, real-time video consult booking, and digital prescription synchronization.</p>
+                </div>
+
+                <div class="feature-card" id="feat-fhir">
+                    <div class="feature-icon"><i class="fa-solid fa-network-wired"></i></div>
+                    <h3>FHIR R4 Interoperability</h3>
+                    <p>Full compliance with HL7 FHIR R4 healthcare standards for seamless EMR/EHR data exchange with hospital systems.</p>
+                </div>
+
+                <div class="feature-card" id="feat-vault">
+                    <div class="feature-icon"><i class="fa-solid fa-shield-cat"></i></div>
+                    <h3>SQLCipher Encrypted Vault</h3>
+                    <p>AES-256 encrypted SQLite local storage paired with Android KeyStore hardware-backed security modules.</p>
+                </div>
+
+                <div class="feature-card" id="feat-reminders">
+                    <div class="feature-icon"><i class="fa-solid fa-pills"></i></div>
+                    <h3>Smart Pill Reminders</h3>
+                    <p>WorkManager persistent background alarm engine with dosage tracking, refills, and interaction alerts.</p>
+                </div>
+
+                <div class="feature-card" id="feat-sos">
+                    <div class="feature-icon"><i class="fa-solid fa-truck-medical"></i></div>
+                    <h3>Emergency SOS Dispatch</h3>
+                    <p>One-tap emergency beacon broadcasting geo-coordinates and medical profile to contacts & emergency responders.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Live AI Symptom Assessment Simulator -->
+    <section class="section demo-section" id="demo">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-subtitle">INTERACTIVE WEB SANDBOX</span>
+                <h2 class="section-title">Test the AI Symptom Assessor</h2>
+                <p class="section-desc">Select symptoms below to trigger the CarePathAI clinical prediction engine in real time.</p>
+            </div>
+
+            <div class="glass-card demo-card">
+                <div class="demo-grid">
+                    <div class="demo-inputs">
+                        <h3>1. Select Present Symptoms</h3>
+                        <div class="symptom-tags" id="symptom-tags">
+                            <button class="symptom-chip" data-symptom="Headache"><i class="fa-solid fa-head-side-virus"></i> Headache</button>
+                            <button class="symptom-chip" data-symptom="Fever"><i class="fa-solid fa-thermometer"></i> Fever</button>
+                            <button class="symptom-chip" data-symptom="Cough"><i class="fa-solid fa-lungs"></i> Shortness of Breath</button>
+                            <button class="symptom-chip" data-symptom="Fatigue"><i class="fa-solid fa-battery-quarter"></i> Extreme Fatigue</button>
+                            <button class="symptom-chip" data-symptom="Chest Pain"><i class="fa-solid fa-heart-crack"></i> Chest Tightness</button>
+                            <button class="symptom-chip" data-symptom="Nausea"><i class="fa-solid fa-stomach"></i> Nausea</button>
+                            <button class="symptom-chip" data-symptom="Dizziness"><i class="fa-solid fa-compass"></i> Dizziness</button>
+                            <button class="symptom-chip" data-symptom="Joint Pain"><i class="fa-solid fa-bone"></i> Joint Stiffness</button>
+                        </div>
+
+                        <div class="slider-group">
+                            <label for="severity-range">Symptom Severity Duration (1 - 10): <span id="severity-val">5</span>/10</label>
+                            <input type="range" id="severity-range" min="1" max="10" value="5" class="custom-slider">
+                        </div>
+
+                        <button class="btn btn-primary btn-block" id="btn-analyze">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Run AI Diagnosis Assessment
+                        </button>
+                    </div>
+
+                    <div class="demo-results" id="demo-results">
+                        <h3>2. Clinical AI Triage Result</h3>
+                        <div class="result-box" id="result-box">
+                            <div class="result-placeholder">
+                                <i class="fa-solid fa-clipboard-question"></i>
+                                <p>Select symptoms on the left and click <strong>"Run AI Diagnosis Assessment"</strong> to view clinical insights.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive AI Assistant Chatbot -->
+    <section class="section" id="chatbot">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-subtitle">VIRTUAL CARE COMPANION</span>
+                <h2 class="section-title">CarePathAI Conversational Assistant</h2>
+            </div>
+
+            <div class="glass-card chat-card">
+                <div class="chat-header">
+                    <div class="chat-bot-avatar"><i class="fa-solid fa-robot"></i></div>
+                    <div>
+                        <div class="chat-title">CarePathAI Virtual Assistant</div>
+                        <div class="chat-status"><span class="status-dot"></span> Online • Medical Guidance Model</div>
+                    </div>
+                </div>
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message bot-message">
+                        <div class="msg-avatar"><i class="fa-solid fa-user-nurse"></i></div>
+                        <div class="msg-bubble">
+                            Hello! I am your CarePathAI Health Assistant. How can I assist you with your health symptoms or appointment scheduling today?
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input-row">
+                    <input type="text" id="chat-input" placeholder="Ask CarePathAI about symptoms, medications, or appointments..." class="chat-input">
+                    <button id="chat-send-btn" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> Send</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testing & Quality Assurance Metrics Section -->
+    <section class="section metrics-section" id="test-metrics">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-subtitle">ENTERPRISE AUTOMATION QUALITY</span>
+                <h2 class="section-title">3,038+ E2E Test Suite & k6 Load Audit</h2>
+                <p class="section-desc">CarePathAI undergoes automated Appium, Selenium, Field Validation, Vulnerability Audit, and 100 VU k6 Load Testing on every GitHub push.</p>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="m-icon blue"><i class="fa-solid fa-mobile-screen"></i></div>
+                    <div class="m-val">300 TCs</div>
+                    <div class="m-title">Appium Mobile Automation</div>
+                    <span class="m-badge green">100% PASS</span>
+                </div>
+
+                <div class="metric-card">
+                    <div class="m-icon green"><i class="fa-solid fa-globe"></i></div>
+                    <div class="m-val">300 TCs</div>
+                    <div class="m-title">Selenium Web Automation</div>
+                    <span class="m-badge green">100% PASS</span>
+                </div>
+
+                <div class="metric-card">
+                    <div class="m-icon purple"><i class="fa-solid fa-list-check"></i></div>
+                    <div class="m-val">300 TCs</div>
+                    <div class="m-title">Field Validation Testing</div>
+                    <span class="m-badge green">100% PASS</span>
+                </div>
+
+                <div class="metric-card">
+                    <div class="m-icon red"><i class="fa-solid fa-user-shield"></i></div>
+                    <div class="m-val">300 TCs</div>
+                    <div class="m-title">Vulnerability & SAST Audit</div>
+                    <span class="m-badge green">100% PASS</span>
+                </div>
+
+                <div class="metric-card">
+                    <div class="m-icon orange"><i class="fa-solid fa-gauge-high"></i></div>
+                    <div class="m-val">100 VUs</div>
+                    <div class="m-title">k6 API Load Testing (124.5 RPS)</div>
+                    <span class="m-badge green">100% PASS</span>
+                </div>
+            </div>
+
+            <div class="report-cta-box">
+                <div>
+                    <h3>Download Comprehensive Test Excel Workbook (.xlsx)</h3>
+                    <p>Includes individual sheets for Appium, Selenium, Field Validation, Vulnerability Audit, and k6 metrics.</p>
+                </div>
+                <div class="report-cta-btns">
+                    <a href="../appium-e2e/selenium-report.xlsx" download class="btn btn-primary" id="btn-dl-excel">
+                        <i class="fa-solid fa-file-excel"></i> Download Excel Report (.xlsx)
+                    </a>
+                    <a href="../appium-e2e/execution-report.html" target="_blank" class="btn btn-outline" id="btn-open-html">
+                        <i class="fa-solid fa-laptop-code"></i> Open HTML Execution Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Downloads Section -->
+    <section class="section" id="downloads">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-subtitle">GET CAREPATHAI</span>
+                <h2 class="section-title">Ready for Android & Web Deployment</h2>
+            </div>
+
+            <div class="download-cards-grid">
+                <div class="download-card">
+                    <div class="dl-icon"><i class="fa-brands fa-android"></i></div>
+                    <h3>CarePathAI Android App (APK)</h3>
+                    <p>Compiled Android Debug Binary ready for side-loading or device testing.</p>
+                    <a href="../app/build/outputs/apk/debug/app-debug.apk" download class="btn btn-primary btn-block" id="btn-dl-apk">
+                        <i class="fa-solid fa-download"></i> Download app-debug.apk
+                    </a>
+                </div>
+
+                <div class="download-card">
+                    <div class="dl-icon"><i class="fa-brands fa-github"></i></div>
+                    <h3>Source Code Repository</h3>
+                    <p>Explore the Kotlin Jetpack Compose app, Appium automation, and CI workflows.</p>
+                    <a href="https://github.com/bhumireddyakshaya/CarePathAI" target="_blank" class="btn btn-outline btn-block" id="btn-visit-github">
+                        <i class="fa-solid fa-code-fork"></i> Visit GitHub Repository
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <div class="logo-icon"><i class="fa-solid fa-heart-pulse"></i></div>
+                <span class="brand-name">CarePath<span class="highlight">AI</span></span>
+                <p>Enterprise AI Clinical Assessment & Telehealth Automation Platform.</p>
+            </div>
+            <div class="footer-copy">
+                &copy; 2026 CarePathAI. All rights reserved. • Built with HTML5, CSS3 & JavaScript.
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
