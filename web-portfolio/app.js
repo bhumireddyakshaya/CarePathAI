@@ -1,143 +1,205 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Symptom Selection Logic
-    const symptomChips = document.querySelectorAll('.symptom-chip');
-    const selectedSymptoms = new Set();
-    const severityRange = document.getElementById('severity-range');
-    const severityVal = document.getElementById('severity-val');
-    const btnAnalyze = document.getElementById('btn-analyze');
-    const resultBox = document.getElementById('result-box');
+    // 1. Navigation Tab Switcher Logic
+    const navBtns = document.querySelectorAll('.nav-btn');
+    const featureViews = document.querySelectorAll('.feature-view');
 
-    symptomChips.forEach(chip => {
+    window.switchTab = function(tabName) {
+        navBtns.forEach(btn => {
+            if (btn.dataset.tab === tabName) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+
+        featureViews.forEach(view => {
+            if (view.id === `view-${tabName}`) view.classList.add('active');
+            else view.classList.remove('active');
+        });
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    navBtns.forEach(btn => {
+        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+    });
+
+    // 2. Symptom Selection & AI Clinical Triage
+    const chipItems = document.querySelectorAll('.chip-item');
+    const selectedSymptoms = new Set();
+    const symSeverity = document.getElementById('sym-severity');
+    const symSeverityVal = document.getElementById('sym-severity-val');
+    const btnRunTriage = document.getElementById('btn-run-triage');
+    const symptomOutputBox = document.getElementById('symptom-output-box');
+
+    chipItems.forEach(chip => {
         chip.addEventListener('click', () => {
-            const symptom = chip.dataset.symptom;
-            if (selectedSymptoms.has(symptom)) {
-                selectedSymptoms.delete(symptom);
+            const sym = chip.dataset.sym;
+            if (selectedSymptoms.has(sym)) {
+                selectedSymptoms.delete(sym);
                 chip.classList.remove('active');
             } else {
-                selectedSymptoms.add(symptom);
+                selectedSymptoms.add(sym);
                 chip.classList.add('active');
             }
         });
     });
 
-    if (severityRange) {
-        severityRange.addEventListener('input', (e) => {
-            severityVal.textContent = e.target.value;
+    if (symSeverity) {
+        symSeverity.addEventListener('input', (e) => {
+            symSeverityVal.textContent = e.target.value;
         });
     }
 
-    if (btnAnalyze) {
-        btnAnalyze.addEventListener('click', () => {
+    if (btnRunTriage) {
+        btnRunTriage.addEventListener('click', () => {
             if (selectedSymptoms.size === 0) {
-                resultBox.innerHTML = `
-                    <div class="result-placeholder">
-                        <i class="fa-solid fa-triangle-exclamation" style="color: #f59e0b;"></i>
-                        <p style="color: #fbbf24;">Please select at least 1 symptom to perform AI diagnosis assessment.</p>
+                symptomOutputBox.innerHTML = `
+                    <div style="text-align: center; color: #fbbf24; padding: 20px;">
+                        <i class="fa-solid fa-triangle-exclamation" style="font-size: 36px; margin-bottom: 10px;"></i>
+                        <p style="font-weight: 600;">Please select at least 1 symptom chip before executing triage.</p>
                     </div>
                 `;
                 return;
             }
 
             const symptomsList = Array.from(selectedSymptoms);
-            const severity = parseInt(severityRange.value, 10);
-            let riskLevel = 'Low';
-            let riskClass = 'risk-low';
-            let recText = 'Standard rest, hydration, and observation recommended.';
+            const severity = parseInt(symSeverity.value, 10);
+            let riskTitle = 'LOW RISK TRIAGE';
+            let riskClass = 'status-tag green';
+            let color = '#4ade80';
+            let guidance = 'Standard rest, hydration, and 48-hour monitoring recommended.';
 
             if (symptomsList.includes('Chest Pain') || symptomsList.includes('Shortness of Breath') || severity >= 8) {
-                riskLevel = 'HIGH (Urgent Clinical Evaluation)';
-                riskClass = 'risk-high';
-                recText = 'Immediate teleconsultation or emergency medical evaluation strongly advised.';
+                riskTitle = 'HIGH RISK (URGENT CARE)';
+                riskClass = 'status-tag red';
+                color = '#f87171';
+                guidance = 'Immediate emergency department or urgent teleconsultation advised.';
             } else if (symptomsList.length >= 3 || severity >= 5) {
-                riskLevel = 'MODERATE';
-                riskClass = 'risk-medium';
-                recText = 'Schedule virtual appointment with CarePathAI primary physician within 24 hours.';
+                riskTitle = 'MODERATE RISK';
+                riskClass = 'status-tag orange';
+                color = '#fbbf24';
+                guidance = 'Schedule a telehealth virtual consult with CarePathAI primary physician within 24 hours.';
             }
 
-            resultBox.innerHTML = `
-                <div class="result-content" style="width: 100%;">
-                    <h4><i class="fa-solid fa-heart-circle-check"></i> CarePathAI Clinical Triaging Completed</h4>
-                    <div style="margin-bottom: 8px;">
-                        <span class="risk-badge ${riskClass}">Risk Triage Level: ${riskLevel}</span>
+            symptomOutputBox.innerHTML = `
+                <div style="width: 100%;">
+                    <h3 style="font-family: var(--font-heading); font-size: 22px; color: ${color}; margin-bottom: 10px;">
+                        <i class="fa-solid fa-square-poll-vertical"></i> ${riskTitle}
+                    </h3>
+                    <div style="font-size: 14px; margin-bottom: 12px; color: #f8fafc;">
+                        <strong>Evaluated Symptoms:</strong> ${symptomsList.join(', ')} (Severity Index: ${severity}/10)
                     </div>
-                    <p style="font-size: 14px; margin-bottom: 12px; color: #e2e8f0;">
-                        <strong>Analyzed Symptoms:</strong> ${symptomsList.join(', ')} (Severity: ${severity}/10)
-                    </p>
-                    <p style="font-size: 14px; color: #94a3b8; background: rgba(30,41,59,0.8); padding: 12px; border-radius: 8px; border-left: 3px solid #38bdf8;">
-                        <i class="fa-solid fa-user-md" style="color: #38bdf8; margin-right: 6px;"></i>
-                        <strong>Clinical Guidance:</strong> ${recText}
-                    </p>
+                    <div style="font-size: 13px; color: #cbd5e1; background: rgba(15, 23, 42, 0.8); padding: 14px; border-radius: 10px; border-left: 4px solid ${color}; margin-bottom: 16px;">
+                        <i class="fa-solid fa-user-md" style="color: ${color}; margin-right: 8px;"></i>
+                        <strong>Clinical Recommendation:</strong> ${guidance}
+                    </div>
+                    <button class="btn btn-primary btn-block" onclick="switchTab('doctors')">
+                        <i class="fa-solid fa-user-doctor"></i> Book Doctor Consultation Now
+                    </button>
                 </div>
             `;
         });
     }
 
-    // 2. Chatbot Simulation Logic
-    const chatInput = document.getElementById('chat-input');
-    const chatSendBtn = document.getElementById('chat-send-btn');
-    const chatMessages = document.getElementById('chat-messages');
+    // 3. AI Chatbot Conversation
+    const chatUserInput = document.getElementById('chat-user-input');
+    const btnSendChat = document.getElementById('btn-send-chat');
+    const chatMessagesArea = document.getElementById('chat-messages-area');
+    const promptBtns = document.querySelectorAll('.prompt-btn');
 
-    function sendChatMessage() {
-        const text = chatInput.value.trim();
+    function sendChatMessage(textOverride = null) {
+        const text = textOverride || (chatUserInput ? chatUserInput.value.trim() : '');
         if (!text) return;
 
-        // User Message
         const userMsg = document.createElement('div');
-        userMsg.className = 'message user-message';
+        userMsg.className = 'chat-message user';
         userMsg.innerHTML = `
             <div class="msg-avatar"><i class="fa-solid fa-user"></i></div>
-            <div class="msg-bubble">${escapeHtml(text)}</div>
+            <div class="msg-content">${escapeHtml(text)}</div>
         `;
-        chatMessages.appendChild(userMsg);
-        chatInput.value = '';
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+        chatMessagesArea.appendChild(userMsg);
+        if (chatUserInput) chatUserInput.value = '';
+        chatMessagesArea.scrollTop = chatMessagesArea.scrollHeight;
 
-        // Bot Response Simulation
         setTimeout(() => {
-            let reply = "CarePathAI has recorded your input. For urgent medical symptoms, please use the Emergency SOS module or consult a physician.";
-            const query = text.toLowerCase();
+            let responseText = "CarePathAI virtual nurse has recorded your inquiry. For urgent symptoms, use the SOS tab.";
+            const q = text.toLowerCase();
 
-            if (query.includes('hello') || query.includes('hi')) {
-                reply = "Hello! How are you feeling today? You can share symptoms or ask about medication schedules.";
-            } else if (query.includes('headache') || query.includes('fever')) {
-                reply = "For persistent headache or fever, stay hydrated and monitor body temperature. Would you like me to book a telehealth consult?";
-            } else if (query.includes('test') || query.includes('report') || query.includes('appium')) {
-                reply = "CarePathAI runs 3,038 automated E2E test assertions across Appium, Selenium, and k6 load testing with 100% pass rate!";
-            } else if (query.includes('apk') || query.includes('download')) {
-                reply = "You can download the compiled CarePathAI app-debug.apk directly from the Downloads section below!";
+            if (q.includes('fever')) {
+                reply = "For high fever, maintain adequate oral hydration, apply cool compresses, and monitor body temperature every 4 hours.";
+            } else if (q.includes('paracetamol')) {
+                reply = "Standard adult Paracetamol dosage is 500mg - 1000mg every 4-6 hours as needed (maximum 4000mg per 24 hours).";
+            } else if (q.includes('doctor') || q.includes('consultation')) {
+                reply = "You can instantly browse accredited cardiologists and general physicians in the 'Doctors' tab above!";
+            } else {
+                reply = "Thank you for reaching out. CarePathAI offers automated symptom triaging, pill alarms, and encrypted FHIR health records.";
             }
 
             const botMsg = document.createElement('div');
-            botMsg.className = 'message bot-message';
+            botMsg.className = 'chat-message bot';
             botMsg.innerHTML = `
                 <div class="msg-avatar"><i class="fa-solid fa-user-nurse"></i></div>
-                <div class="msg-bubble">${reply}</div>
+                <div class="msg-content">${reply}</div>
             `;
-            chatMessages.appendChild(botMsg);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }, 600);
+            chatMessagesArea.appendChild(botMsg);
+            chatMessagesArea.scrollTop = chatMessagesArea.scrollHeight;
+        }, 500);
     }
 
-    if (chatSendBtn) {
-        chatSendBtn.addEventListener('click', sendChatMessage);
-        chatInput.addEventListener('keypress', (e) => {
+    if (btnSendChat) {
+        btnSendChat.addEventListener('click', () => sendChatMessage());
+        chatUserInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') sendChatMessage();
         });
     }
 
-    // 3. Dynamic Waveform Chart Animation
-    const waveChart = document.getElementById('wave-chart');
-    if (waveChart) {
-        setInterval(() => {
-            const bars = waveChart.querySelectorAll('.wave-bar');
-            bars.forEach(bar => {
-                const randomHeight = Math.floor(Math.random() * 75) + 20;
-                bar.style.height = `${randomHeight}%`;
-            });
-        }, 800);
-    }
+    promptBtns.forEach(p => {
+        p.addEventListener('click', () => sendChatMessage(p.dataset.text));
+    });
 
-    // Utility HTML escaper
+    // 4. Medicine Status Toggle
+    const statusBtns = document.querySelectorAll('.btn-status');
+    statusBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (btn.classList.contains('pending')) {
+                btn.classList.remove('pending');
+                btn.classList.add('taken');
+                btn.textContent = '✔ TAKEN';
+            } else {
+                btn.classList.remove('taken');
+                btn.classList.add('pending');
+                btn.textContent = '⏳ PENDING';
+            }
+        });
+    });
+
+    // 5. Emergency SOS Trigger
+    document.getElementById('btn-trigger-sos')?.addEventListener('click', () => {
+        alert('🚨 EMERGENCY SOS BEACON ACTIVATED!\nBroadcasting GPS coordinates & CarePathAI encrypted medical vault profile to emergency contacts & dispatchers.');
+    });
+
+    // 6. FHIR R4 JSON Export Simulation
+    document.getElementById('btn-export-fhir')?.addEventListener('click', () => {
+        const fhirJson = {
+            resourceType: "Patient",
+            id: "carepath-patient-001",
+            name: [{ family: "Bhumireddy", given: ["Akshaya"] }],
+            gender: "female",
+            birthDate: "2000-01-01",
+            address: [{ city: "Bangalore", country: "IN" }],
+            observation: [
+                { code: "Daily Wellness Score", value: "85/100" },
+                { code: "Medicine Adherence", value: "75%" }
+            ]
+        };
+
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fhirJson, null, 2));
+        const dlAnchor = document.createElement('a');
+        dlAnchor.setAttribute("href", dataStr);
+        dlAnchor.setAttribute("download", "CarePathAI_FHIR_Patient_Record.json");
+        document.body.appendChild(dlAnchor);
+        dlAnchor.click();
+        dlAnchor.remove();
+    });
+
     function escapeHtml(str) {
         return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }

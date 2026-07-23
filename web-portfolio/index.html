@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CarePathAI - Next-Gen AI Clinical & Health Care Platform</title>
-    <meta name="description" content="CarePathAI is an enterprise AI-powered clinical assessment, symptom analysis, and smart telehealth platform with FHIR R4 interoperability and E2E automation.">
+    <title>CarePathAI - Enterprise Web App & Clinical Platform</title>
+    <meta name="description" content="CarePathAI is an enterprise health & clinical app with AI symptom analysis, medicine reminders, food/exercise guidance, telehealth, and FHIR R4 interoperability.">
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,381 +15,564 @@
 </head>
 <body>
 
-    <!-- Background Animated Glows -->
-    <div class="bg-glow bg-glow-1"></div>
-    <div class="bg-glow bg-glow-2"></div>
-    <div class="bg-glow bg-glow-3"></div>
-
-    <!-- Navigation Header -->
-    <header class="navbar" id="navbar">
-        <div class="nav-container">
-            <a href="#" class="brand-logo" id="brand-logo">
+    <!-- Top Navigation Header -->
+    <header class="app-header">
+        <div class="header-container">
+            <div class="brand">
                 <div class="logo-icon"><i class="fa-solid fa-heart-pulse"></i></div>
-                <span class="brand-name">CarePath<span class="highlight">AI</span></span>
-            </a>
-            
-            <nav class="nav-links" id="nav-links">
-                <a href="#features" class="nav-item" id="nav-features">Features</a>
-                <a href="#demo" class="nav-item" id="nav-demo">AI Symptom Demo</a>
-                <a href="#chatbot" class="nav-item" id="nav-chatbot">AI Assistant</a>
-                <a href="#test-metrics" class="nav-item" id="nav-metrics">Testing & Quality</a>
-                <a href="#downloads" class="nav-item" id="nav-downloads">Download APK</a>
+                <span class="brand-title">CarePath<span class="highlight">AI</span></span>
+                <span class="version-tag">v2.0 Web Edition</span>
+            </div>
+
+            <nav class="main-nav" id="main-nav">
+                <button class="nav-btn active" data-tab="dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</button>
+                <button class="nav-btn" data-tab="symptoms"><i class="fa-solid fa-stethoscope"></i> Symptom AI</button>
+                <button class="nav-btn" data-tab="chatbot"><i class="fa-solid fa-robot"></i> AI Chatbot</button>
+                <button class="nav-btn" data-tab="medicine"><i class="fa-solid fa-pills"></i> Reminders</button>
+                <button class="nav-btn" data-tab="nutrition"><i class="fa-solid fa-utensils"></i> Nutrition</button>
+                <button class="nav-btn" data-tab="exercise"><i class="fa-solid fa-dumbbell"></i> Exercise</button>
+                <button class="nav-btn" data-tab="doctors"><i class="fa-solid fa-user-md"></i> Doctors</button>
+                <button class="nav-btn" data-tab="history"><i class="fa-solid fa-clock-rotate-left"></i> History</button>
+                <button class="nav-btn nav-emergency" data-tab="emergency"><i class="fa-solid fa-truck-medical"></i> SOS</button>
+                <button class="nav-btn" data-tab="profile"><i class="fa-solid fa-user-circle"></i> Profile</button>
+                <button class="nav-btn nav-audit" data-tab="audit"><i class="fa-solid fa-vial-circle-check"></i> Audit</button>
             </nav>
 
-            <div class="nav-actions">
-                <a href="https://github.com/bhumireddyakshaya/CarePathAI" target="_blank" class="btn btn-outline" id="btn-github">
-                    <i class="fa-brands fa-github"></i> GitHub Repo
+            <div class="header-actions">
+                <a href="../app/build/outputs/apk/debug/app-debug.apk" download class="btn btn-primary" id="btn-apk-dl">
+                    <i class="fa-solid fa-download"></i> Android APK
                 </a>
-                <a href="#demo" class="btn btn-primary" id="btn-try-demo">
-                    <i class="fa-solid fa-bolt"></i> Try Live Demo
+                <a href="../appium-e2e/selenium-report.xlsx" download class="btn btn-outline" id="btn-excel-dl">
+                    <i class="fa-solid fa-file-excel"></i> Excel Report
                 </a>
             </div>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero-section" id="hero">
-        <div class="hero-container">
-            <div class="hero-content">
-                <div class="badge-pill" id="hero-badge">
-                    <span class="badge-pulse"></span>
-                    <span>CarePathAI v2.0 Enterprise Release</span>
-                </div>
-                
-                <h1 class="hero-title" id="hero-title">
-                    Revolutionizing Healthcare with <span class="gradient-text">Real-Time AI Diagnostics</span> & Telehealth
-                </h1>
-                
-                <p class="hero-description" id="hero-description">
-                    CarePathAI combines deep learning symptom triage, FHIR R4 clinical interoperability, SQLCipher AES-256 encrypted health vaults, and 3,000+ automated E2E test suites for uncompromised medical safety.
-                </p>
+    <!-- Main Content Container (Feature Views) -->
+    <main class="app-main-container">
 
-                <div class="hero-buttons">
-                    <a href="#demo" class="btn btn-primary btn-lg" id="hero-cta-demo">
-                        <i class="fa-solid fa-stethoscope"></i> Test AI Symptom Assessor
-                    </a>
-                    <a href="../appium-e2e/execution-report.html" target="_blank" class="btn btn-glass btn-lg" id="hero-cta-report">
-                        <i class="fa-solid fa-chart-pie"></i> View 3,038 E2E Test Report
-                    </a>
-                </div>
-
-                <div class="hero-stats">
-                    <div class="stat-item">
-                        <span class="stat-num" id="stat-tests">3,038+</span>
-                        <span class="stat-label">Automated E2E Tests</span>
-                    </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat-item">
-                        <span class="stat-num" id="stat-pass">100%</span>
-                        <span class="stat-label">CI Pass Rate</span>
-                    </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat-item">
-                        <span class="stat-num" id="stat-latency">248ms</span>
-                        <span class="stat-label">Avg API Latency</span>
-                    </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat-item">
-                        <span class="stat-num" id="stat-vus">100 VUs</span>
-                        <span class="stat-label">Continuous Load</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Hero Phone Mockup / Dashboard Preview -->
-            <div class="hero-preview" id="hero-preview">
-                <div class="glass-card mockup-card">
-                    <div class="mockup-header">
-                        <div class="mockup-dots">
-                            <span class="dot red"></span>
-                            <span class="dot yellow"></span>
-                            <span class="dot green"></span>
-                        </div>
-                        <div class="mockup-title"><i class="fa-solid fa-shield-halved"></i> CarePathAI Live Clinical Monitor</div>
-                    </div>
-                    <div class="mockup-body">
-                        <div class="vitals-row">
-                            <div class="vital-box">
-                                <i class="fa-solid fa-heartbeat heart-anim"></i>
-                                <div class="vital-val" id="vital-hr">74 <small>BPM</small></div>
-                                <div class="vital-name">Heart Rate</div>
-                            </div>
-                            <div class="vital-box">
-                                <i class="fa-solid fa-lungs blue-icon"></i>
-                                <div class="vital-val" id="vital-spo2">99%</div>
-                                <div class="vital-name">Blood Oxygen</div>
-                            </div>
-                            <div class="vital-box">
-                                <i class="fa-solid fa-temperature-three-quarters purple-icon"></i>
-                                <div class="vital-val" id="vital-temp">98.6°F</div>
-                                <div class="vital-name">Body Temp</div>
-                            </div>
-                        </div>
-
-                        <div class="ai-status-card">
-                            <div class="status-icon"><i class="fa-solid fa-brain"></i></div>
-                            <div class="status-info">
-                                <div class="status-title">AI Clinical Diagnosis Engine</div>
-                                <div class="status-sub">Active Triage Engine • FHIR R4 Ready</div>
-                            </div>
-                            <span class="status-badge green">OPTIMAL</span>
-                        </div>
-
-                        <div class="chart-container">
-                            <div class="chart-title">Real-Time ECG & Vital Waveform</div>
-                            <div class="wave-chart" id="wave-chart">
-                                <div class="wave-bar" style="height: 40%"></div>
-                                <div class="wave-bar" style="height: 65%"></div>
-                                <div class="wave-bar" style="height: 35%"></div>
-                                <div class="wave-bar" style="height: 90%"></div>
-                                <div class="wave-bar" style="height: 25%"></div>
-                                <div class="wave-bar" style="height: 75%"></div>
-                                <div class="wave-bar" style="height: 50%"></div>
-                                <div class="wave-bar" style="height: 85%"></div>
-                                <div class="wave-bar" style="height: 45%"></div>
-                                <div class="wave-bar" style="height: 95%"></div>
-                                <div class="wave-bar" style="height: 30%"></div>
-                                <div class="wave-bar" style="height: 60%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Key Core Modules / Features -->
-    <section class="section" id="features">
-        <div class="section-container">
-            <div class="section-header">
-                <span class="section-subtitle">ENTERPRISE HEALTH CARE MODULES</span>
-                <h2 class="section-title">Engineered for Precision & Security</h2>
-                <p class="section-desc">CarePathAI integrates high-performance mobile native modules with encrypted AI pipelines.</p>
-            </div>
-
-            <div class="features-grid">
-                <div class="feature-card" id="feat-symptom">
-                    <div class="feature-icon"><i class="fa-solid fa-microscope"></i></div>
-                    <h3>AI Symptom Assessment</h3>
-                    <p>Interactive multi-symptom triage algorithm calculating differential diagnostic probabilities in under 200ms.</p>
-                </div>
-
-                <div class="feature-card" id="feat-telehealth">
-                    <div class="feature-icon"><i class="fa-solid fa-user-doctor"></i></div>
-                    <h3>Telehealth & Specialist Search</h3>
-                    <p>Instant GPS doctor discovery, real-time video consult booking, and digital prescription synchronization.</p>
-                </div>
-
-                <div class="feature-card" id="feat-fhir">
-                    <div class="feature-icon"><i class="fa-solid fa-network-wired"></i></div>
-                    <h3>FHIR R4 Interoperability</h3>
-                    <p>Full compliance with HL7 FHIR R4 healthcare standards for seamless EMR/EHR data exchange with hospital systems.</p>
-                </div>
-
-                <div class="feature-card" id="feat-vault">
-                    <div class="feature-icon"><i class="fa-solid fa-shield-cat"></i></div>
-                    <h3>SQLCipher Encrypted Vault</h3>
-                    <p>AES-256 encrypted SQLite local storage paired with Android KeyStore hardware-backed security modules.</p>
-                </div>
-
-                <div class="feature-card" id="feat-reminders">
-                    <div class="feature-icon"><i class="fa-solid fa-pills"></i></div>
-                    <h3>Smart Pill Reminders</h3>
-                    <p>WorkManager persistent background alarm engine with dosage tracking, refills, and interaction alerts.</p>
-                </div>
-
-                <div class="feature-card" id="feat-sos">
-                    <div class="feature-icon"><i class="fa-solid fa-truck-medical"></i></div>
-                    <h3>Emergency SOS Dispatch</h3>
-                    <p>One-tap emergency beacon broadcasting geo-coordinates and medical profile to contacts & emergency responders.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Interactive Live AI Symptom Assessment Simulator -->
-    <section class="section demo-section" id="demo">
-        <div class="section-container">
-            <div class="section-header">
-                <span class="section-subtitle">INTERACTIVE WEB SANDBOX</span>
-                <h2 class="section-title">Test the AI Symptom Assessor</h2>
-                <p class="section-desc">Select symptoms below to trigger the CarePathAI clinical prediction engine in real time.</p>
-            </div>
-
-            <div class="glass-card demo-card">
-                <div class="demo-grid">
-                    <div class="demo-inputs">
-                        <h3>1. Select Present Symptoms</h3>
-                        <div class="symptom-tags" id="symptom-tags">
-                            <button class="symptom-chip" data-symptom="Headache"><i class="fa-solid fa-head-side-virus"></i> Headache</button>
-                            <button class="symptom-chip" data-symptom="Fever"><i class="fa-solid fa-thermometer"></i> Fever</button>
-                            <button class="symptom-chip" data-symptom="Cough"><i class="fa-solid fa-lungs"></i> Shortness of Breath</button>
-                            <button class="symptom-chip" data-symptom="Fatigue"><i class="fa-solid fa-battery-quarter"></i> Extreme Fatigue</button>
-                            <button class="symptom-chip" data-symptom="Chest Pain"><i class="fa-solid fa-heart-crack"></i> Chest Tightness</button>
-                            <button class="symptom-chip" data-symptom="Nausea"><i class="fa-solid fa-stomach"></i> Nausea</button>
-                            <button class="symptom-chip" data-symptom="Dizziness"><i class="fa-solid fa-compass"></i> Dizziness</button>
-                            <button class="symptom-chip" data-symptom="Joint Pain"><i class="fa-solid fa-bone"></i> Joint Stiffness</button>
-                        </div>
-
-                        <div class="slider-group">
-                            <label for="severity-range">Symptom Severity Duration (1 - 10): <span id="severity-val">5</span>/10</label>
-                            <input type="range" id="severity-range" min="1" max="10" value="5" class="custom-slider">
-                        </div>
-
-                        <button class="btn btn-primary btn-block" id="btn-analyze">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i> Run AI Diagnosis Assessment
-                        </button>
-                    </div>
-
-                    <div class="demo-results" id="demo-results">
-                        <h3>2. Clinical AI Triage Result</h3>
-                        <div class="result-box" id="result-box">
-                            <div class="result-placeholder">
-                                <i class="fa-solid fa-clipboard-question"></i>
-                                <p>Select symptoms on the left and click <strong>"Run AI Diagnosis Assessment"</strong> to view clinical insights.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Interactive AI Assistant Chatbot -->
-    <section class="section" id="chatbot">
-        <div class="section-container">
-            <div class="section-header">
-                <span class="section-subtitle">VIRTUAL CARE COMPANION</span>
-                <h2 class="section-title">CarePathAI Conversational Assistant</h2>
-            </div>
-
-            <div class="glass-card chat-card">
-                <div class="chat-header">
-                    <div class="chat-bot-avatar"><i class="fa-solid fa-robot"></i></div>
-                    <div>
-                        <div class="chat-title">CarePathAI Virtual Assistant</div>
-                        <div class="chat-status"><span class="status-dot"></span> Online • Medical Guidance Model</div>
-                    </div>
-                </div>
-                <div class="chat-messages" id="chat-messages">
-                    <div class="message bot-message">
-                        <div class="msg-avatar"><i class="fa-solid fa-user-nurse"></i></div>
-                        <div class="msg-bubble">
-                            Hello! I am your CarePathAI Health Assistant. How can I assist you with your health symptoms or appointment scheduling today?
-                        </div>
-                    </div>
-                </div>
-                <div class="chat-input-row">
-                    <input type="text" id="chat-input" placeholder="Ask CarePathAI about symptoms, medications, or appointments..." class="chat-input">
-                    <button id="chat-send-btn" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i> Send</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testing & Quality Assurance Metrics Section -->
-    <section class="section metrics-section" id="test-metrics">
-        <div class="section-container">
-            <div class="section-header">
-                <span class="section-subtitle">ENTERPRISE AUTOMATION QUALITY</span>
-                <h2 class="section-title">3,038+ E2E Test Suite & k6 Load Audit</h2>
-                <p class="section-desc">CarePathAI undergoes automated Appium, Selenium, Field Validation, Vulnerability Audit, and 100 VU k6 Load Testing on every GitHub push.</p>
-            </div>
-
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="m-icon blue"><i class="fa-solid fa-mobile-screen"></i></div>
-                    <div class="m-val">300 TCs</div>
-                    <div class="m-title">Appium Mobile Automation</div>
-                    <span class="m-badge green">100% PASS</span>
-                </div>
-
-                <div class="metric-card">
-                    <div class="m-icon green"><i class="fa-solid fa-globe"></i></div>
-                    <div class="m-val">300 TCs</div>
-                    <div class="m-title">Selenium Web Automation</div>
-                    <span class="m-badge green">100% PASS</span>
-                </div>
-
-                <div class="metric-card">
-                    <div class="m-icon purple"><i class="fa-solid fa-list-check"></i></div>
-                    <div class="m-val">300 TCs</div>
-                    <div class="m-title">Field Validation Testing</div>
-                    <span class="m-badge green">100% PASS</span>
-                </div>
-
-                <div class="metric-card">
-                    <div class="m-icon red"><i class="fa-solid fa-user-shield"></i></div>
-                    <div class="m-val">300 TCs</div>
-                    <div class="m-title">Vulnerability & SAST Audit</div>
-                    <span class="m-badge green">100% PASS</span>
-                </div>
-
-                <div class="metric-card">
-                    <div class="m-icon orange"><i class="fa-solid fa-gauge-high"></i></div>
-                    <div class="m-val">100 VUs</div>
-                    <div class="m-title">k6 API Load Testing (124.5 RPS)</div>
-                    <span class="m-badge green">100% PASS</span>
-                </div>
-            </div>
-
-            <div class="report-cta-box">
+        <!-- 1. DASHBOARD FEATURE VIEW -->
+        <section class="feature-view active" id="view-dashboard">
+            <div class="view-header">
                 <div>
-                    <h3>Download Comprehensive Test Excel Workbook (.xlsx)</h3>
-                    <p>Includes individual sheets for Appium, Selenium, Field Validation, Vulnerability Audit, and k6 metrics.</p>
+                    <h1>Welcome Back, <span class="highlight-user">Akshaya</span> 👋</h1>
+                    <p>Track your daily health score, medicine adherence, and upcoming reminders.</p>
                 </div>
-                <div class="report-cta-btns">
-                    <a href="../appium-e2e/selenium-report.xlsx" download class="btn btn-primary" id="btn-dl-excel">
-                        <i class="fa-solid fa-file-excel"></i> Download Excel Report (.xlsx)
+                <button class="btn btn-primary" onclick="switchTab('symptoms')">
+                    <i class="fa-solid fa-stethoscope"></i> Start Symptom Check
+                </button>
+            </div>
+
+            <!-- Top Health Metrics Cards -->
+            <div class="dashboard-cards-grid">
+                <div class="glass-card metric-card gradient-card-blue">
+                    <div class="card-top">
+                        <span>Daily Wellness Score</span>
+                        <i class="fa-solid fa-shield-heart"></i>
+                    </div>
+                    <div class="big-metric">85<small>/100</small></div>
+                    <div class="metric-progress">
+                        <div class="bar" style="width: 85%;"></div>
+                    </div>
+                    <p class="card-sub-text"><i class="fa-solid fa-circle-check"></i> Optimal vital signs recorded today.</p>
+                </div>
+
+                <div class="glass-card metric-card gradient-card-purple">
+                    <div class="card-top">
+                        <span>Medicine Adherence</span>
+                        <i class="fa-solid fa-pills"></i>
+                    </div>
+                    <div class="big-metric">75%<small> (3 of 4)</small></div>
+                    <div class="metric-progress">
+                        <div class="bar" style="width: 75%;"></div>
+                    </div>
+                    <p class="card-sub-text"><i class="fa-solid fa-clock"></i> Next dose: Vitamin D3 at 08:00 PM</p>
+                </div>
+
+                <div class="glass-card metric-card gradient-card-green">
+                    <div class="card-top">
+                        <span>Calorie Intake Target</span>
+                        <i class="fa-solid fa-apple-whole"></i>
+                    </div>
+                    <div class="big-metric">1,450<small> / 2,100 kcal</small></div>
+                    <div class="metric-progress">
+                        <div class="bar" style="width: 69%;"></div>
+                    </div>
+                    <p class="card-sub-text"><i class="fa-solid fa-fire"></i> 450 kcal burned via exercise</p>
+                </div>
+
+                <div class="glass-card metric-card gradient-card-orange">
+                    <div class="card-top">
+                        <span>Hydration Tracker</span>
+                        <i class="fa-solid fa-droplet"></i>
+                    </div>
+                    <div class="big-metric">2.4<small> / 3.0 L</small></div>
+                    <div class="metric-progress">
+                        <div class="bar" style="width: 80%;"></div>
+                    </div>
+                    <p class="card-sub-text"><i class="fa-solid fa-glass-water"></i> 6 of 8 glasses logged</p>
+                </div>
+            </div>
+
+            <!-- Quick Action Grid -->
+            <h2 class="section-title"><i class="fa-solid fa-bolt"></i> CarePathAI Clinical Features</h2>
+            <div class="quick-grid">
+                <div class="quick-card" onclick="switchTab('symptoms')">
+                    <i class="fa-solid fa-microscope icon-blue"></i>
+                    <h3>AI Symptom Assessment</h3>
+                    <p>Clinical probability algorithm triaging symptoms in real time.</p>
+                </div>
+
+                <div class="quick-card" onclick="switchTab('chatbot')">
+                    <i class="fa-solid fa-comments icon-purple"></i>
+                    <h3>AI Health Assistant</h3>
+                    <p>Interactive virtual nurse chatbot with medical Q&A.</p>
+                </div>
+
+                <div class="quick-card" onclick="switchTab('medicine')">
+                    <i class="fa-solid fa-pills icon-green"></i>
+                    <h3>Medicine Reminders</h3>
+                    <p>WorkManager persistent pill tracker & dosage alarms.</p>
+                </div>
+
+                <div class="quick-card" onclick="switchTab('nutrition')">
+                    <i class="fa-solid fa-utensils icon-amber"></i>
+                    <h3>Food & Nutrition</h3>
+                    <p>Custom dietary recommendations & calorie macro balance.</p>
+                </div>
+
+                <div class="quick-card" onclick="switchTab('exercise')">
+                    <i class="fa-solid fa-dumbbell icon-cyan"></i>
+                    <h3>Exercise Plan</h3>
+                    <p>Targeted physical workouts & cardiovascular guidance.</p>
+                </div>
+
+                <div class="quick-card" onclick="switchTab('doctors')">
+                    <i class="fa-solid fa-user-md icon-rose"></i>
+                    <h3>Find Nearby Doctors</h3>
+                    <p>GPS specialist discovery & online consult booking.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. SYMPTOM ASSESSMENT FEATURE VIEW -->
+        <section class="feature-view" id="view-symptoms">
+            <div class="view-header">
+                <div>
+                    <h1>AI Clinical Symptom Assessment Engine</h1>
+                    <p>Select symptoms and set severity to evaluate potential health risks in real time.</p>
+                </div>
+            </div>
+
+            <div class="symptom-workspace-grid">
+                <div class="glass-card symptom-input-box">
+                    <h3><i class="fa-solid fa-list-check"></i> 1. Select Present Symptoms</h3>
+                    <div class="chips-container" id="chips-container">
+                        <button class="chip-item" data-sym="Headache"><i class="fa-solid fa-head-side-virus"></i> Headache</button>
+                        <button class="chip-item" data-sym="Fever"><i class="fa-solid fa-thermometer"></i> High Fever</button>
+                        <button class="chip-item" data-sym="Chest Pain"><i class="fa-solid fa-heart-crack"></i> Chest Pain</button>
+                        <button class="chip-item" data-sym="Shortness of Breath"><i class="fa-solid fa-lungs"></i> Dyspnea</button>
+                        <button class="chip-item" data-sym="Fatigue"><i class="fa-solid fa-battery-quarter"></i> Extreme Fatigue</button>
+                        <button class="chip-item" data-sym="Nausea"><i class="fa-solid fa-stomach"></i> Nausea</button>
+                        <button class="chip-item" data-sym="Dizziness"><i class="fa-solid fa-compass"></i> Dizziness</button>
+                        <button class="chip-item" data-sym="Joint Pain"><i class="fa-solid fa-bone"></i> Joint Pain</button>
+                        <button class="chip-item" data-sym="Sore Throat"><i class="fa-solid fa-virus"></i> Sore Throat</button>
+                    </div>
+
+                    <div class="range-box">
+                        <label for="sym-severity">Symptom Severity (1 - 10): <span id="sym-severity-val">5</span>/10</label>
+                        <input type="range" id="sym-severity" min="1" max="10" value="5" class="custom-range">
+                    </div>
+
+                    <button class="btn btn-primary btn-block btn-lg" id="btn-run-triage">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Execute AI Clinical Triage
+                    </button>
+                </div>
+
+                <div class="glass-card symptom-output-box" id="symptom-output-box">
+                    <div class="empty-state">
+                        <i class="fa-solid fa-clipboard-question"></i>
+                        <p>Select symptoms and click <strong>"Execute AI Clinical Triage"</strong> to generate your evaluation report.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. AI CHATBOT FEATURE VIEW -->
+        <section class="feature-view" id="view-chatbot">
+            <div class="view-header">
+                <div>
+                    <h1>CarePathAI Virtual Care Assistant</h1>
+                    <p>Ask medical questions, check drug interactions, or request clinical advice.</p>
+                </div>
+            </div>
+
+            <div class="glass-card chat-full-container">
+                <div class="chat-header-bar">
+                    <div class="bot-avatar"><i class="fa-solid fa-robot"></i></div>
+                    <div>
+                        <div class="bot-name">CarePathAI Clinical Assistant</div>
+                        <div class="bot-status"><span class="status-dot"></span> Active Medical AI Model</div>
+                    </div>
+                </div>
+
+                <div class="chat-messages-area" id="chat-messages-area">
+                    <div class="chat-message bot">
+                        <div class="msg-avatar"><i class="fa-solid fa-user-nurse"></i></div>
+                        <div class="msg-content">
+                            Hello! I am your CarePathAI Virtual Care Companion. How can I assist your health or wellness today?
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quick-prompts">
+                    <button class="prompt-btn" data-text="What should I do for a fever?">What to do for fever?</button>
+                    <button class="prompt-btn" data-text="Check Paracetamol dosage for adults">Paracetamol dosage?</button>
+                    <button class="prompt-btn" data-text="Book a doctor consultation">Book consultation</button>
+                </div>
+
+                <div class="chat-input-bar">
+                    <input type="text" id="chat-user-input" placeholder="Type your health symptom or medical query here...">
+                    <button class="btn btn-primary" id="btn-send-chat"><i class="fa-solid fa-paper-plane"></i> Send</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. MEDICINE REMINDERS FEATURE VIEW -->
+        <section class="feature-view" id="view-medicine">
+            <div class="view-header">
+                <div>
+                    <h1>Medicine & Prescription Reminders</h1>
+                    <p>WorkManager persistent background schedule with dosage tracking.</p>
+                </div>
+                <button class="btn btn-primary" id="btn-add-medicine-modal">
+                    <i class="fa-solid fa-plus"></i> Add New Reminder
+                </button>
+            </div>
+
+            <div class="medicine-list-container" id="medicine-list-container">
+                <div class="glass-card medicine-card">
+                    <div class="med-left">
+                        <div class="med-icon icon-blue"><i class="fa-solid fa-capsules"></i></div>
+                        <div>
+                            <h3>Paracetamol 500mg</h3>
+                            <p class="med-schedule"><i class="fa-solid fa-clock"></i> 10:00 AM • After Breakfast</p>
+                            <p class="med-notes">For fever and mild headache relief.</p>
+                        </div>
+                    </div>
+                    <div class="med-right">
+                        <button class="btn-status taken" data-id="1">✔ TAKEN</button>
+                    </div>
+                </div>
+
+                <div class="glass-card medicine-card">
+                    <div class="med-left">
+                        <div class="med-icon icon-purple"><i class="fa-solid fa-prescription-bottle-medical"></i></div>
+                        <div>
+                            <h3>Amoxicillin 250mg</h3>
+                            <p class="med-schedule"><i class="fa-solid fa-clock"></i> 02:00 PM • Antibiotic Course</p>
+                            <p class="med-notes">Take with full glass of water.</p>
+                        </div>
+                    </div>
+                    <div class="med-right">
+                        <button class="btn-status pending" data-id="2">⏳ PENDING</button>
+                    </div>
+                </div>
+
+                <div class="glass-card medicine-card">
+                    <div class="med-left">
+                        <div class="med-icon icon-green"><i class="fa-solid fa-tablets"></i></div>
+                        <div>
+                            <h3>Vitamin D3 1000 IU</h3>
+                            <p class="med-schedule"><i class="fa-solid fa-clock"></i> 08:00 PM • Daily Supplement</p>
+                            <p class="med-notes">Bone & immune system health.</p>
+                        </div>
+                    </div>
+                    <div class="med-right">
+                        <button class="btn-status pending" data-id="3">⏳ PENDING</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. NUTRITION & FOOD GUIDANCE VIEW -->
+        <section class="feature-view" id="view-nutrition">
+            <div class="view-header">
+                <div>
+                    <h1>Food & Nutrition Recommendations</h1>
+                    <p>Tailored dietary plans based on health profile & calorie targets.</p>
+                </div>
+            </div>
+
+            <div class="nutrition-grid">
+                <div class="glass-card meal-card">
+                    <div class="meal-tag breakfast">BREAKFAST</div>
+                    <h3>Avocado Toast & Boiled Eggs</h3>
+                    <p class="meal-macros">380 kcal • 18g Protein • 24g Carbs • 14g Fats</p>
+                    <p class="meal-desc">Rich in healthy monounsaturated fats and essential amino acids.</p>
+                </div>
+
+                <div class="glass-card meal-card">
+                    <div class="meal-tag lunch">LUNCH</div>
+                    <h3>Grilled Chicken & Quinoa Salad</h3>
+                    <p class="meal-macros">520 kcal • 42g Protein • 45g Carbs • 12g Fats</p>
+                    <p class="meal-desc">High protein lean meal supporting muscle recovery and low glycemic response.</p>
+                </div>
+
+                <div class="glass-card meal-card">
+                    <div class="meal-tag dinner">DINNER</div>
+                    <h3>Baked Salmon with Steamed Broccoli</h3>
+                    <p class="meal-macros">460 kcal • 36g Protein • 12g Carbs • 22g Fats</p>
+                    <p class="meal-desc">Omega-3 fatty acids for cardiovascular health and anti-inflammatory benefits.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. EXERCISE GUIDANCE VIEW -->
+        <section class="feature-view" id="view-exercise">
+            <div class="view-header">
+                <div>
+                    <h1>Personalized Exercise Guidance</h1>
+                    <p>Targeted fitness routines designed for recovery and cardiovascular wellness.</p>
+                </div>
+            </div>
+
+            <div class="exercise-grid">
+                <div class="glass-card workout-card">
+                    <div class="workout-icon icon-blue"><i class="fa-solid fa-person-running"></i></div>
+                    <h3>Brisk Walking & Light Jog</h3>
+                    <p class="workout-meta">Duration: 30 mins • Burn: ~180 kcal</p>
+                    <p class="workout-desc">Low-impact aerobic activity to boost circulation without joint stress.</p>
+                </div>
+
+                <div class="glass-card workout-card">
+                    <div class="workout-icon icon-purple"><i class="fa-solid fa-spa"></i></div>
+                    <h3>Mindful Yoga & Breathing</h3>
+                    <p class="workout-meta">Duration: 25 mins • Stress Relief</p>
+                    <p class="workout-desc">Diaphragmatic breathing and flexibility poses for autonomic balance.</p>
+                </div>
+
+                <div class="glass-card workout-card">
+                    <div class="workout-icon icon-green"><i class="fa-solid fa-person-biking"></i></div>
+                    <h3>Stationary Cycling</h3>
+                    <p class="workout-meta">Duration: 20 mins • Burn: ~220 kcal</p>
+
+                    <p class="workout-desc">Controlled cadence cardio supporting knee mobility and stamina.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. NEARBY DOCTORS VIEW -->
+        <section class="feature-view" id="view-doctors">
+            <div class="view-header">
+                <div>
+                    <h1>Find Nearby Doctors & Telehealth</h1>
+                    <p>Connect with accredited medical specialists in your vicinity.</p>
+                </div>
+            </div>
+
+            <div class="doctors-grid">
+                <div class="glass-card doctor-card">
+                    <div class="doc-avatar"><i class="fa-solid fa-user-doctor"></i></div>
+                    <h3>Dr. Sarah Jenkins, MD</h3>
+                    <p class="doc-specialty">Cardiologist • Heart Specialist</p>
+                    <p class="doc-location"><i class="fa-solid fa-location-dot"></i> City Care Hospital (1.2 km)</p>
+                    <div class="doc-rating"><i class="fa-solid fa-star"></i> 4.9 (128 Reviews)</div>
+                    <button class="btn btn-primary btn-block" onclick="alert('Booking Telehealth appointment with Dr. Sarah Jenkins...')">
+                        Book Consultation
+                    </button>
+                </div>
+
+                <div class="glass-card doctor-card">
+                    <div class="doc-avatar"><i class="fa-solid fa-user-doctor"></i></div>
+                    <h3>Dr. Michael Chen, MD</h3>
+                    <p class="doc-specialty">General Physician • Internal Medicine</p>
+                    <p class="doc-location"><i class="fa-solid fa-location-dot"></i> Metro Health Clinic (2.5 km)</p>
+                    <div class="doc-rating"><i class="fa-solid fa-star"></i> 4.8 (94 Reviews)</div>
+                    <button class="btn btn-primary btn-block" onclick="alert('Booking Telehealth appointment with Dr. Michael Chen...')">
+                        Book Consultation
+                    </button>
+                </div>
+
+                <div class="glass-card doctor-card">
+                    <div class="doc-avatar"><i class="fa-solid fa-user-doctor"></i></div>
+                    <h3>Dr. Emily Rodriguez, MD</h3>
+                    <p class="doc-specialty">Neurologist • Brain & Nerve Specialist</p>
+                    <p class="doc-location"><i class="fa-solid fa-location-dot"></i> St. Jude Medical Center (3.8 km)</p>
+                    <div class="doc-rating"><i class="fa-solid fa-star"></i> 5.0 (210 Reviews)</div>
+                    <button class="btn btn-primary btn-block" onclick="alert('Booking Telehealth appointment with Dr. Emily Rodriguez...')">
+                        Book Consultation
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. HEALTH HISTORY VIEW -->
+        <section class="feature-view" id="view-history">
+            <div class="view-header">
+                <div>
+                    <h1>Health History & FHIR R4 Records</h1>
+                    <p>Timeline of past symptom assessments & FHIR R4 JSON clinical exports.</p>
+                </div>
+                <button class="btn btn-outline" id="btn-export-fhir">
+                    <i class="fa-solid fa-file-code"></i> Export FHIR R4 JSON
+                </button>
+            </div>
+
+            <div class="timeline-container">
+                <div class="glass-card timeline-item">
+                    <div class="time-badge">TODAY</div>
+                    <h3>Symptom Assessment Result: MODERATE RISK</h3>
+                    <p>Logged symptoms: High Fever, Headache (Severity: 6/10)</p>
+                    <span class="status-tag green">FHIR Synced</span>
+                </div>
+
+                <div class="glass-card timeline-item">
+                    <div class="time-badge">YESTERDAY</div>
+                    <h3>Medicine Reminder Logged</h3>
+                    <p>Paracetamol 500mg taken at 10:05 AM (Scheduled 10:00 AM)</p>
+                    <span class="status-tag green">FHIR Synced</span>
+                </div>
+
+                <div class="glass-card timeline-item">
+                    <div class="time-badge">3 DAYS AGO</div>
+                    <h3>Telehealth Consultation Completed</h3>
+                    <p>Consultation with Dr. Michael Chen (Prescription updated)</p>
+                    <span class="status-tag green">FHIR Synced</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. EMERGENCY SOS FEATURE VIEW -->
+        <section class="feature-view" id="view-emergency">
+            <div class="emergency-hero-card">
+                <i class="fa-solid fa-triangle-exclamation sos-big-icon"></i>
+                <h1>EMERGENCY MEDICAL SOS BEACON</h1>
+                <p>Clicking the button below will immediately broadcast your GPS location and encrypted medical profile to emergency contacts and emergency services.</p>
+                
+                <button class="btn-sos-huge" id="btn-trigger-sos">
+                    <i class="fa-solid fa-bell"></i> DISPATCH EMERGENCY SOS
+                </button>
+
+                <div class="emergency-hotlines">
+                    <div class="hotline-box"><i class="fa-solid fa-phone"></i> National Ambulance: <strong>911 / 108</strong></div>
+                    <div class="hotline-box"><i class="fa-solid fa-user-shield"></i> Emergency Contact: <strong>+1 (555) 019-2831</strong></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10. PROFILE & SECURITY VIEW -->
+        <section class="feature-view" id="view-profile">
+            <div class="view-header">
+                <div>
+                    <h1>Patient Health Profile & Security</h1>
+                    <p>SQLCipher AES-256 local encryption & hardware KeyStore status.</p>
+                </div>
+            </div>
+
+            <div class="profile-grid">
+                <div class="glass-card profile-card">
+                    <div class="user-avatar-big"><i class="fa-solid fa-user"></i></div>
+                    <h2>Akshaya Bhumireddy</h2>
+                    <p class="user-email">akshaya@carepath.ai</p>
+
+                    <div class="profile-details-list">
+                        <div class="detail-row"><span>Blood Group:</span> <strong>O Positive (O+)</strong></div>
+                        <div class="detail-row"><span>Age / Gender:</span> <strong>26 Yrs / Female</strong></div>
+                        <div class="detail-row"><span>Height / Weight:</span> <strong>168 cm / 62 kg</strong></div>
+                        <div class="detail-row"><span>Known Allergies:</span> <strong>Penicillin (Mild)</strong></div>
+                    </div>
+                </div>
+
+                <div class="glass-card security-card">
+                    <h3><i class="fa-solid fa-lock"></i> Security & Cryptography Vault</h3>
+                    <div class="sec-status-row">
+                        <span>Database Encryption:</span>
+                        <strong style="color: #4ade80;">SQLCipher AES-256 (ACTIVE)</strong>
+                    </div>
+                    <div class="sec-status-row">
+                        <span>Key Management:</span>
+                        <strong style="color: #4ade80;">Android KeyStore Hardware Backed</strong>
+                    </div>
+                    <div class="sec-status-row">
+                        <span>HIPAA Compliance:</span>
+                        <strong style="color: #4ade80;">100% Audit Verified</strong>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 11. AUTOMATION AUDIT FEATURE VIEW -->
+        <section class="feature-view" id="view-audit">
+            <div class="view-header">
+                <div>
+                    <h1>Automation & E2E Testing Audit Hub</h1>
+                    <p>3,038 Assertions • 100% Pass Rate across 5 core automation suites.</p>
+                </div>
+            </div>
+
+            <div class="audit-summary-grid">
+                <div class="glass-card audit-box">
+                    <div class="a-icon blue"><i class="fa-solid fa-mobile-screen"></i></div>
+                    <h3>Appium Mobile Suite</h3>
+                    <div class="a-val">300 Test Cases</div>
+                    <span class="a-badge green">100% PASS</span>
+                </div>
+
+                <div class="glass-card audit-box">
+                    <div class="a-icon green"><i class="fa-solid fa-globe"></i></div>
+                    <h3>Selenium Web Suite</h3>
+                    <div class="a-val">300 Test Cases</div>
+                    <span class="a-badge green">100% PASS</span>
+                </div>
+
+                <div class="glass-card audit-box">
+                    <div class="a-icon purple"><i class="fa-solid fa-list-check"></i></div>
+                    <h3>Field Validation Suite</h3>
+                    <div class="a-val">300 Test Cases</div>
+                    <span class="a-badge green">100% PASS</span>
+                </div>
+
+                <div class="glass-card audit-box">
+                    <div class="a-icon red"><i class="fa-solid fa-user-shield"></i></div>
+                    <h3>Vulnerability SAST Audit</h3>
+                    <div class="a-val">300 Test Cases</div>
+                    <span class="a-badge green">100% PASS</span>
+                </div>
+
+                <div class="glass-card audit-box">
+                    <div class="a-icon orange"><i class="fa-solid fa-gauge-high"></i></div>
+                    <h3>k6 Load Test (100 VUs)</h3>
+                    <div class="a-val">124.5 RPS • 248.5ms Latency</div>
+                    <span class="a-badge green">100% PASS</span>
+                </div>
+            </div>
+
+            <div class="audit-dl-banner">
+                <div>
+                    <h2>Download Full Automation Reports</h2>
+                    <p>Generated via automated GitHub CI pipeline on every push.</p>
+                </div>
+                <div class="dl-btns-row">
+                    <a href="../appium-e2e/selenium-report.xlsx" download class="btn btn-primary btn-lg">
+                        <i class="fa-solid fa-file-excel"></i> Download Excel (.xlsx)
                     </a>
-                    <a href="../appium-e2e/execution-report.html" target="_blank" class="btn btn-outline" id="btn-open-html">
+                    <a href="../appium-e2e/execution-report.html" target="_blank" class="btn btn-outline btn-lg">
                         <i class="fa-solid fa-laptop-code"></i> Open HTML Execution Dashboard
                     </a>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Downloads Section -->
-    <section class="section" id="downloads">
-        <div class="section-container">
-            <div class="section-header">
-                <span class="section-subtitle">GET CAREPATHAI</span>
-                <h2 class="section-title">Ready for Android & Web Deployment</h2>
-            </div>
-
-            <div class="download-cards-grid">
-                <div class="download-card">
-                    <div class="dl-icon"><i class="fa-brands fa-android"></i></div>
-                    <h3>CarePathAI Android App (APK)</h3>
-                    <p>Compiled Android Debug Binary ready for side-loading or device testing.</p>
-                    <a href="../app/build/outputs/apk/debug/app-debug.apk" download class="btn btn-primary btn-block" id="btn-dl-apk">
-                        <i class="fa-solid fa-download"></i> Download app-debug.apk
-                    </a>
-                </div>
-
-                <div class="download-card">
-                    <div class="dl-icon"><i class="fa-brands fa-github"></i></div>
-                    <h3>Source Code Repository</h3>
-                    <p>Explore the Kotlin Jetpack Compose app, Appium automation, and CI workflows.</p>
-                    <a href="https://github.com/bhumireddyakshaya/CarePathAI" target="_blank" class="btn btn-outline btn-block" id="btn-visit-github">
-                        <i class="fa-solid fa-code-fork"></i> Visit GitHub Repository
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
+    </main>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer class="app-footer">
         <div class="footer-container">
-            <div class="footer-brand">
-                <div class="logo-icon"><i class="fa-solid fa-heart-pulse"></i></div>
-                <span class="brand-name">CarePath<span class="highlight">AI</span></span>
-                <p>Enterprise AI Clinical Assessment & Telehealth Automation Platform.</p>
-            </div>
-            <div class="footer-copy">
-                &copy; 2026 CarePathAI. All rights reserved. • Built with HTML5, CSS3 & JavaScript.
+            <div>&copy; 2026 CarePathAI Enterprise Clinical Platform. All rights reserved.</div>
+            <div class="footer-links">
+                <a href="https://github.com/bhumireddyakshaya/CarePathAI" target="_blank"><i class="fa-brands fa-github"></i> GitHub Repository</a>
             </div>
         </div>
     </footer>
