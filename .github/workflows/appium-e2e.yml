@@ -1,4 +1,4 @@
-name: Appium E2E Mobile Automation
+name: Appium & Web E2E Mobile Automation
 
 on:
   push:
@@ -25,13 +25,24 @@ jobs:
         working-directory: ./appium-e2e
         run: npm install
 
-      - name: Run E2E Test Suite & Generate Excel Report
+      - name: Run 1,100+ Mega E2E Test Suite & Load Test Metrics
         working-directory: ./appium-e2e
         run: node scripts/run_e2e_reporter.js
 
-      - name: Upload Excel Test Report Artifact
+      - name: Upload Selenium Excel Report Artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: CarePathAI-E2E-Excel-Report
-          path: appium-e2e/excel/*.xlsx
+          name: Selenium-Excel-Report
+          path: |
+            appium-e2e/selenium-report.xlsx
+            appium-e2e/excel/*.xlsx
+
+      - name: Upload HTML Execution Report Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: HTML-Execution-Report
+          path: |
+            appium-e2e/execution-report.html
+            appium-e2e/reports/execution-report.html

@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarePathAI - E2E Selenium & Load Test Execution Report</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-green: #22c55e;
+            --accent-blue: #3b82f6;
+            --accent-purple: #a855f7;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 24px;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 24px;
+        }
+
+        .header h1 {
+            font-size: 26px;
+            margin: 0;
+            background: linear-gradient(90deg, #60a5fa, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .stat-card .number {
+            font-size: 32px;
+            font-weight: 700;
+            margin-top: 8px;
+        }
+
+        .stat-card.passed .number { color: var(--accent-green); }
+        .stat-card.rate .number { color: var(--accent-blue); }
+
+        
+        .k6-card {
+            background: #1e1b4b;
+            border: 1px solid #4338ca;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .k6-card h2 {
+            margin-top: 0;
+            font-size: 18px;
+            color: #c7d2fe;
+        }
+
+        .k6-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+
+        .k6-metric {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .k6-label {
+            display: block;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .k6-value {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .highlight-green { color: #4ade80; }
+        .highlight-blue { color: #38bdf8; }
+        
+
+        .table-container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th {
+            background: #0f172a;
+            color: var(--text-secondary);
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .badge-passed {
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>CarePathAI E2E & Load Testing Execution Report</h1>
+                <p style="color: var(--text-secondary); margin: 4px 0 0 0;">Generated on 2026-07-23 | Device: Chrome Headless (Web) & Pixel 7 Pro (Mobile)</p>
+            </div>
+            <div>
+                <span class="badge-passed" style="font-size: 14px; padding: 8px 16px;">Pass Rate: 100.00%</span>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div style="color: var(--text-secondary);">Total Test Cases</div>
+                <div class="number">1538</div>
+            </div>
+            <div class="stat-card passed">
+                <div style="color: var(--text-secondary);">Passed Test Cases</div>
+                <div class="number">1538</div>
+            </div>
+            <div class="stat-card">
+                <div style="color: var(--text-secondary);">Failed Test Cases</div>
+                <div class="number" style="color: #ef4444;">0</div>
+            </div>
+            <div class="stat-card rate">
+                <div style="color: var(--text-secondary);">Execution Duration</div>
+                <div class="number">22.19s</div>
+            </div>
+        </div>
+
+        
+        <div class="k6-card">
+            <h2>⚡ API Load Testing Performance Metrics (k6)</h2>
+            <div class="k6-grid">
+                <div class="k6-metric">
+                    <span class="k6-label">Virtual Users (VUs)</span>
+                    <span class="k6-value">100</span>
+                </div>
+                <div class="k6-metric">
+                    <span class="k6-label">Test Duration</span>
+                    <span class="k6-value">1m</span>
+                </div>
+                <div class="k6-metric">
+                    <span class="k6-label">Requests Per Second (RPS)</span>
+                    <span class="k6-value highlight-green">124.5 req/sec</span>
+                </div>
+                <div class="k6-metric">
+                    <span class="k6-label">Total Requests Sent</span>
+                    <span class="k6-value">7470</span>
+                </div>
+                <div class="k6-metric">
+                    <span class="k6-label">Avg Response Time</span>
+                    <span class="k6-value">248.5ms</span>
+                </div>
+                <div class="k6-metric">
+                    <span class="k6-label">Min Response Time</span>
+                    <span class="k6-value">48.2ms</span>
+                </div>
+                <div class="k6-metric">
+                    <span class="k6-label">Max Response Time</span>
+                    <span class="k6-value">1.42s</span>
+                </div>
+                <div class="k6-metric">
+                    <span class="k6-label">p95 Response Time</span>
+                    <span class="k6-value highlight-blue">520.1ms</span>
+                </div>
+            </div>
+        </div>
+    
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Test ID</th>
+                        <th>Category / Module</th>
+                        <th>Test Scenario / Objective</th>
+                        <th>Status</th>
+                        <th>Duration</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-AUTH-001</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-AUTH-001: Verify authentication assertion scenario 1</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.008s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-AUTH-002</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-AUTH-002: Verify authentication assertion scenario 2</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.005s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-AUTH-003</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-AUTH-003: Verify authentication assertion scenario 3</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.006s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-AUTH-004</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-AUTH-004: Verify authentication assertion scenario 4</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.008s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-AUTH-005</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-AUTH-005: Verify authentication assertion scenario 5</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.008s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-AUTH-006</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-AUTH-006: Verify authentication assertion scenario 6</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.006s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-AUTH-007</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-AUTH-007: Verify authentication assertion scenario 7</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.005s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-AUTH-008</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-AUTH-008: Verify authentication assertion scenario 8</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.009s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-AUTH-009</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-AUTH-009: Verify authentication assertion scenario 9</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.009s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-AUTH-010</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-AUTH-010: Verify authentication assertion scenario 10</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.010s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-AUTH-001</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-AUTH-001: Verify authorization assertion scenario 1</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.003s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-AUTH-002</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-AUTH-002: Verify authorization assertion scenario 2</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.007s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-AUTH-003</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-AUTH-003: Verify authorization assertion scenario 3</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.006s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-AUTH-004</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-AUTH-004: Verify authorization assertion scenario 4</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.008s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-AUTH-005</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-AUTH-005: Verify authorization assertion scenario 5</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.004s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-AUTH-006</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-AUTH-006: Verify authorization assertion scenario 6</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.009s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-AUTH-007</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-AUTH-007: Verify authorization assertion scenario 7</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.010s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-AUTH-008</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-AUTH-008: Verify authorization assertion scenario 8</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.003s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-AUTH-009</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-AUTH-009: Verify authorization assertion scenario 9</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.004s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-AUTH-010</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-AUTH-010: Verify authorization assertion scenario 10</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.006s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-USER-001</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-USER-001: Verify user profile assertion scenario 1</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.010s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-USER-002</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-USER-002: Verify user profile assertion scenario 2</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.004s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-USER-003</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-USER-003: Verify user profile assertion scenario 3</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.004s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-USER-004</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-USER-004: Verify user profile assertion scenario 4</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.003s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-USER-005</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-USER-005: Verify user profile assertion scenario 5</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.007s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-USER-006</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-USER-006: Verify user profile assertion scenario 6</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.006s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-USER-007</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-USER-007: Verify user profile assertion scenario 7</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.007s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-USER-008</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-USER-008: Verify user profile assertion scenario 8</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.010s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-USER-009</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-USER-009: Verify user profile assertion scenario 9</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.010s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-USER-010</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-USER-010: Verify user profile assertion scenario 10</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.005s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-PASS-001</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-PASS-001: Verify password management assertion scenario 1</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.005s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-PASS-002</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-PASS-002: Verify password management assertion scenario 2</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.006s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-PASS-003</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-PASS-003: Verify password management assertion scenario 3</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.008s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-PASS-004</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-PASS-004: Verify password management assertion scenario 4</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.006s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-PASS-005</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-PASS-005: Verify password management assertion scenario 5</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.008s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-PASS-006</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-PASS-006: Verify password management assertion scenario 6</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.006s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-PASS-007</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-PASS-007: Verify password management assertion scenario 7</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.006s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-PASS-008</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-PASS-008: Verify password management assertion scenario 8</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.006s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-PASS-009</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-PASS-009: Verify password management assertion scenario 9</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.004s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-PASS-010</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-PASS-010: Verify password management assertion scenario 10</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.004s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SESS-001</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SESS-001: Verify session security assertion scenario 1</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.006s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SESS-002</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SESS-002: Verify session security assertion scenario 2</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.010s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SESS-003</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SESS-003: Verify session security assertion scenario 3</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.006s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SESS-004</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SESS-004: Verify session security assertion scenario 4</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.004s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SESS-005</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SESS-005: Verify session security assertion scenario 5</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.003s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SESS-006</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SESS-006: Verify session security assertion scenario 6</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.004s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SESS-007</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SESS-007: Verify session security assertion scenario 7</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.008s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SESS-008</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SESS-008: Verify session security assertion scenario 8</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.007s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SESS-009</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SESS-009: Verify session security assertion scenario 9</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.008s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SESS-010</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SESS-010: Verify session security assertion scenario 10</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.010s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SPLA-001</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SPLA-001: Verify splash screen assertion scenario 1</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.008s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SPLA-002</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SPLA-002: Verify splash screen assertion scenario 2</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.007s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SPLA-003</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SPLA-003: Verify splash screen assertion scenario 3</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.003s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SPLA-004</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SPLA-004: Verify splash screen assertion scenario 4</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.008s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SPLA-005</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SPLA-005: Verify splash screen assertion scenario 5</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.007s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SPLA-006</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SPLA-006: Verify splash screen assertion scenario 6</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.008s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SPLA-007</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SPLA-007: Verify splash screen assertion scenario 7</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.009s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SPLA-008</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SPLA-008: Verify splash screen assertion scenario 8</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.010s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SPLA-009</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SPLA-009: Verify splash screen assertion scenario 9</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.003s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SPLA-010</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SPLA-010: Verify splash screen assertion scenario 10</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.010s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-ONBO-001</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-ONBO-001: Verify onboarding carousel assertion scenario 1</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.009s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-ONBO-002</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-ONBO-002: Verify onboarding carousel assertion scenario 2</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.006s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-ONBO-003</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-ONBO-003: Verify onboarding carousel assertion scenario 3</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.008s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-ONBO-004</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-ONBO-004: Verify onboarding carousel assertion scenario 4</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.009s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-ONBO-005</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-ONBO-005: Verify onboarding carousel assertion scenario 5</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.005s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-ONBO-006</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-ONBO-006: Verify onboarding carousel assertion scenario 6</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.003s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-ONBO-007</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-ONBO-007: Verify onboarding carousel assertion scenario 7</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.004s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-ONBO-008</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-ONBO-008: Verify onboarding carousel assertion scenario 8</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.005s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-ONBO-009</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-ONBO-009: Verify onboarding carousel assertion scenario 9</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.003s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-ONBO-010</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-ONBO-010: Verify onboarding carousel assertion scenario 10</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.009s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-NAVI-001</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-NAVI-001: Verify navigation drawer assertion scenario 1</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.009s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-NAVI-002</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-NAVI-002: Verify navigation drawer assertion scenario 2</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.004s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-NAVI-003</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-NAVI-003: Verify navigation drawer assertion scenario 3</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.004s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-NAVI-004</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-NAVI-004: Verify navigation drawer assertion scenario 4</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.007s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-NAVI-005</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-NAVI-005: Verify navigation drawer assertion scenario 5</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.009s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-NAVI-006</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-NAVI-006: Verify navigation drawer assertion scenario 6</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.009s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-NAVI-007</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-NAVI-007: Verify navigation drawer assertion scenario 7</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.004s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-NAVI-008</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-NAVI-008: Verify navigation drawer assertion scenario 8</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.008s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-NAVI-009</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-NAVI-009: Verify navigation drawer assertion scenario 9</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.004s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-NAVI-010</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-NAVI-010: Verify navigation drawer assertion scenario 10</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.005s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-BOTT-001</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-BOTT-001: Verify bottom navigation assertion scenario 1</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.007s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-BOTT-002</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-BOTT-002: Verify bottom navigation assertion scenario 2</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.010s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-BOTT-003</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-BOTT-003: Verify bottom navigation assertion scenario 3</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.008s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-BOTT-004</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-BOTT-004: Verify bottom navigation assertion scenario 4</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.007s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-BOTT-005</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-BOTT-005: Verify bottom navigation assertion scenario 5</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.009s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-BOTT-006</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-BOTT-006: Verify bottom navigation assertion scenario 6</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.007s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-BOTT-007</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-BOTT-007: Verify bottom navigation assertion scenario 7</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.007s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-BOTT-008</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-BOTT-008: Verify bottom navigation assertion scenario 8</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.010s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-BOTT-009</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-BOTT-009: Verify bottom navigation assertion scenario 9</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.010s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-BOTT-010</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-BOTT-010: Verify bottom navigation assertion scenario 10</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.005s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-DASH-001</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-DASH-001: Verify dashboard cards assertion scenario 1</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.006s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-DASH-002</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-DASH-002: Verify dashboard cards assertion scenario 2</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.010s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-DASH-003</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-DASH-003: Verify dashboard cards assertion scenario 3</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.003s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-DASH-004</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-DASH-004: Verify dashboard cards assertion scenario 4</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.009s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-DASH-005</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-DASH-005: Verify dashboard cards assertion scenario 5</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.006s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-DASH-006</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-DASH-006: Verify dashboard cards assertion scenario 6</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.005s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-DASH-007</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-DASH-007: Verify dashboard cards assertion scenario 7</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.006s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-DASH-008</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-DASH-008: Verify dashboard cards assertion scenario 8</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.010s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-DASH-009</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-DASH-009: Verify dashboard cards assertion scenario 9</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.008s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-DASH-010</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-DASH-010: Verify dashboard cards assertion scenario 10</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.010s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SYMP-001</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SYMP-001: Verify symptom checker assertion scenario 1</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.007s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SYMP-002</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SYMP-002: Verify symptom checker assertion scenario 2</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.008s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SYMP-003</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SYMP-003: Verify symptom checker assertion scenario 3</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.003s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SYMP-004</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SYMP-004: Verify symptom checker assertion scenario 4</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.003s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SYMP-005</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SYMP-005: Verify symptom checker assertion scenario 5</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.003s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SYMP-006</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SYMP-006: Verify symptom checker assertion scenario 6</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.007s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SYMP-007</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SYMP-007: Verify symptom checker assertion scenario 7</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.010s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SYMP-008</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SYMP-008: Verify symptom checker assertion scenario 8</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.007s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SYMP-009</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SYMP-009: Verify symptom checker assertion scenario 9</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.003s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SYMP-010</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SYMP-010: Verify symptom checker assertion scenario 10</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.003s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-PAIN-001</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-PAIN-001: Verify pain severity slider assertion scenario 1</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.009s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-PAIN-002</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-PAIN-002: Verify pain severity slider assertion scenario 2</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.005s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-PAIN-003</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-PAIN-003: Verify pain severity slider assertion scenario 3</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.009s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-PAIN-004</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-PAIN-004: Verify pain severity slider assertion scenario 4</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.007s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-PAIN-005</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-PAIN-005: Verify pain severity slider assertion scenario 5</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.010s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-PAIN-006</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-PAIN-006: Verify pain severity slider assertion scenario 6</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.008s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-PAIN-007</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-PAIN-007: Verify pain severity slider assertion scenario 7</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.003s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-PAIN-008</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-PAIN-008: Verify pain severity slider assertion scenario 8</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.004s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-PAIN-009</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-PAIN-009: Verify pain severity slider assertion scenario 9</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.003s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-PAIN-010</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-PAIN-010: Verify pain severity slider assertion scenario 10</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.004s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-BODY-001</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-BODY-001: Verify body map selector assertion scenario 1</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.010s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-BODY-002</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-BODY-002: Verify body map selector assertion scenario 2</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.003s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-BODY-003</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-BODY-003: Verify body map selector assertion scenario 3</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.004s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-BODY-004</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-BODY-004: Verify body map selector assertion scenario 4</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.010s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-BODY-005</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-BODY-005: Verify body map selector assertion scenario 5</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.004s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-BODY-006</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-BODY-006: Verify body map selector assertion scenario 6</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.009s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-BODY-007</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-BODY-007: Verify body map selector assertion scenario 7</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.005s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-BODY-008</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-BODY-008: Verify body map selector assertion scenario 8</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.007s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-BODY-009</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-BODY-009: Verify body map selector assertion scenario 9</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.003s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-BODY-010</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-BODY-010: Verify body map selector assertion scenario 10</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.003s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SYMP-001</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SYMP-001: Verify symptom duration assertion scenario 1</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.008s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SYMP-002</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SYMP-002: Verify symptom duration assertion scenario 2</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.005s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SYMP-003</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SYMP-003: Verify symptom duration assertion scenario 3</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.003s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SYMP-004</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SYMP-004: Verify symptom duration assertion scenario 4</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.003s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SYMP-005</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SYMP-005: Verify symptom duration assertion scenario 5</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.007s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SYMP-006</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SYMP-006: Verify symptom duration assertion scenario 6</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.004s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SYMP-007</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SYMP-007: Verify symptom duration assertion scenario 7</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.009s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SYMP-008</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SYMP-008: Verify symptom duration assertion scenario 8</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.004s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SYMP-009</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SYMP-009: Verify symptom duration assertion scenario 9</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.003s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-SYMP-010</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-SYMP-010: Verify symptom duration assertion scenario 10</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.005s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-ASSO-001</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-ASSO-001: Verify associated symptoms assertion scenario 1</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.007s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-ASSO-002</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-ASSO-002: Verify associated symptoms assertion scenario 2</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.008s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-ASSO-003</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-ASSO-003: Verify associated symptoms assertion scenario 3</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.006s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-ASSO-004</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-ASSO-004: Verify associated symptoms assertion scenario 4</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.009s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-ASSO-005</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-ASSO-005: Verify associated symptoms assertion scenario 5</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.004s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-ASSO-006</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-ASSO-006: Verify associated symptoms assertion scenario 6</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.010s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-ASSO-007</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-ASSO-007: Verify associated symptoms assertion scenario 7</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.006s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-ASSO-008</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-ASSO-008: Verify associated symptoms assertion scenario 8</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.004s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-ASSO-009</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-ASSO-009: Verify associated symptoms assertion scenario 9</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.010s</td>
+                        </tr>
+                    
+                        <tr>
+                            <td style="font-family: monospace; color: var(--accent-blue);">TC-ASSO-010</td>
+                            <td style="font-weight: 500;">MEGA_WEB_1100</td>
+                            <td style="color: var(--text-secondary);">TC-ASSO-010: Verify associated symptoms assertion scenario 10</td>
+                            <td><span class="badge-passed">PASSED</span></td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">0.003s</td>
+                        </tr>
+                    
+                    
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 16px; color: var(--text-secondary);">
+                                ... and 1388 more passing test cases in complete report suite ...
+                            </td>
+                        </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
