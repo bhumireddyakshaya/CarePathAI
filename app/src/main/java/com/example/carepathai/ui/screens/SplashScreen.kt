@@ -18,11 +18,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.carepathai.ui.theme.CarePathAITheme
+import com.example.carepathai.ui.viewmodel.SplashViewModel
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen(onNext: () -> Unit) {
+fun SplashScreen(
+    viewModel: SplashViewModel = hiltViewModel(),
+    onNext: (Boolean) -> Unit
+) {
     val scale = remember { Animatable(0f) }
     
     // Use a flag to ensure onNext is only called once
@@ -41,7 +46,7 @@ fun SplashScreen(onNext: () -> Unit) {
         delay(2000L)
         if (!navigateTriggered) {
             navigateTriggered = true
-            onNext()
+            onNext(viewModel.isUserLoggedIn)
         }
     }
 

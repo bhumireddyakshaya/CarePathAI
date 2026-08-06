@@ -38,7 +38,7 @@ fun SymptomAssessmentScreen(onBack: () -> Unit, onAnalyze: (List<String>) -> Uni
         listOf(
             BodyPart("Head", Icons.Default.Face),
             BodyPart("Chest", Icons.Default.Favorite),
-            BodyPart("Abdomen", Icons.Default.Restaurant), // Placeholder icon
+            BodyPart("Abdomen", Icons.Default.Restaurant), 
             BodyPart("Arms", Icons.Default.PanTool),
             BodyPart("Legs", Icons.AutoMirrored.Filled.DirectionsRun)
         )
@@ -54,8 +54,8 @@ fun SymptomAssessmentScreen(onBack: () -> Unit, onAnalyze: (List<String>) -> Uni
         )
     }
 
-    Scaffold(
-        topBar = {
+    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+        Column(modifier = Modifier.fillMaxSize()) {
             TopAppBar(
                 title = { Text("Symptom Assessment") },
                 navigationIcon = {
@@ -64,133 +64,135 @@ fun SymptomAssessmentScreen(onBack: () -> Unit, onAnalyze: (List<String>) -> Uni
                     }
                 }
             )
-        }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(16.dp)
-        ) {
-            LinearProgressIndicator(
-                progress = { step / 3f },
-                modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp)
-            )
 
-            when (step) {
-                1 -> {
-                    Text("Where do you feel discomfort?", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
-                    Spacer(modifier = Modifier.height(16.dp))
-                    
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(2),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        items(bodyParts) { part ->
-                            BodyPartCard(
-                                part = part,
-                                isSelected = selectedBodyPart == part.name,
-                                onClick = { selectedBodyPart = part.name }
-                            )
-                        }
-                    }
-                    
-                    Button(
-                        onClick = { step = 2 },
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
-                        enabled = selectedBodyPart != null
-                    ) {
-                        Text("Next")
-                    }
-                }
-                2 -> {
-                    Text("Select your symptoms", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
-                    Spacer(modifier = Modifier.height(16.dp))
-                    
-                    OutlinedTextField(
-                        value = searchText,
-                        onValueChange = { searchText = it },
-                        modifier = Modifier.fillMaxWidth(),
-                        placeholder = { Text("Search symptoms...") },
-                        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) }
-                    )
-                    
-                    Spacer(modifier = Modifier.height(16.dp))
-                    
-                    LazyColumn(modifier = Modifier.weight(1f)) {
-                        symptomCategories.forEach { (category, symptoms) ->
-                            item {
-                                Text(category, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(vertical = 8.dp))
-                            }
-                            items(symptoms) { symptom ->
-                                SymptomItem(
-                                    name = symptom,
-                                    isSelected = selectedSymptoms.contains(symptom),
-                                    onToggle = {
-                                        if (selectedSymptoms.contains(symptom)) selectedSymptoms.remove(symptom)
-                                        else selectedSymptoms.add(symptom)
-                                    }
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+            ) {
+                LinearProgressIndicator(
+                    progress = { step / 3f },
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp)
+                )
+
+                when (step) {
+                    1 -> {
+                        Text("Where do you feel discomfort?", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                        Spacer(modifier = Modifier.height(16.dp))
+                        
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(2),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            items(bodyParts) { part ->
+                                BodyPartCard(
+                                    part = part,
+                                    isSelected = selectedBodyPart == part.name,
+                                    onClick = { selectedBodyPart = part.name }
                                 )
                             }
                         }
-                    }
-                    
-                    Button(
-                        onClick = { step = 3 },
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
-                        enabled = selectedSymptoms.isNotEmpty()
-                    ) {
-                        Text("Next")
-                    }
-                }
-                3 -> {
-                    Column(modifier = Modifier.weight(1f).verticalScroll(rememberScrollState())) {
-                        Text("Additional Details", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
-                        Spacer(modifier = Modifier.height(24.dp))
                         
-                        Text("Symptom Severity: ${severity.toInt()}")
-                        Slider(
-                            value = severity,
-                            onValueChange = { severity = it },
-                            valueRange = 1f..10f,
-                            steps = 8
-                        )
-                        
+                        Button(
+                            onClick = { step = 2 },
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
+                            enabled = selectedBodyPart != null
+                        ) {
+                            Text("Next")
+                        }
+                    }
+                    2 -> {
+                        Text("Select your symptoms", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.height(16.dp))
                         
                         OutlinedTextField(
-                            value = duration,
-                            onValueChange = { duration = it },
-                            label = { Text("How long have you had these?") },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                        
-                        Spacer(modifier = Modifier.height(16.dp))
-                        
-                        OutlinedTextField(
-                            value = notes,
-                            onValueChange = { notes = it },
-                            label = { Text("Any additional notes?") },
+                            value = searchText,
+                            onValueChange = { searchText = it },
                             modifier = Modifier.fillMaxWidth(),
-                            minLines = 3
+                            placeholder = { Text("Search symptoms...") },
+                            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) }
                         )
+                        
+                        Spacer(modifier = Modifier.height(16.dp))
+                        
+                        LazyColumn(modifier = Modifier.weight(1f)) {
+                            symptomCategories.forEach { (category, symptoms) ->
+                                item {
+                                    Text(category, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(vertical = 8.dp))
+                                }
+                                items(symptoms) { symptom ->
+                                    SymptomItem(
+                                        name = symptom,
+                                        isSelected = selectedSymptoms.contains(symptom),
+                                        onToggle = {
+                                            if (selectedSymptoms.contains(symptom)) selectedSymptoms.remove(symptom)
+                                            else selectedSymptoms.add(symptom)
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                        
+                        Button(
+                            onClick = { step = 3 },
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
+                            enabled = selectedSymptoms.isNotEmpty()
+                        ) {
+                            Text("Next")
+                        }
                     }
-                    
-                    Button(
-                        onClick = { onAnalyze(selectedSymptoms.toList()) },
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp)
-                    ) {
-                        Text("Analyze Symptoms")
+                    3 -> {
+                        Column(modifier = Modifier.weight(1f).verticalScroll(rememberScrollState())) {
+                            Text("Additional Details", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                            Spacer(modifier = Modifier.height(24.dp))
+                            
+                            Text("Symptom Severity: ${severity.toInt()}")
+                            Slider(
+                                value = severity,
+                                onValueChange = { severity = it },
+                                valueRange = 1f..10f,
+                                steps = 8
+                            )
+                            
+                            Spacer(modifier = Modifier.height(16.dp))
+                            
+                            OutlinedTextField(
+                                value = duration,
+                                onValueChange = { duration = it },
+                                label = { Text("How long have you had these?") },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            
+                            Spacer(modifier = Modifier.height(16.dp))
+                            
+                            OutlinedTextField(
+                                value = notes,
+                                onValueChange = { notes = it },
+                                label = { Text("Any additional notes?") },
+                                modifier = Modifier.fillMaxWidth(),
+                                minLines = 3
+                            )
+                        }
+                        
+                        Button(
+                            onClick = { 
+                                if (selectedSymptoms.isNotEmpty()) {
+                                    onAnalyze(selectedSymptoms.toList())
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
+                            enabled = selectedSymptoms.isNotEmpty()
+                        ) {
+                            Text("Analyze Symptoms")
+                        }
                     }
                 }
             }
         }
     }
 }
-
-data class BodyPart(val name: String, val icon: ImageVector)
 
 @Composable
 fun BodyPartCard(part: BodyPart, isSelected: Boolean, onClick: () -> Unit) {
@@ -225,3 +227,5 @@ fun SymptomItem(name: String, isSelected: Boolean, onToggle: () -> Unit) {
         Text(name, modifier = Modifier.padding(start = 8.dp))
     }
 }
+
+data class BodyPart(val name: String, val icon: ImageVector)

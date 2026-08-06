@@ -15,9 +15,15 @@ fun SetupNavGraph(navController: NavHostController) {
         startDestination = Screen.Splash.route
     ) {
         composable(route = Screen.Splash.route) {
-            SplashScreen(onNext = {
-                navController.navigate(Screen.Onboarding.route) {
-                    popUpTo(Screen.Splash.route) { inclusive = true }
+            SplashScreen(onNext = { isLoggedIn ->
+                if (isLoggedIn) {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Splash.route) { inclusive = true }
+                    }
+                } else {
+                    navController.navigate(Screen.Onboarding.route) {
+                        popUpTo(Screen.Splash.route) { inclusive = true }
+                    }
                 }
             })
         }
@@ -91,12 +97,6 @@ fun SetupNavGraph(navController: NavHostController) {
         }
         composable(route = Screen.AIChatbot.route) {
             AIChatbotScreen(onBack = { navController.popBackStack() })
-        }
-        composable(route = Screen.WellnessTracker.route) {
-            WellnessTrackerScreen(
-                onFoodRecommendationClick = { navController.navigate(Screen.FoodRecommendations.route) },
-                onExerciseRecommendationClick = { navController.navigate(Screen.ExerciseRecommendations.route) }
-            )
         }
     }
 }

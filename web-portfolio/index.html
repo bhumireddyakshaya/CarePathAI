@@ -3,580 +3,432 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CarePathAI - Enterprise Web App & Clinical Platform</title>
-    <meta name="description" content="CarePathAI is an enterprise health & clinical app with AI symptom analysis, medicine reminders, food/exercise guidance, telehealth, and FHIR R4 interoperability.">
-    <!-- Google Fonts -->
+    <title>CarePathAI - Health & Wellness</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- FontAwesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <link rel="stylesheet" href="styles.css?v=6">
 </head>
 <body>
 
-    <!-- Top Navigation Header -->
-    <header class="app-header">
-        <div class="header-container">
-            <div class="brand">
-                <div class="logo-icon"><i class="fa-solid fa-heart-pulse"></i></div>
-                <span class="brand-title">CarePath<span class="highlight">AI</span></span>
-                <span class="version-tag">v2.0 Web Edition</span>
-            </div>
+    <div class="app-shell">
+        <!-- Main Scrollable Content -->
+        <div class="app-content">
 
-            <nav class="main-nav" id="main-nav">
-                <button class="nav-btn active" data-tab="dashboard"><i class="fa-solid fa-chart-line"></i> Dashboard</button>
-                <button class="nav-btn" data-tab="symptoms"><i class="fa-solid fa-stethoscope"></i> Symptom AI</button>
-                <button class="nav-btn" data-tab="chatbot"><i class="fa-solid fa-robot"></i> AI Chatbot</button>
-                <button class="nav-btn" data-tab="medicine"><i class="fa-solid fa-pills"></i> Reminders</button>
-                <button class="nav-btn" data-tab="nutrition"><i class="fa-solid fa-utensils"></i> Nutrition</button>
-                <button class="nav-btn" data-tab="exercise"><i class="fa-solid fa-dumbbell"></i> Exercise</button>
-                <button class="nav-btn" data-tab="doctors"><i class="fa-solid fa-user-md"></i> Doctors</button>
-                <button class="nav-btn" data-tab="history"><i class="fa-solid fa-clock-rotate-left"></i> History</button>
-                <button class="nav-btn nav-emergency" data-tab="emergency"><i class="fa-solid fa-truck-medical"></i> SOS</button>
-                <button class="nav-btn" data-tab="profile"><i class="fa-solid fa-user-circle"></i> Profile</button>
-                <button class="nav-btn nav-audit" data-tab="audit"><i class="fa-solid fa-vial-circle-check"></i> Audit</button>
-            </nav>
-
-            <div class="header-actions">
-                <a href="../app/build/outputs/apk/debug/app-debug.apk" download class="btn btn-primary" id="btn-apk-dl">
-                    <i class="fa-solid fa-download"></i> Android APK
-                </a>
-                <a href="../appium-e2e/selenium-report.xlsx" download class="btn btn-outline" id="btn-excel-dl">
-                    <i class="fa-solid fa-file-excel"></i> Excel Report
-                </a>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Content Container (Feature Views) -->
-    <main class="app-main-container">
-
-        <!-- 1. DASHBOARD FEATURE VIEW -->
-        <section class="feature-view active" id="view-dashboard">
-            <div class="view-header">
-                <div>
-                    <h1>Welcome Back, <span class="highlight-user">Akshaya</span> 👋</h1>
-                    <p>Track your daily health score, medicine adherence, and upcoming reminders.</p>
-                </div>
-                <button class="btn btn-primary" onclick="switchTab('symptoms')">
-                    <i class="fa-solid fa-stethoscope"></i> Start Symptom Check
-                </button>
-            </div>
-
-            <!-- Top Health Metrics Cards -->
-            <div class="dashboard-cards-grid">
-                <div class="glass-card metric-card gradient-card-blue">
-                    <div class="card-top">
-                        <span>Daily Wellness Score</span>
-                        <i class="fa-solid fa-shield-heart"></i>
-                    </div>
-                    <div class="big-metric">85<small>/100</small></div>
-                    <div class="metric-progress">
-                        <div class="bar" style="width: 85%;"></div>
-                    </div>
-                    <p class="card-sub-text"><i class="fa-solid fa-circle-check"></i> Optimal vital signs recorded today.</p>
+            <!-- HOME TAB -->
+            <section class="tab-view active" id="view-home">
+                <div class="home-header">
+                    <h1>Welcome Back!</h1>
+                    <p>Track your health and wellness today.</p>
                 </div>
 
-                <div class="glass-card metric-card gradient-card-purple">
-                    <div class="card-top">
-                        <span>Medicine Adherence</span>
-                        <i class="fa-solid fa-pills"></i>
-                    </div>
-                    <div class="big-metric">75%<small> (3 of 4)</small></div>
-                    <div class="metric-progress">
-                        <div class="bar" style="width: 75%;"></div>
-                    </div>
-                    <p class="card-sub-text"><i class="fa-solid fa-clock"></i> Next dose: Vitamin D3 at 08:00 PM</p>
-                </div>
-
-                <div class="glass-card metric-card gradient-card-green">
-                    <div class="card-top">
-                        <span>Calorie Intake Target</span>
-                        <i class="fa-solid fa-apple-whole"></i>
-                    </div>
-                    <div class="big-metric">1,450<small> / 2,100 kcal</small></div>
-                    <div class="metric-progress">
-                        <div class="bar" style="width: 69%;"></div>
-                    </div>
-                    <p class="card-sub-text"><i class="fa-solid fa-fire"></i> 450 kcal burned via exercise</p>
-                </div>
-
-                <div class="glass-card metric-card gradient-card-orange">
-                    <div class="card-top">
-                        <span>Hydration Tracker</span>
-                        <i class="fa-solid fa-droplet"></i>
-                    </div>
-                    <div class="big-metric">2.4<small> / 3.0 L</small></div>
-                    <div class="metric-progress">
-                        <div class="bar" style="width: 80%;"></div>
-                    </div>
-                    <p class="card-sub-text"><i class="fa-solid fa-glass-water"></i> 6 of 8 glasses logged</p>
-                </div>
-            </div>
-
-            <!-- Quick Action Grid -->
-            <h2 class="section-title"><i class="fa-solid fa-bolt"></i> CarePathAI Clinical Features</h2>
-            <div class="quick-grid">
-                <div class="quick-card" onclick="switchTab('symptoms')">
-                    <i class="fa-solid fa-microscope icon-blue"></i>
-                    <h3>AI Symptom Assessment</h3>
-                    <p>Clinical probability algorithm triaging symptoms in real time.</p>
-                </div>
-
-                <div class="quick-card" onclick="switchTab('chatbot')">
-                    <i class="fa-solid fa-comments icon-purple"></i>
-                    <h3>AI Health Assistant</h3>
-                    <p>Interactive virtual nurse chatbot with medical Q&A.</p>
-                </div>
-
-                <div class="quick-card" onclick="switchTab('medicine')">
-                    <i class="fa-solid fa-pills icon-green"></i>
-                    <h3>Medicine Reminders</h3>
-                    <p>WorkManager persistent pill tracker & dosage alarms.</p>
-                </div>
-
-                <div class="quick-card" onclick="switchTab('nutrition')">
-                    <i class="fa-solid fa-utensils icon-amber"></i>
-                    <h3>Food & Nutrition</h3>
-                    <p>Custom dietary recommendations & calorie macro balance.</p>
-                </div>
-
-                <div class="quick-card" onclick="switchTab('exercise')">
-                    <i class="fa-solid fa-dumbbell icon-cyan"></i>
-                    <h3>Exercise Plan</h3>
-                    <p>Targeted physical workouts & cardiovascular guidance.</p>
-                </div>
-
-                <div class="quick-card" onclick="switchTab('doctors')">
-                    <i class="fa-solid fa-user-md icon-rose"></i>
-                    <h3>Find Nearby Doctors</h3>
-                    <p>GPS specialist discovery & online consult booking.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- 2. SYMPTOM ASSESSMENT FEATURE VIEW -->
-        <section class="feature-view" id="view-symptoms">
-            <div class="view-header">
-                <div>
-                    <h1>AI Clinical Symptom Assessment Engine</h1>
-                    <p>Select symptoms and set severity to evaluate potential health risks in real time.</p>
-                </div>
-            </div>
-
-            <div class="symptom-workspace-grid">
-                <div class="glass-card symptom-input-box">
-                    <h3><i class="fa-solid fa-list-check"></i> 1. Select Present Symptoms</h3>
-                    <div class="chips-container" id="chips-container">
-                        <button class="chip-item" data-sym="Headache"><i class="fa-solid fa-head-side-virus"></i> Headache</button>
-                        <button class="chip-item" data-sym="Fever"><i class="fa-solid fa-thermometer"></i> High Fever</button>
-                        <button class="chip-item" data-sym="Chest Pain"><i class="fa-solid fa-heart-crack"></i> Chest Pain</button>
-                        <button class="chip-item" data-sym="Shortness of Breath"><i class="fa-solid fa-lungs"></i> Dyspnea</button>
-                        <button class="chip-item" data-sym="Fatigue"><i class="fa-solid fa-battery-quarter"></i> Extreme Fatigue</button>
-                        <button class="chip-item" data-sym="Nausea"><i class="fa-solid fa-stomach"></i> Nausea</button>
-                        <button class="chip-item" data-sym="Dizziness"><i class="fa-solid fa-compass"></i> Dizziness</button>
-                        <button class="chip-item" data-sym="Joint Pain"><i class="fa-solid fa-bone"></i> Joint Pain</button>
-                        <button class="chip-item" data-sym="Sore Throat"><i class="fa-solid fa-virus"></i> Sore Throat</button>
+                <div class="dashboard-grid">
+                    <!-- Wellness Card -->
+                    <div class="card wellness-card">
+                        <div class="card-body">
+                            <span class="card-label">Daily Wellness Score</span>
+                            <div class="score-display">85<small>/100</small></div>
+                            <p>You're doing great! Keep it up.</p>
+                        </div>
                     </div>
 
-                    <div class="range-box">
-                        <label for="sym-severity">Symptom Severity (1 - 10): <span id="sym-severity-val">5</span>/10</label>
-                        <input type="range" id="sym-severity" min="1" max="10" value="5" class="custom-range">
+                    <!-- Adherence Card -->
+                    <div class="card adherence-card" onclick="switchTab('medicine')">
+                        <div class="card-body row">
+                            <div class="progress-circle">
+                                <svg viewBox="0 0 36 36" class="circular-chart">
+                                    <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                    <path class="circle" stroke-dasharray="75, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                </svg>
+                            </div>
+                            <div class="adherence-info">
+                                <h3>Medicine Adherence</h3>
+                                <p>3 of 4 doses taken today</p>
+                            </div>
+                        </div>
                     </div>
-
-                    <button class="btn btn-primary btn-block btn-lg" id="btn-run-triage">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i> Execute AI Clinical Triage
-                    </button>
                 </div>
 
-                <div class="glass-card symptom-output-box" id="symptom-output-box">
-                    <div class="empty-state">
-                        <i class="fa-solid fa-clipboard-question"></i>
-                        <p>Select symptoms and click <strong>"Execute AI Clinical Triage"</strong> to generate your evaluation report.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 3. AI CHATBOT FEATURE VIEW -->
-        <section class="feature-view" id="view-chatbot">
-            <div class="view-header">
-                <div>
-                    <h1>CarePathAI Virtual Care Assistant</h1>
-                    <p>Ask medical questions, check drug interactions, or request clinical advice.</p>
-                </div>
-            </div>
-
-            <div class="glass-card chat-full-container">
-                <div class="chat-header-bar">
-                    <div class="bot-avatar"><i class="fa-solid fa-robot"></i></div>
+                <div class="dashboard-grid">
                     <div>
-                        <div class="bot-name">CarePathAI Clinical Assistant</div>
-                        <div class="bot-status"><span class="status-dot"></span> Active Medical AI Model</div>
-                    </div>
-                </div>
+                        <h2 class="section-title">Upcoming Reminders</h2>
+                        <div class="card reminder-card">
+                            <div class="card-body row">
+                                <i class="fa-solid fa-pills reminder-icon"></i>
+                                <div class="reminder-info">
+                                    <h3>Medicine Reminder</h3>
+                                    <p>Paracetamol - 10:00 AM</p>
+                                </div>
+                            </div>
+                        </div>
 
-                <div class="chat-messages-area" id="chat-messages-area">
-                    <div class="chat-message bot">
-                        <div class="msg-avatar"><i class="fa-solid fa-user-nurse"></i></div>
-                        <div class="msg-content">
-                            Hello! I am your CarePathAI Virtual Care Companion. How can I assist your health or wellness today?
+                        <button class="btn-emergency" id="btn-sos">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            Emergency Support
+                        </button>
+                    </div>
+
+                    <div>
+                        <h2 class="section-title">Quick Insights</h2>
+                        <div class="quick-insights-grid">
+                            <div class="insight-item" onclick="switchTab('assessment')">
+                                <i class="fa-solid fa-microscope"></i>
+                                <span>Symptom Analysis</span>
+                            </div>
+                            <div class="insight-item" onclick="switchTab('nutrition')">
+                                <i class="fa-solid fa-utensils"></i>
+                                <span>Recommended Food</span>
+                            </div>
+                            <div class="insight-item" onclick="switchTab('exercise')">
+                                <i class="fa-solid fa-dumbbell"></i>
+                                <span>Exercise Plan</span>
+                            </div>
+                            <div class="insight-item" onclick="switchTab('history')">
+                                <i class="fa-solid fa-clock-rotate-left"></i>
+                                <span>Health History</span>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </section>
 
-                <div class="quick-prompts">
-                    <button class="prompt-btn" data-text="What should I do for a fever?">What to do for fever?</button>
-                    <button class="prompt-btn" data-text="Check Paracetamol dosage for adults">Paracetamol dosage?</button>
-                    <button class="prompt-btn" data-text="Book a doctor consultation">Book consultation</button>
+            <!-- ASSESSMENT TAB -->
+            <section class="tab-view" id="view-assessment">
+                <div class="top-app-bar">
+                    <button class="icon-btn" onclick="switchTab('home')"><i class="fa-solid fa-arrow-left"></i></button>
+                    <h2>Symptom Assessment</h2>
                 </div>
 
-                <div class="chat-input-bar">
-                    <input type="text" id="chat-user-input" placeholder="Type your health symptom or medical query here...">
-                    <button class="btn btn-primary" id="btn-send-chat"><i class="fa-solid fa-paper-plane"></i> Send</button>
-                </div>
-            </div>
-        </section>
+                <div class="assessment-container">
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="assessment-progress" style="width: 33%;"></div>
+                    </div>
 
-        <!-- 4. MEDICINE REMINDERS FEATURE VIEW -->
-        <section class="feature-view" id="view-medicine">
-            <div class="view-header">
-                <div>
-                    <h1>Medicine & Prescription Reminders</h1>
-                    <p>WorkManager persistent background schedule with dosage tracking.</p>
-                </div>
-                <button class="btn btn-primary" id="btn-add-medicine-modal">
-                    <i class="fa-solid fa-plus"></i> Add New Reminder
-                </button>
-            </div>
+                    <div id="assessment-steps">
+                        <!-- Step 1: Body Part -->
+                        <div class="step active" id="step-1">
+                            <h3>Where do you feel discomfort?</h3>
+                            <div class="body-parts-grid">
+                                <div class="body-part-card" data-part="Head"><i class="fa-solid fa-face-smile"></i><span>Head</span></div>
+                                <div class="body-part-card" data-part="Chest"><i class="fa-solid fa-heart"></i><span>Chest</span></div>
+                                <div class="body-part-card" data-part="Abdomen"><i class="fa-solid fa-utensils"></i><span>Abdomen</span></div>
+                                <div class="body-part-card" data-part="Arms"><i class="fa-solid fa-hand"></i><span>Arms</span></div>
+                                <div class="body-part-card" data-part="Legs"><i class="fa-solid fa-person-running"></i><span>Legs</span></div>
+                            </div>
+                            <button class="btn btn-primary btn-block" disabled id="next-1">Next</button>
+                        </div>
 
-            <div class="medicine-list-container" id="medicine-list-container">
-                <div class="glass-card medicine-card">
-                    <div class="med-left">
-                        <div class="med-icon icon-blue"><i class="fa-solid fa-capsules"></i></div>
-                        <div>
-                            <h3>Paracetamol 500mg</h3>
-                            <p class="med-schedule"><i class="fa-solid fa-clock"></i> 10:00 AM • After Breakfast</p>
-                            <p class="med-notes">For fever and mild headache relief.</p>
+                        <!-- Step 2: Symptom Selection -->
+                        <div class="step" id="step-2">
+                            <h3>Select your symptoms</h3>
+                            <div class="search-box">
+                                <i class="fa-solid fa-search"></i>
+                                <input type="text" placeholder="Search symptoms...">
+                            </div>
+                            <div class="symptoms-list">
+                                <div class="category-label">General</div>
+                                <div class="symptom-check-item"><input type="checkbox" id="sym-fever"><label for="sym-fever">Fever</label></div>
+                                <div class="symptom-check-item"><input type="checkbox" id="sym-headache"><label for="sym-fever">Headache</label></div>
+                                <div class="symptom-check-item"><input type="checkbox" id="sym-fatigue"><label for="sym-fever">Fatigue</label></div>
+                                <div class="category-label">Cardiovascular</div>
+                                <div class="symptom-check-item"><input type="checkbox" id="sym-chestpain"><label for="sym-fever">Chest Pain</label></div>
+                                <div class="symptom-check-item"><input type="checkbox" id="sym-palpitations"><label for="sym-fever">Palpitations</label></div>
+                            </div>
+                            <button class="btn btn-primary btn-block" id="next-2">Next</button>
+                        </div>
+
+                        <!-- Step 3: Analysis Result (BLACK THEME) -->
+                        <div class="step dark-mode" id="step-3">
+                            <div class="analysis-result-content" id="analysis-result">
+                                <div class="loading-spinner">
+                                    <div class="spinner"></div>
+                                    <p>AI is analyzing your symptoms...</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="med-right">
-                        <button class="btn-status taken" data-id="1">✔ TAKEN</button>
+                </div>
+            </section>
+
+            <!-- HISTORY TAB -->
+            <section class="tab-view" id="view-history">
+                <div class="top-app-bar">
+                    <h2>Health History</h2>
+                </div>
+                <div class="history-container">
+                    <div class="search-box">
+                        <i class="fa-solid fa-search"></i>
+                        <input type="text" id="history-search" placeholder="Search history...">
+                    </div>
+                    <div id="history-list">
+                        <!-- History items injected via JS -->
+                        <div class="empty-msg">No history records found.</div>
                     </div>
                 </div>
+            </section>
 
-                <div class="glass-card medicine-card">
-                    <div class="med-left">
-                        <div class="med-icon icon-purple"><i class="fa-solid fa-prescription-bottle-medical"></i></div>
-                        <div>
-                            <h3>Amoxicillin 250mg</h3>
-                            <p class="med-schedule"><i class="fa-solid fa-clock"></i> 02:00 PM • Antibiotic Course</p>
-                            <p class="med-notes">Take with full glass of water.</p>
+            <!-- PROFILE TAB -->
+            <section class="tab-view" id="view-profile">
+                <div class="top-app-bar">
+                    <h2>Profile</h2>
+                    <button class="icon-btn edit-toggle" id="btn-edit-profile"><i class="fa-solid fa-pen"></i></button>
+                </div>
+                <div class="profile-container">
+                    <div class="profile-header">
+                        <div class="avatar-circle"><i class="fa-solid fa-user"></i></div>
+                        <h2 id="disp-name">Akshaya Bhumireddy</h2>
+                        <p id="disp-email">akshaya@carepath.ai</p>
+                    </div>
+
+                    <div class="info-group">
+                        <h3>Personal Information</h3>
+                        <div class="info-card">
+                            <div class="info-row">
+                                <i class="fa-solid fa-phone"></i>
+                                <div class="info-val">
+                                    <label>Mobile</label>
+                                    <span id="val-mobile">8008487667</span>
+                                    <input type="text" id="edit-mobile" value="8008487667" style="display:none">
+                                </div>
+                            </div>
+                            <div class="info-row">
+                                <i class="fa-solid fa-cake-candles"></i>
+                                <div class="info-val">
+                                    <label>Age</label>
+                                    <span id="val-age">24</span>
+                                    <input type="number" id="edit-age" value="24" style="display:none">
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="med-right">
-                        <button class="btn-status pending" data-id="2">⏳ PENDING</button>
-                    </div>
-                </div>
 
-                <div class="glass-card medicine-card">
-                    <div class="med-left">
-                        <div class="med-icon icon-green"><i class="fa-solid fa-tablets"></i></div>
-                        <div>
-                            <h3>Vitamin D3 1000 IU</h3>
-                            <p class="med-schedule"><i class="fa-solid fa-clock"></i> 08:00 PM • Daily Supplement</p>
-                            <p class="med-notes">Bone & immune system health.</p>
+                    <div class="info-group">
+                        <h3>Health Information</h3>
+                        <div class="info-card">
+                            <div class="info-row">
+                                <i class="fa-solid fa-droplet"></i>
+                                <div class="info-val">
+                                    <label>Blood Group</label>
+                                    <span id="val-blood">O+</span>
+                                    <input type="text" id="edit-blood" value="O+" style="display:none">
+                                </div>
+                            </div>
+                            <div class="info-row">
+                                <i class="fa-solid fa-ruler-vertical"></i>
+                                <div class="info-val">
+                                    <label>Height (cm)</label>
+                                    <span id="val-height">165</span>
+                                    <input type="text" id="edit-height" value="165" style="display:none">
+                                </div>
+                            </div>
+                            <div class="info-row">
+                                <i class="fa-solid fa-weight-hanging"></i>
+                                <div class="info-val">
+                                    <label>Weight (kg)</label>
+                                    <span id="val-weight">58</span>
+                                    <input type="text" id="edit-weight" value="58" style="display:none">
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="med-right">
-                        <button class="btn-status pending" data-id="3">⏳ PENDING</button>
+
+                    <button class="btn-logout" id="btn-logout" onclick="handleLogout()">Logout</button>
+                </div>
+            </section>
+
+            <!-- LOGIN / AUTHENTICATION TAB VIEW -->
+            <section class="tab-view" id="view-login">
+                <div class="login-container">
+                    <div class="login-card">
+                        <div class="login-header">
+                            <i class="fa-solid fa-user-doctor login-logo"></i>
+                            <h2 id="auth-title">Welcome Back</h2>
+                            <p id="auth-subtitle">Sign in or create an account to access CarePathAI</p>
+                        </div>
+
+                        <!-- Auth Mode Selector Tabs -->
+                        <div class="auth-tabs">
+                            <button type="button" class="auth-tab active" id="tab-signin" onclick="toggleAuthMode('signin')">Sign In</button>
+                            <button type="button" class="auth-tab" id="tab-signup" onclick="toggleAuthMode('signup')">Sign Up</button>
+                        </div>
+
+                        <!-- Sign In Form -->
+                        <form id="login-form" onsubmit="event.preventDefault(); handleLogin();">
+                            <div class="form-group">
+                                <label><i class="fa-solid fa-envelope"></i> Email Address</label>
+                                <input type="email" id="login-email" placeholder="name@example.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fa-solid fa-lock"></i> Password</label>
+                                <input type="password" id="login-password" placeholder="Enter your password" required>
+                            </div>
+                            <button type="submit" class="btn-primary btn-block login-btn">Sign In</button>
+                        </form>
+
+                        <!-- Sign Up Form -->
+                        <form id="signup-form" style="display:none;" onsubmit="event.preventDefault(); handleSignUp();">
+                            <div class="form-group">
+                                <label><i class="fa-solid fa-user"></i> Full Name</label>
+                                <input type="text" id="signup-name" placeholder="Enter your full name" required>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fa-solid fa-envelope"></i> Email Address</label>
+                                <input type="email" id="signup-email" placeholder="name@example.com" required>
+                            </div>
+                            <div class="form-grid-2">
+                                <div class="form-group">
+                                    <label><i class="fa-solid fa-phone"></i> Mobile</label>
+                                    <input type="text" id="signup-mobile" placeholder="Mobile Number">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fa-solid fa-cake-candles"></i> Age</label>
+                                    <input type="number" id="signup-age" placeholder="Age" min="1" max="120">
+                                </div>
+                            </div>
+                            <div class="form-grid-3">
+                                <div class="form-group">
+                                    <label><i class="fa-solid fa-droplet"></i> Blood</label>
+                                    <input type="text" id="signup-blood" placeholder="e.g. O+">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fa-solid fa-ruler-vertical"></i> Height</label>
+                                    <input type="text" id="signup-height" placeholder="cm">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fa-solid fa-weight-hanging"></i> Weight</label>
+                                    <input type="text" id="signup-weight" placeholder="kg">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fa-solid fa-lock"></i> Password</label>
+                                <input type="password" id="signup-password" placeholder="Create a password" required>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fa-solid fa-shield-halved"></i> Confirm Password</label>
+                                <input type="password" id="signup-confirm-password" placeholder="Confirm your password" required>
+                            </div>
+                            <button type="submit" class="btn-primary btn-block login-btn">Create Account</button>
+                        </form>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- 5. NUTRITION & FOOD GUIDANCE VIEW -->
-        <section class="feature-view" id="view-nutrition">
-            <div class="view-header">
-                <div>
-                    <h1>Food & Nutrition Recommendations</h1>
-                    <p>Tailored dietary plans based on health profile & calorie targets.</p>
+            <!-- SUB VIEWS (DIET/EXERCISE) - BLACK THEME -->
+            <section class="tab-view dark-mode" id="view-nutrition">
+                <div class="top-app-bar">
+                    <button class="icon-btn" onclick="switchTab('home')"><i class="fa-solid fa-arrow-left"></i></button>
+                    <h2>Nutrition AI</h2>
                 </div>
-            </div>
-
-            <div class="nutrition-grid">
-                <div class="glass-card meal-card">
-                    <div class="meal-tag breakfast">BREAKFAST</div>
-                    <h3>Avocado Toast & Boiled Eggs</h3>
-                    <p class="meal-macros">380 kcal • 18g Protein • 24g Carbs • 14g Fats</p>
-                    <p class="meal-desc">Rich in healthy monounsaturated fats and essential amino acids.</p>
+                <div class="sub-view-content">
+                    <div class="dark-card">
+                        <h3>Daily Nutrition Insight</h3>
+                        <p>“Boost your immunity with Vitamin C-rich foods today.”</p>
+                    </div>
+                    <div class="meal-list">
+                        <div class="dark-card"><span>BREAKFAST</span><h4>Oatmeal with Almonds</h4><p>320 kcal | 8g Protein</p></div>
+                        <div class="dark-card"><span>LUNCH</span><h4>Quinoa Salad</h4><p>450 kcal | 15g Protein</p></div>
+                    </div>
                 </div>
+            </section>
 
-                <div class="glass-card meal-card">
-                    <div class="meal-tag lunch">LUNCH</div>
-                    <h3>Grilled Chicken & Quinoa Salad</h3>
-                    <p class="meal-macros">520 kcal • 42g Protein • 45g Carbs • 12g Fats</p>
-                    <p class="meal-desc">High protein lean meal supporting muscle recovery and low glycemic response.</p>
+            <section class="tab-view dark-mode" id="view-exercise">
+                <div class="top-app-bar">
+                    <button class="icon-btn" onclick="switchTab('home')"><i class="fa-solid fa-arrow-left"></i></button>
+                    <h2>Exercise Plan</h2>
                 </div>
-
-                <div class="glass-card meal-card">
-                    <div class="meal-tag dinner">DINNER</div>
-                    <h3>Baked Salmon with Steamed Broccoli</h3>
-                    <p class="meal-macros">460 kcal • 36g Protein • 12g Carbs • 22g Fats</p>
-                    <p class="meal-desc">Omega-3 fatty acids for cardiovascular health and anti-inflammatory benefits.</p>
+                <div class="sub-view-content">
+                    <div class="dark-card">
+                        <h3>AI Wellness Insight</h3>
+                        <p>“Light movements and breathing exercises will help reduce fatigue.”</p>
+                    </div>
+                    <div class="exercise-list">
+                        <div class="dark-card"><h4>Deep Breathing</h4><p>5 mins • Low Intensity</p></div>
+                        <div class="dark-card"><h4>Brisk Walking</h4><p>20 mins • Medium Intensity</p></div>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- 6. EXERCISE GUIDANCE VIEW -->
-        <section class="feature-view" id="view-exercise">
-            <div class="view-header">
-                <div>
-                    <h1>Personalized Exercise Guidance</h1>
-                    <p>Targeted fitness routines designed for recovery and cardiovascular wellness.</p>
-                </div>
-            </div>
-
-            <div class="exercise-grid">
-                <div class="glass-card workout-card">
-                    <div class="workout-icon icon-blue"><i class="fa-solid fa-person-running"></i></div>
-                    <h3>Brisk Walking & Light Jog</h3>
-                    <p class="workout-meta">Duration: 30 mins • Burn: ~180 kcal</p>
-                    <p class="workout-desc">Low-impact aerobic activity to boost circulation without joint stress.</p>
-                </div>
-
-                <div class="glass-card workout-card">
-                    <div class="workout-icon icon-purple"><i class="fa-solid fa-spa"></i></div>
-                    <h3>Mindful Yoga & Breathing</h3>
-                    <p class="workout-meta">Duration: 25 mins • Stress Relief</p>
-                    <p class="workout-desc">Diaphragmatic breathing and flexibility poses for autonomic balance.</p>
-                </div>
-
-                <div class="glass-card workout-card">
-                    <div class="workout-icon icon-green"><i class="fa-solid fa-person-biking"></i></div>
-                    <h3>Stationary Cycling</h3>
-                    <p class="workout-meta">Duration: 20 mins • Burn: ~220 kcal</p>
-
-                    <p class="workout-desc">Controlled cadence cardio supporting knee mobility and stamina.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- 7. NEARBY DOCTORS VIEW -->
-        <section class="feature-view" id="view-doctors">
-            <div class="view-header">
-                <div>
-                    <h1>Find Nearby Doctors & Telehealth</h1>
-                    <p>Connect with accredited medical specialists in your vicinity.</p>
-                </div>
-            </div>
-
-            <div class="doctors-grid">
-                <div class="glass-card doctor-card">
-                    <div class="doc-avatar"><i class="fa-solid fa-user-doctor"></i></div>
-                    <h3>Dr. Sarah Jenkins, MD</h3>
-                    <p class="doc-specialty">Cardiologist • Heart Specialist</p>
-                    <p class="doc-location"><i class="fa-solid fa-location-dot"></i> City Care Hospital (1.2 km)</p>
-                    <div class="doc-rating"><i class="fa-solid fa-star"></i> 4.9 (128 Reviews)</div>
-                    <button class="btn btn-primary btn-block" onclick="alert('Booking Telehealth appointment with Dr. Sarah Jenkins...')">
-                        Book Consultation
+            <section class="tab-view" id="view-medicine">
+                <div class="top-app-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <button class="icon-btn" onclick="switchTab('home')"><i class="fa-solid fa-arrow-left"></i></button>
+                        <h2>Medicine Reminders</h2>
+                    </div>
+                    <button class="btn btn-primary" onclick="openAddMedicineModal()" style="font-size: 13px; padding: 8px 16px;">
+                        <i class="fa-solid fa-plus" style="margin-right: 6px;"></i>Add Medicine
                     </button>
                 </div>
-
-                <div class="glass-card doctor-card">
-                    <div class="doc-avatar"><i class="fa-solid fa-user-doctor"></i></div>
-                    <h3>Dr. Michael Chen, MD</h3>
-                    <p class="doc-specialty">General Physician • Internal Medicine</p>
-                    <p class="doc-location"><i class="fa-solid fa-location-dot"></i> Metro Health Clinic (2.5 km)</p>
-                    <div class="doc-rating"><i class="fa-solid fa-star"></i> 4.8 (94 Reviews)</div>
-                    <button class="btn btn-primary btn-block" onclick="alert('Booking Telehealth appointment with Dr. Michael Chen...')">
-                        Book Consultation
-                    </button>
-                </div>
-
-                <div class="glass-card doctor-card">
-                    <div class="doc-avatar"><i class="fa-solid fa-user-doctor"></i></div>
-                    <h3>Dr. Emily Rodriguez, MD</h3>
-                    <p class="doc-specialty">Neurologist • Brain & Nerve Specialist</p>
-                    <p class="doc-location"><i class="fa-solid fa-location-dot"></i> St. Jude Medical Center (3.8 km)</p>
-                    <div class="doc-rating"><i class="fa-solid fa-star"></i> 5.0 (210 Reviews)</div>
-                    <button class="btn btn-primary btn-block" onclick="alert('Booking Telehealth appointment with Dr. Emily Rodriguez...')">
-                        Book Consultation
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- 8. HEALTH HISTORY VIEW -->
-        <section class="feature-view" id="view-history">
-            <div class="view-header">
-                <div>
-                    <h1>Health History & FHIR R4 Records</h1>
-                    <p>Timeline of past symptom assessments & FHIR R4 JSON clinical exports.</p>
-                </div>
-                <button class="btn btn-outline" id="btn-export-fhir">
-                    <i class="fa-solid fa-file-code"></i> Export FHIR R4 JSON
-                </button>
-            </div>
-
-            <div class="timeline-container">
-                <div class="glass-card timeline-item">
-                    <div class="time-badge">TODAY</div>
-                    <h3>Symptom Assessment Result: MODERATE RISK</h3>
-                    <p>Logged symptoms: High Fever, Headache (Severity: 6/10)</p>
-                    <span class="status-tag green">FHIR Synced</span>
-                </div>
-
-                <div class="glass-card timeline-item">
-                    <div class="time-badge">YESTERDAY</div>
-                    <h3>Medicine Reminder Logged</h3>
-                    <p>Paracetamol 500mg taken at 10:05 AM (Scheduled 10:00 AM)</p>
-                    <span class="status-tag green">FHIR Synced</span>
-                </div>
-
-                <div class="glass-card timeline-item">
-                    <div class="time-badge">3 DAYS AGO</div>
-                    <h3>Telehealth Consultation Completed</h3>
-                    <p>Consultation with Dr. Michael Chen (Prescription updated)</p>
-                    <span class="status-tag green">FHIR Synced</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- 9. EMERGENCY SOS FEATURE VIEW -->
-        <section class="feature-view" id="view-emergency">
-            <div class="emergency-hero-card">
-                <i class="fa-solid fa-triangle-exclamation sos-big-icon"></i>
-                <h1>EMERGENCY MEDICAL SOS BEACON</h1>
-                <p>Clicking the button below will immediately broadcast your GPS location and encrypted medical profile to emergency contacts and emergency services.</p>
-                
-                <button class="btn-sos-huge" id="btn-trigger-sos">
-                    <i class="fa-solid fa-bell"></i> DISPATCH EMERGENCY SOS
-                </button>
-
-                <div class="emergency-hotlines">
-                    <div class="hotline-box"><i class="fa-solid fa-phone"></i> National Ambulance: <strong>911 / 108</strong></div>
-                    <div class="hotline-box"><i class="fa-solid fa-user-shield"></i> Emergency Contact: <strong>+1 (555) 019-2831</strong></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 10. PROFILE & SECURITY VIEW -->
-        <section class="feature-view" id="view-profile">
-            <div class="view-header">
-                <div>
-                    <h1>Patient Health Profile & Security</h1>
-                    <p>SQLCipher AES-256 local encryption & hardware KeyStore status.</p>
-                </div>
-            </div>
-
-            <div class="profile-grid">
-                <div class="glass-card profile-card">
-                    <div class="user-avatar-big"><i class="fa-solid fa-user"></i></div>
-                    <h2>Akshaya Bhumireddy</h2>
-                    <p class="user-email">akshaya@carepath.ai</p>
-
-                    <div class="profile-details-list">
-                        <div class="detail-row"><span>Blood Group:</span> <strong>O Positive (O+)</strong></div>
-                        <div class="detail-row"><span>Age / Gender:</span> <strong>26 Yrs / Female</strong></div>
-                        <div class="detail-row"><span>Height / Weight:</span> <strong>168 cm / 62 kg</strong></div>
-                        <div class="detail-row"><span>Known Allergies:</span> <strong>Penicillin (Mild)</strong></div>
+                <div class="medicine-list" id="medicine-list">
+                    <div class="card empty-msg" style="text-align:center; color: var(--text-muted); padding: 20px;">
+                        Loading medicine reminders...
                     </div>
                 </div>
 
-                <div class="glass-card security-card">
-                    <h3><i class="fa-solid fa-lock"></i> Security & Cryptography Vault</h3>
-                    <div class="sec-status-row">
-                        <span>Database Encryption:</span>
-                        <strong style="color: #4ade80;">SQLCipher AES-256 (ACTIVE)</strong>
+                <!-- Add Medicine Modal -->
+                <div id="add-medicine-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center;">
+                    <div style="background: #ffffff; border-radius: 16px; width: 90%; max-width: 480px; padding: 24px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <h3 style="font-size: 18px; font-weight: 700; color: #1e293b;">Add New Medicine</h3>
+                            <button onclick="closeAddMedicineModal()" style="background: none; border: none; font-size: 20px; color: #64748b; cursor: pointer;"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <form id="add-medicine-form" onsubmit="handleAddMedicineSubmit(event)">
+                            <div class="form-group" style="margin-bottom: 12px;">
+                                <label style="display: block; font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 4px;">Medicine Name *</label>
+                                <input type="text" id="med-name" required placeholder="e.g. Paracetamol" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px;">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 12px;">
+                                <label style="display: block; font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 4px;">Dosage *</label>
+                                <input type="text" id="med-dosage" required placeholder="e.g. 500mg" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px;">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 12px;">
+                                <label style="display: block; font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 4px;">Frequency *</label>
+                                <input type="text" id="med-frequency" required placeholder="e.g. Once daily / Twice daily" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px;">
+                            </div>
+                            <div style="margin-bottom: 16px;">
+                                <label style="display: block; font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 8px;">Time Slots</label>
+                                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                                    <label style="font-size: 13px; color: #334155; display: flex; align-items: center; gap: 6px;"><input type="checkbox" id="med-morning"> Morning</label>
+                                    <label style="font-size: 13px; color: #334155; display: flex; align-items: center; gap: 6px;"><input type="checkbox" id="med-afternoon"> Afternoon</label>
+                                    <label style="font-size: 13px; color: #334155; display: flex; align-items: center; gap: 6px;"><input type="checkbox" id="med-night"> Night</label>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: flex-end; gap: 12px;">
+                                <button type="button" onclick="closeAddMedicineModal()" style="padding: 10px 18px; border-radius: 8px; border: 1px solid #cbd5e1; background: #f8fafc; color: #475569; cursor: pointer;">Cancel</button>
+                                <button type="submit" class="btn btn-primary" style="padding: 10px 20px; border-radius: 8px;">Save Reminder</button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="sec-status-row">
-                        <span>Key Management:</span>
-                        <strong style="color: #4ade80;">Android KeyStore Hardware Backed</strong>
-                    </div>
-                    <div class="sec-status-row">
-                        <span>HIPAA Compliance:</span>
-                        <strong style="color: #4ade80;">100% Audit Verified</strong>
-                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- 11. AUTOMATION AUDIT FEATURE VIEW -->
-        <section class="feature-view" id="view-audit">
-            <div class="view-header">
-                <div>
-                    <h1>Automation & E2E Testing Audit Hub</h1>
-                    <p>3,038 Assertions • 100% Pass Rate across 5 core automation suites.</p>
-                </div>
-            </div>
-
-            <div class="audit-summary-grid">
-                <div class="glass-card audit-box">
-                    <div class="a-icon blue"><i class="fa-solid fa-mobile-screen"></i></div>
-                    <h3>Appium Mobile Suite</h3>
-                    <div class="a-val">300 Test Cases</div>
-                    <span class="a-badge green">100% PASS</span>
-                </div>
-
-                <div class="glass-card audit-box">
-                    <div class="a-icon green"><i class="fa-solid fa-globe"></i></div>
-                    <h3>Selenium Web Suite</h3>
-                    <div class="a-val">300 Test Cases</div>
-                    <span class="a-badge green">100% PASS</span>
-                </div>
-
-                <div class="glass-card audit-box">
-                    <div class="a-icon purple"><i class="fa-solid fa-list-check"></i></div>
-                    <h3>Field Validation Suite</h3>
-                    <div class="a-val">300 Test Cases</div>
-                    <span class="a-badge green">100% PASS</span>
-                </div>
-
-                <div class="glass-card audit-box">
-                    <div class="a-icon red"><i class="fa-solid fa-user-shield"></i></div>
-                    <h3>Vulnerability SAST Audit</h3>
-                    <div class="a-val">300 Test Cases</div>
-                    <span class="a-badge green">100% PASS</span>
-                </div>
-
-                <div class="glass-card audit-box">
-                    <div class="a-icon orange"><i class="fa-solid fa-gauge-high"></i></div>
-                    <h3>k6 Load Test (100 VUs)</h3>
-                    <div class="a-val">124.5 RPS • 248.5ms Latency</div>
-                    <span class="a-badge green">100% PASS</span>
-                </div>
-            </div>
-
-            <div class="audit-dl-banner">
-                <div>
-                    <h2>Download Full Automation Reports</h2>
-                    <p>Generated via automated GitHub CI pipeline on every push.</p>
-                </div>
-                <div class="dl-btns-row">
-                    <a href="../appium-e2e/selenium-report.xlsx" download class="btn btn-primary btn-lg">
-                        <i class="fa-solid fa-file-excel"></i> Download Excel (.xlsx)
-                    </a>
-                    <a href="../appium-e2e/execution-report.html" target="_blank" class="btn btn-outline btn-lg">
-                        <i class="fa-solid fa-laptop-code"></i> Open HTML Execution Dashboard
-                    </a>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="app-footer">
-        <div class="footer-container">
-            <div>&copy; 2026 CarePathAI Enterprise Clinical Platform. All rights reserved.</div>
-            <div class="footer-links">
-                <a href="https://github.com/bhumireddyakshaya/CarePathAI" target="_blank"><i class="fa-brands fa-github"></i> GitHub Repository</a>
-            </div>
         </div>
-    </footer>
 
-    <script src="app.js"></script>
+        <!-- Bottom Navigation Bar -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" data-tab="home">
+                <i class="fa-solid fa-house"></i>
+                <span>Home</span>
+            </button>
+            <button class="nav-item" data-tab="assessment">
+                <i class="fa-solid fa-shield-heart"></i>
+                <span>Assessment</span>
+            </button>
+            <button class="nav-item" data-tab="history">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                <span>History</span>
+            </button>
+            <button class="nav-item" data-tab="profile">
+                <i class="fa-solid fa-user"></i>
+                <span>Profile</span>
+            </button>
+        </nav>
+    </div>
+
+    <script src="app.js?v=6"></script>
 </body>
 </html>

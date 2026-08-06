@@ -34,30 +34,32 @@ fun AIAnalysisScreen(
     val result by viewModel.analysisResult.collectAsState()
 
     LaunchedEffect(symptoms) {
-        viewModel.performAnalysis(symptoms)
+        if (symptoms.isNotEmpty()) {
+            viewModel.performAnalysis(symptoms)
+        }
     }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("AI Health Analysis", fontWeight = FontWeight.Bold) },
+                title = { Text("AI Health Analysis", fontWeight = FontWeight.Bold, color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFFE8F5E9)
+                    containerColor = Color.Black
                 )
             )
         }
     ) { innerPadding ->
         if (result == null) {
-            Box(modifier = Modifier.fillMaxSize().background(Color(0xFFE8F5E9)), contentAlignment = Alignment.Center) {
+            Box(modifier = Modifier.fillMaxSize().background(Color.Black), contentAlignment = Alignment.Center) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    CircularProgressIndicator(color = Color(0xFF2E7D32))
+                    CircularProgressIndicator(color = Color.White)
                     Spacer(modifier = Modifier.height(16.dp))
-                    Text("AI is analyzing your symptoms...", color = Color(0xFF2E7D32))
+                    Text("AI is analyzing your symptoms...", color = Color.White)
                 }
             }
         } else {
@@ -65,7 +67,7 @@ fun AIAnalysisScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
-                    .background(Brush.verticalGradient(listOf(Color(0xFFE8F5E9), Color.White)))
+                    .background(Color.Black)
                     .verticalScroll(rememberScrollState())
                     .padding(16.dp)
             ) {
@@ -73,8 +75,8 @@ fun AIAnalysisScreen(
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(24.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A1A)),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
                 ) {
                     Column(modifier = Modifier.padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                         Box(contentAlignment = Alignment.Center, modifier = Modifier.size(100.dp)) {
@@ -82,29 +84,29 @@ fun AIAnalysisScreen(
                                 progress = 0.85f,
                                 modifier = Modifier.fillMaxSize(),
                                 strokeWidth = 8.dp,
-                                color = Color(0xFF4CAF50),
-                                trackColor = Color(0xFFE8F5E9)
+                                color = if(result?.riskLevel == "High") Color.Red else Color(0xFF4CAF50),
+                                trackColor = Color.DarkGray
                             )
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text("85%", fontWeight = FontWeight.ExtraBold, style = MaterialTheme.typography.titleLarge)
-                                Text("Confidence", style = MaterialTheme.typography.labelSmall)
+                                Text("85%", fontWeight = FontWeight.ExtraBold, style = MaterialTheme.typography.titleLarge, color = Color.White)
+                                Text("Confidence", style = MaterialTheme.typography.labelSmall, color = Color.LightGray)
                             }
                         }
                         Spacer(modifier = Modifier.height(16.dp))
                         Text("Possible Condition", style = MaterialTheme.typography.labelLarge, color = Color.Gray)
-                        Text(result?.diagnosis ?: "Analyzing...", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = Color(0xFF2E7D32))
+                        Text(result?.diagnosis ?: "Analyzing...", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = Color.White)
                         
                         Spacer(modifier = Modifier.height(8.dp))
                         
                         Surface(
                             shape = CircleShape,
-                            color = if(result?.riskLevel == "High") Color(0xFFFFEBEE) else Color(0xFFE8F5E9),
+                            color = if(result?.riskLevel == "High") Color(0x33FF0000) else Color(0x334CAF50),
                             modifier = Modifier.padding(vertical = 4.dp)
                         ) {
                             Row(modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
                                 Box(modifier = Modifier.size(8.dp).clip(CircleShape).background(if(result?.riskLevel == "High") Color.Red else Color.Green))
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text("Risk Level: ${result?.riskLevel ?: "Unknown"}", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
+                                Text("Risk Level: ${result?.riskLevel ?: "Unknown"}", style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold, color = Color.White)
                             }
                         }
                     }
@@ -113,19 +115,20 @@ fun AIAnalysisScreen(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 // AI Insights
-                Text("AI Health Insights", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                Text("AI Health Insights", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = Color.White)
                 Spacer(modifier = Modifier.height(12.dp))
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFFF1F8E9))
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF262626))
                 ) {
                     Row(modifier = Modifier.padding(16.dp)) {
-                        Icon(Icons.Default.Psychology, contentDescription = null, tint = Color(0xFF2E7D32))
+                        Icon(Icons.Default.Psychology, contentDescription = null, tint = Color.White)
                         Spacer(modifier = Modifier.width(16.dp))
                         Text(
-                            "Based on your symptoms (${symptoms.joinToString(", ")}), the AI suggests this might be related to ${result?.diagnosis?.lowercase() ?: "the condition identified"}. We recommend monitoring your temperature.",
-                            style = MaterialTheme.typography.bodyMedium
+                            "Based on your symptoms (${symptoms.joinToString(", ")}), the AI suggests this might be related to ${result?.diagnosis?.lowercase() ?: "the condition identified"}. Monitor your symptoms closely.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.White
                         )
                     }
                 }
@@ -133,12 +136,12 @@ fun AIAnalysisScreen(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 // Next Actions
-                Text("Recommended Next Actions", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                Text("Recommended Next Actions", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = Color.White)
                 Spacer(modifier = Modifier.height(12.dp))
                 
-                ActionItem(Icons.Default.MonitorWeight, "Monitor your vitals twice daily.")
-                ActionItem(Icons.Default.WaterDrop, "Increase fluid intake (at least 2.5L).")
-                ActionItem(Icons.Default.Bedtime, "Ensure adequate rest (7-8 hours).")
+                ActionItem(Icons.Default.MonitorWeight, "Monitor your vitals twice daily.", Color.White)
+                ActionItem(Icons.Default.WaterDrop, "Increase fluid intake (at least 2.5L).", Color.White)
+                ActionItem(Icons.Default.Bedtime, "Ensure adequate rest (7-8 hours).", Color.White)
 
                 Spacer(modifier = Modifier.height(24.dp))
 
@@ -150,24 +153,12 @@ fun AIAnalysisScreen(
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                // Consult Doctor Button
-                Button(
-                    onClick = { /* Navigate to Doctor Search */ },
-                    modifier = Modifier.fillMaxWidth().height(56.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32))
-                ) {
-                    Icon(Icons.Default.LocalHospital, contentDescription = null)
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Text("Consult a Doctor", fontWeight = FontWeight.Bold)
-                }
-                
-                Spacer(modifier = Modifier.height(12.dp))
-                
                 OutlinedButton(
                     onClick = onBack,
                     modifier = Modifier.fillMaxWidth().height(56.dp),
-                    shape = RoundedCornerShape(16.dp)
+                    shape = RoundedCornerShape(16.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
+                    border = ButtonDefaults.outlinedButtonBorder.copy(brush = Brush.linearGradient(listOf(Color.White, Color.Gray)))
                 ) {
                     Text("Back to Dashboard")
                 }
@@ -179,14 +170,14 @@ fun AIAnalysisScreen(
 }
 
 @Composable
-fun ActionItem(icon: ImageVector, text: String) {
+fun ActionItem(icon: ImageVector, text: String, tint: Color) {
     Row(
         modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(icon, contentDescription = null, tint = Color(0xFF2E7D32), modifier = Modifier.size(20.dp))
+        Icon(icon, contentDescription = null, tint = tint, modifier = Modifier.size(20.dp))
         Spacer(modifier = Modifier.width(16.dp))
-        Text(text, style = MaterialTheme.typography.bodyMedium)
+        Text(text, style = MaterialTheme.typography.bodyMedium, color = Color.White)
     }
 }
 
@@ -195,7 +186,7 @@ fun MiniRecommendationCard(title: String, icon: ImageVector, color: Color, modif
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A1A)),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         onClick = onClick
     ) {
@@ -205,7 +196,7 @@ fun MiniRecommendationCard(title: String, icon: ImageVector, color: Color, modif
         ) {
             Icon(icon, contentDescription = null, tint = color)
             Spacer(modifier = Modifier.height(8.dp))
-            Text(title, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge)
+            Text(title, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.labelLarge, color = Color.White)
         }
     }
 }

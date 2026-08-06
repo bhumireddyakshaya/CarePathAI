@@ -12,6 +12,15 @@ interface MedicineDao {
     @Query("SELECT * FROM medicines WHERE id = :id")
     suspend fun getMedicineById(id: Int): Medicine?
 
+    @Query("SELECT * FROM medicines WHERE firestoreId = :firestoreId LIMIT 1")
+    suspend fun getByFirestoreId(firestoreId: String): Medicine?
+
+    @Query("DELETE FROM medicines WHERE firestoreId = :firestoreId")
+    suspend fun deleteByFirestoreId(firestoreId: String)
+
+    @Query("DELETE FROM medicines")
+    suspend fun deleteAllMedicines()
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMedicine(medicine: Medicine)
 

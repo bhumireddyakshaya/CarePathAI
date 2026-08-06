@@ -9,6 +9,15 @@ interface HealthHistoryDao {
     @Query("SELECT * FROM health_history ORDER BY date DESC")
     fun getAllHistory(): Flow<List<HealthHistory>>
 
+    @Query("SELECT * FROM health_history WHERE firestoreId = :firestoreId LIMIT 1")
+    suspend fun getByFirestoreId(firestoreId: String): HealthHistory?
+
+    @Query("DELETE FROM health_history WHERE firestoreId = :firestoreId")
+    suspend fun deleteByFirestoreId(firestoreId: String)
+
+    @Query("DELETE FROM health_history")
+    suspend fun deleteAllHistory()
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertHistory(history: HealthHistory)
 

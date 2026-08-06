@@ -2,7 +2,6 @@ package com.example.carepathai.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -16,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
@@ -55,34 +53,25 @@ fun FoodRecommendationsScreen(onBack: () -> Unit) {
                     Text(
                         "Nutrition AI", 
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                        color = Color.White
                     ) 
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFFE0F2F1)
+                    containerColor = Color.Black
                 )
             )
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { /* Navigate to AI Chatbot */ },
-                containerColor = Color(0xFF009688),
-                contentColor = Color.White
-            ) {
-                Icon(Icons.Default.Chat, contentDescription = "AI Assistant")
-            }
         }
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .background(Brush.verticalGradient(listOf(Color(0xFFE0F2F1), Color.White)))
+                .background(Color.Black)
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp)
         ) {
@@ -90,12 +79,12 @@ fun FoodRecommendationsScreen(onBack: () -> Unit) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(24.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF009688))
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A1A))
             ) {
                 Column(modifier = Modifier.padding(20.dp)) {
                     Text(
                         "Daily Nutrition Insight",
-                        color = Color.White.copy(alpha = 0.8f),
+                        color = Color.White.copy(alpha = 0.6f),
                         style = MaterialTheme.typography.labelLarge
                     )
                     Spacer(modifier = Modifier.height(8.dp))
@@ -124,13 +113,13 @@ fun FoodRecommendationsScreen(onBack: () -> Unit) {
                 "Hydration Status",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF00796B)
+                color = Color.White
             )
             Spacer(modifier = Modifier.height(12.dp))
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD))
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A1A))
             ) {
                 Row(
                     modifier = Modifier.padding(16.dp),
@@ -139,14 +128,14 @@ fun FoodRecommendationsScreen(onBack: () -> Unit) {
                     Icon(Icons.Default.WaterDrop, contentDescription = null, tint = Color(0xFF2196F3))
                     Spacer(modifier = Modifier.width(16.dp))
                     Column {
-                        Text("Target: 2500 ml", fontWeight = FontWeight.Bold)
+                        Text("Target: 2500 ml", fontWeight = FontWeight.Bold, color = Color.White)
                         LinearProgressIndicator(
                             progress = 0.6f,
                             modifier = Modifier.fillMaxWidth().height(8.dp).clip(CircleShape),
                             color = Color(0xFF2196F3),
-                            trackColor = Color.White
+                            trackColor = Color.DarkGray
                         )
-                        Text("1500 ml consumed", style = MaterialTheme.typography.bodySmall)
+                        Text("1500 ml consumed", style = MaterialTheme.typography.bodySmall, color = Color.LightGray)
                     }
                 }
             }
@@ -158,7 +147,7 @@ fun FoodRecommendationsScreen(onBack: () -> Unit) {
                 "Personalized Meal Plan",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF00796B)
+                color = Color.White
             )
             Spacer(modifier = Modifier.height(12.dp))
             meals.forEach { meal ->
@@ -173,7 +162,7 @@ fun FoodRecommendationsScreen(onBack: () -> Unit) {
                 "Immunity Boosting Foods",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF00796B)
+                color = Color.White
             )
             Spacer(modifier = Modifier.height(12.dp))
             LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -188,7 +177,7 @@ fun FoodRecommendationsScreen(onBack: () -> Unit) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFFFEBEE))
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF331111))
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -199,7 +188,8 @@ fun FoodRecommendationsScreen(onBack: () -> Unit) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         "Avoid oily, processed foods and excessive sugar to speed up recovery.",
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White
                     )
                 }
             }
@@ -223,7 +213,7 @@ fun MealListItem(meal: FoodItem) {
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A1A))
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -231,7 +221,7 @@ fun MealListItem(meal: FoodItem) {
         ) {
             Surface(
                 shape = RoundedCornerShape(12.dp),
-                color = meal.color.copy(alpha = 0.1f),
+                color = meal.color.copy(alpha = 0.2f),
                 modifier = Modifier.size(56.dp)
             ) {
                 Box(contentAlignment = Alignment.Center) {
@@ -241,11 +231,11 @@ fun MealListItem(meal: FoodItem) {
             Spacer(modifier = Modifier.width(16.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(meal.category, color = meal.color, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold)
-                Text(meal.name, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
-                Text(meal.description, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+                Text(meal.name, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium, color = Color.White)
+                Text(meal.description, style = MaterialTheme.typography.bodySmall, color = Color.LightGray)
                 if (meal.nutritionalValue.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(4.dp))
-                    Text(meal.nutritionalValue, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
+                    Text(meal.nutritionalValue, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = Color.White)
                 }
             }
         }
@@ -257,7 +247,7 @@ fun ImmunityFoodCard(food: FoodItem) {
     Card(
         modifier = Modifier.width(140.dp),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A1A))
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -265,8 +255,8 @@ fun ImmunityFoodCard(food: FoodItem) {
         ) {
             Icon(food.icon, contentDescription = null, tint = food.color, modifier = Modifier.size(32.dp))
             Spacer(modifier = Modifier.height(8.dp))
-            Text(food.name, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyMedium)
-            Text(food.description, style = MaterialTheme.typography.labelSmall, color = Color.Gray)
+            Text(food.name, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodyMedium, color = Color.White)
+            Text(food.description, style = MaterialTheme.typography.labelSmall, color = Color.LightGray)
         }
     }
 }

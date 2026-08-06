@@ -39,9 +39,19 @@ class AuthRepositoryImpl @Inject constructor(
                 val user = authResult.user
                 if (user != null) {
                     val userData = hashMapOf(
-                        "uid" to user.uid,
-                        "name" to name,
+                        "id" to user.uid,
+                        "fullName" to name,
                         "email" to email,
+                        "mobileNumber" to "",
+                        "age" to 0,
+                        "bloodGroup" to "",
+                        "gender" to "",
+                        "height" to 0f,
+                        "weight" to 0f,
+                        "medicalHistory" to emptyList<String>(),
+                        "dietaryPreferences" to "",
+                        "fitnessGoals" to "",
+                        "profileImageUrl" to "",
                         "createdAt" to System.currentTimeMillis()
                     )
                     firestore.collection("users").document(user.uid).set(userData)

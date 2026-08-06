@@ -11,5 +11,6 @@ data class HealthHistory(
     val diagnosis: String,
     val foodRecommendations: String,
     val exercisePlans: String,
-    val riskLevel: String
+    val riskLevel: String,
+    val firestoreId: String = ""
 )

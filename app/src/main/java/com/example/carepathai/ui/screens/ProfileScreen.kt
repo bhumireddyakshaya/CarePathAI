@@ -1,6 +1,7 @@
 package com.example.carepathai.ui.screens
 
-import androidx.compose.foundation.Image
+import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -12,9 +13,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -27,15 +28,58 @@ fun ProfileScreen(
     onLogout: () -> Unit = {}
 ) {
     val profile by viewModel.userProfile.collectAsState()
+    val updateStatus by viewModel.updateStatus.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+    val context = LocalContext.current
     var isEditing by remember { mutableStateOf(false) }
+    
+    // Editable states - ensure they react to profile changes
+    var fullName by remember(profile.fullName) { mutableStateOf(profile.fullName) }
+    var mobileNumber by remember(profile.mobileNumber) { mutableStateOf(profile.mobileNumber) }
+    var age by remember(profile.age) { mutableStateOf(profile.age.toString()) }
+    var bloodGroup by remember(profile.bloodGroup) { mutableStateOf(profile.bloodGroup) }
+    var height by remember(profile.height) { mutableStateOf(profile.height.toString()) }
+    var weight by remember(profile.weight) { mutableStateOf(profile.weight.toString()) }
+    var fitnessGoals by remember(profile.fitnessGoals) { mutableStateOf(profile.fitnessGoals) }
+
+    LaunchedEffect(updateStatus) {
+        updateStatus?.let {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            viewModel.clearStatus()
+        }
+    }
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Profile") },
+            CenterAlignedTopAppBar(
+                title = { Text("Profile", fontWeight = FontWeight.Bold) },
                 actions = {
-                    IconButton(onClick = { isEditing = !isEditing }) {
-                        Icon(if (isEditing) Icons.Default.Save else Icons.Default.Edit, contentDescription = "Edit")
+                    if (isLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp).padding(end = 16.dp),
+                            strokeWidth = 2.dp
+                        )
+                    } else {
+                        IconButton(onClick = { 
+                            if (isEditing) {
+                                viewModel.updateProfile(profile.copy(
+                                    fullName = fullName,
+                                    mobileNumber = mobileNumber,
+                                    age = age.toIntOrNull() ?: profile.age,
+                                    bloodGroup = bloodGroup,
+                                    height = height.toFloatOrNull() ?: profile.height,
+                                    weight = weight.toFloatOrNull() ?: profile.weight,
+                                    fitnessGoals = fitnessGoals
+                                ))
+                            }
+                            isEditing = !isEditing 
+                        }) {
+                            Icon(
+                                imageVector = if (isEditing) Icons.Default.Save else Icons.Default.Edit,
+                                contentDescription = "Toggle Edit",
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
                     }
                 }
             )
@@ -45,101 +89,133 @@ fun ProfileScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(16.dp)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Spacer(modifier = Modifier.height(16.dp))
+
             // Profile Image
             Box(
                 modifier = Modifier
-                    .size(120.dp)
+                    .size(100.dp)
                     .clip(CircleShape)
-                    .padding(4.dp)
+                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)),
+                contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    Icons.Default.AccountCircle,
+                    Icons.Default.Person,
                     contentDescription = null,
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.size(60.dp),
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
             
             Spacer(modifier = Modifier.height(16.dp))
             
-            Text(
-                text = profile.fullName,
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
-            )
+            if (isEditing) {
+                OutlinedTextField(
+                    value = fullName,
+                    onValueChange = { fullName = it },
+                    label = { Text("Full Name") },
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp),
+                    singleLine = true
+                )
+            } else {
+                Text(
+                    text = profile.fullName.ifEmpty { "User" },
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            
             Text(
                 text = profile.email,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = Color.Gray
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            ProfileInfoCard(
-                title = "Personal Information",
-                items = listOf(
-                    ProfileItem("Full Name", profile.fullName, Icons.Default.Person),
-                    ProfileItem("Email", profile.email, Icons.Default.Email),
-                    ProfileItem("Mobile", profile.mobileNumber, Icons.Default.Phone),
-                    ProfileItem("Age", profile.age.toString(), Icons.Default.Cake)
-                )
-            )
+            // Information sections
+            ProfileCard(title = "Personal Details") {
+                if (isEditing) {
+                    EditRow(value = mobileNumber, onValueChange = { mobileNumber = it }, label = "Mobile", icon = Icons.Default.Phone)
+                    EditRow(value = age, onValueChange = { age = it }, label = "Age", icon = Icons.Default.Cake)
+                } else {
+                    DisplayRow(label = "Mobile", value = mobileNumber, icon = Icons.Default.Phone)
+                    DisplayRow(label = "Age", value = age, icon = Icons.Default.Cake)
+                }
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            ProfileInfoCard(
-                title = "Health Information",
-                items = listOf(
-                    ProfileItem("Blood Group", profile.bloodGroup, Icons.Default.Bloodtype),
-                    ProfileItem("Height", "${profile.height} cm", Icons.Default.Height),
-                    ProfileItem("Weight", "${profile.weight} kg", Icons.Default.MonitorWeight),
-                    ProfileItem("Fitness Goals", profile.fitnessGoals, Icons.Default.Flag)
-                )
-            )
+            ProfileCard(title = "Health Stats") {
+                if (isEditing) {
+                    EditRow(value = bloodGroup, onValueChange = { bloodGroup = it }, label = "Blood Group", icon = Icons.Default.Bloodtype)
+                    EditRow(value = height, onValueChange = { height = it }, label = "Height (cm)", icon = Icons.Default.Height)
+                    EditRow(value = weight, onValueChange = { weight = it }, label = "Weight (kg)", icon = Icons.Default.MonitorWeight)
+                    EditRow(value = fitnessGoals, onValueChange = { fitnessGoals = it }, label = "Goals", icon = Icons.Default.Flag)
+                } else {
+                    DisplayRow(label = "Blood Group", value = bloodGroup, icon = Icons.Default.Bloodtype)
+                    DisplayRow(label = "Height", value = "$height cm", icon = Icons.Default.Height)
+                    DisplayRow(label = "Weight", value = "$weight kg", icon = Icons.Default.MonitorWeight)
+                    DisplayRow(label = "Goals", value = fitnessGoals, icon = Icons.Default.Flag)
+                }
+            }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             Button(
                 onClick = onLogout,
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+                enabled = !isLoading
             ) {
-                Text("Logout")
+                Text("Sign Out")
             }
+            
+            Spacer(modifier = Modifier.height(40.dp))
         }
     }
 }
 
-data class ProfileItem(val label: String, val value: String, val icon: ImageVector)
-
 @Composable
-fun ProfileInfoCard(title: String, items: List<ProfileItem>) {
+fun ProfileCard(title: String, content: @Composable ColumnScope.() -> Unit) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(title, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+            Text(title, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
             Spacer(modifier = Modifier.height(8.dp))
-            items.forEach { item ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(item.icon, contentDescription = null, modifier = Modifier.size(20.dp), tint = MaterialTheme.colorScheme.primary)
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Column {
-                        Text(item.label, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                        Text(item.value, style = MaterialTheme.typography.bodyLarge)
-                    }
-                }
-            }
+            content()
         }
     }
+}
+
+@Composable
+fun DisplayRow(label: String, value: String, icon: ImageVector) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(icon, null, modifier = Modifier.size(20.dp), tint = MaterialTheme.colorScheme.primary)
+        Spacer(modifier = Modifier.width(16.dp))
+        Column {
+            Text(label, style = MaterialTheme.typography.labelSmall, color = Color.Gray)
+            Text(value.ifEmpty { "Not set" }, style = MaterialTheme.typography.bodyLarge)
+        }
+    }
+}
+
+@Composable
+fun EditRow(value: String, onValueChange: (String) -> Unit, label: String, icon: ImageVector) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = { Text(label) },
+        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+        leadingIcon = { Icon(icon, null, modifier = Modifier.size(20.dp)) },
+        singleLine = true
+    )
 }

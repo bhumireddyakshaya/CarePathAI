@@ -5,7 +5,6 @@ import androidx.room.Room
 import com.example.carepathai.data.local.CarePathDatabase
 import com.example.carepathai.data.local.dao.HealthHistoryDao
 import com.example.carepathai.data.local.dao.MedicineDao
-import com.example.carepathai.data.local.dao.WellnessDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,10 +34,5 @@ object DatabaseModule {
     @Provides
     fun provideHealthHistoryDao(database: CarePathDatabase): HealthHistoryDao {
         return database.healthHistoryDao()
-    }
-
-    @Provides
-    fun provideWellnessDao(database: CarePathDatabase): WellnessDao {
-        return database.wellnessDao()
     }
 }

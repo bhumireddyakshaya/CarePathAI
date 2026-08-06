@@ -6,6 +6,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "medicines")
 data class Medicine(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val firestoreId: String = "",
     val name: String,
     val dosage: String,
     val frequency: String,

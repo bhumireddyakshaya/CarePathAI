@@ -2,8 +2,6 @@ package com.example.carepathai.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,7 +13,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
@@ -49,16 +46,16 @@ fun ExerciseRecommendationsScreen(onBack: () -> Unit) {
                     Text(
                         "Wellness Exercises", 
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                        color = Color.White
                     ) 
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFFF3E5F5)
+                    containerColor = Color.Black
                 )
             )
         }
@@ -67,7 +64,7 @@ fun ExerciseRecommendationsScreen(onBack: () -> Unit) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .background(Brush.verticalGradient(listOf(Color(0xFFF3E5F5), Color.White)))
+                .background(Color.Black)
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp)
         ) {
@@ -75,12 +72,12 @@ fun ExerciseRecommendationsScreen(onBack: () -> Unit) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(24.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFF9575CD))
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A1A))
             ) {
                 Column(modifier = Modifier.padding(20.dp)) {
                     Text(
                         "AI Wellness Insight",
-                        color = Color.White.copy(alpha = 0.8f),
+                        color = Color.White.copy(alpha = 0.6f),
                         style = MaterialTheme.typography.labelLarge
                     )
                     Spacer(modifier = Modifier.height(8.dp))
@@ -94,14 +91,14 @@ fun ExerciseRecommendationsScreen(onBack: () -> Unit) {
                     
                     // Completion Progress
                     val completedCount = exercises.count { it.isCompleted }
-                    val progress = completedCount.toFloat() / exercises.size
+                    val progress = if (exercises.isEmpty()) 0f else completedCount.toFloat() / exercises.size
                     
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         LinearProgressIndicator(
-                            progress = progress,
+                            progress = { progress },
                             modifier = Modifier.weight(1f).height(8.dp).clip(CircleShape),
                             color = Color.White,
-                            trackColor = Color.White.copy(alpha = 0.3f)
+                            trackColor = Color.DarkGray
                         )
                         Spacer(modifier = Modifier.width(16.dp))
                         Text(
@@ -120,13 +117,13 @@ fun ExerciseRecommendationsScreen(onBack: () -> Unit) {
                 "Recovery Focus",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF512DA8)
+                color = Color.White
             )
             Spacer(modifier = Modifier.height(12.dp))
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFE8EAF6))
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A1A))
             ) {
                 Row(
                     modifier = Modifier.padding(16.dp),
@@ -136,7 +133,8 @@ fun ExerciseRecommendationsScreen(onBack: () -> Unit) {
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
                         "Avoid intense workouts. Focus on mobility and hydration today.",
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.White
                     )
                 }
             }
@@ -148,7 +146,7 @@ fun ExerciseRecommendationsScreen(onBack: () -> Unit) {
                 "Today's Personalized Plan",
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF512DA8)
+                color = Color.White
             )
             Spacer(modifier = Modifier.height(12.dp))
             exercises.forEachIndexed { index, exercise ->
@@ -169,16 +167,17 @@ fun ExerciseRecommendationsScreen(onBack: () -> Unit) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFF1F8E9))
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF1B2E1C))
             ) {
                 Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
                     Icon(Icons.Default.Lightbulb, contentDescription = null, tint = Color(0xFF4CAF50))
                     Spacer(modifier = Modifier.width(16.dp))
                     Column {
-                        Text("Pro Tip", fontWeight = FontWeight.Bold, color = Color(0xFF388E3C))
+                        Text("Pro Tip", fontWeight = FontWeight.Bold, color = Color(0xFF4CAF50))
                         Text(
                             "Do these exercises in a well-ventilated room for better oxygen intake.",
-                            style = MaterialTheme.typography.bodySmall
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color.White
                         )
                     }
                 }
@@ -195,7 +194,7 @@ fun ExerciseListItem(exercise: ExerciseItem, onCompleteChange: (Boolean) -> Unit
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (exercise.isCompleted) Color(0xFFF5F5F5) else Color.White
+            containerColor = if (exercise.isCompleted) Color(0xFF0D0D0D) else Color(0xFF1A1A1A)
         )
     ) {
         Row(
@@ -204,7 +203,7 @@ fun ExerciseListItem(exercise: ExerciseItem, onCompleteChange: (Boolean) -> Unit
         ) {
             Surface(
                 shape = RoundedCornerShape(12.dp),
-                color = exercise.color.copy(alpha = 0.1f),
+                color = exercise.color.copy(alpha = 0.2f),
                 modifier = Modifier.size(56.dp)
             ) {
                 Box(contentAlignment = Alignment.Center) {
@@ -223,14 +222,15 @@ fun ExerciseListItem(exercise: ExerciseItem, onCompleteChange: (Boolean) -> Unit
                     exercise.name,
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.titleMedium,
+                    color = if (exercise.isCompleted) Color.Gray else Color.White,
                     textDecoration = if (exercise.isCompleted) androidx.compose.ui.text.style.TextDecoration.LineThrough else null
                 )
-                Text(exercise.description, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+                Text(exercise.description, style = MaterialTheme.typography.bodySmall, color = Color.LightGray)
             }
             Checkbox(
                 checked = exercise.isCompleted,
                 onCheckedChange = onCompleteChange,
-                colors = CheckboxDefaults.colors(checkedColor = exercise.color)
+                colors = CheckboxDefaults.colors(checkedColor = exercise.color, uncheckedColor = Color.Gray)
             )
         }
     }

@@ -25,10 +25,14 @@ fun HistoryScreen(
     val historyList by viewModel.allHistory.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
 
-    val filteredList = if (searchQuery.isEmpty()) {
+    val filteredList = try {
+        if (searchQuery.isEmpty()) {
+            historyList
+        } else {
+            historyList.filter { it.diagnosis.contains(searchQuery, ignoreCase = true) || it.symptoms.contains(searchQuery, ignoreCase = true) }
+        }
+    } catch (e: Exception) {
         historyList
-    } else {
-        historyList.filter { it.diagnosis.contains(searchQuery, ignoreCase = true) || it.symptoms.contains(searchQuery, ignoreCase = true) }
     }
 
     Scaffold(
@@ -69,8 +73,12 @@ fun HistoryScreen(
 
 @Composable
 fun HistoryCard(history: HealthHistory, onDelete: () -> Unit) {
-    val sdf = SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault())
-    val dateString = sdf.format(Date(history.date))
+    val dateString = try {
+        val sdf = SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault())
+        sdf.format(Date(history.date))
+    } catch (e: Exception) {
+        "Unknown Date"
+    }
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -87,7 +95,7 @@ fun HistoryCard(history: HealthHistory, onDelete: () -> Unit) {
                 }
             }
             
-            Divider(modifier = Modifier.padding(vertical = 8.dp))
+            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
             
             Text(text = "Symptoms: ${history.symptoms}", style = MaterialTheme.typography.bodySmall)
             
@@ -96,12 +104,12 @@ fun HistoryCard(history: HealthHistory, onDelete: () -> Unit) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 AssistChip(
                     onClick = {},
-                    label = { Text("Food Recommendations") },
+                    label = { Text("Diet Plan") },
                     leadingIcon = { Icon(Icons.Default.Restaurant, contentDescription = null, modifier = Modifier.size(16.dp)) }
                 )
                 AssistChip(
                     onClick = {},
-                    label = { Text("Exercises") },
+                    label = { Text("Exercise") },
                     leadingIcon = { Icon(Icons.Default.FitnessCenter, contentDescription = null, modifier = Modifier.size(16.dp)) }
                 )
             }

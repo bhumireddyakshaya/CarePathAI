@@ -23,13 +23,26 @@ class AnalysisViewModel @Inject constructor(
     fun performAnalysis(symptoms: List<String>) {
         viewModelScope.launch {
             // Mocking AI Analysis based on symptoms
-            val diagnosis = if (symptoms.any { it.contains("fever", ignoreCase = true) }) "Fever"
-            else if (symptoms.any { it.contains("sugar", ignoreCase = true) }) "Diabetes Risk"
-            else if (symptoms.any { it.contains("chest", ignoreCase = true) }) "Heart Health"
+            val symptomsLower = symptoms.map { it.lowercase() }
+            
+            val diagnosis = if (symptomsLower.any { it.contains("chest") || it.contains("heart") || it.contains("palpitations") }) "Cardiac Concern"
+            else if (symptomsLower.any { it.contains("breath") || it.contains("wheezing") }) "Respiratory Issue"
+            else if (symptomsLower.any { it.contains("sugar") || it.contains("thirst") }) "Metabolic Risk"
+            else if (symptomsLower.any { it.contains("fever") || it.contains("chills") }) "Infection/Fever"
+            else if (symptomsLower.any { it.contains("headache") || it.contains("migraine") }) "Neurological"
             else "General Wellness"
 
             val foodRecs = getFoodRecommendations(diagnosis)
             val exerciseRecs = getExerciseRecommendations(diagnosis)
+            
+            val riskLevel = when (diagnosis) {
+                "Cardiac Concern", "Respiratory Issue" -> "High"
+                "Metabolic Risk", "Infection/Fever" -> "Medium"
+                else -> "Low"
+            }
+            
+            // Override risk level if multiple severe symptoms are present
+            val finalRiskLevel = if (symptoms.size > 4 && riskLevel == "Medium") "High" else riskLevel
             
             val history = HealthHistory(
                 date = System.currentTimeMillis(),
@@ -37,28 +50,34 @@ class AnalysisViewModel @Inject constructor(
                 diagnosis = diagnosis,
                 foodRecommendations = foodRecs,
                 exercisePlans = exerciseRecs,
-                riskLevel = "Low"
+                riskLevel = finalRiskLevel
             )
             
             _analysisResult.value = history
-            historyRepository.insertHistory(history)
+            try {
+                historyRepository.insertHistory(history)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
     private fun getFoodRecommendations(condition: String): String {
         return when (condition) {
-            "Fever" -> "Fruits, Soup, Coconut Water, Vitamin C Rich Foods"
-            "Diabetes Risk" -> "Oats, Whole Grains, Leafy Vegetables"
-            "Heart Health" -> "Oats, Nuts, Fruits, Healthy Fats"
+            "Infection/Fever" -> "Fruits, Soup, Coconut Water, Vitamin C Rich Foods"
+            "Metabolic Risk" -> "Oats, Whole Grains, Leafy Vegetables"
+            "Cardiac Concern" -> "Oats, Nuts, Fruits, Healthy Fats"
+            "Respiratory Issue" -> "Warm fluids, Honey, Ginger, Anti-inflammatory foods"
             else -> "Balanced Diet, Plenty of Water, Fresh Vegetables"
         }
     }
 
     private fun getExerciseRecommendations(condition: String): String {
         return when (condition) {
-            "Fever" -> "Rest, Breathing Exercises"
-            "Diabetes Risk" -> "Walking, Light Cardio"
-            "Heart Health" -> "Walking, Yoga"
+            "Infection/Fever" -> "Rest, Breathing Exercises"
+            "Metabolic Risk" -> "Walking, Light Cardio"
+            "Cardiac Concern" -> "Walking, Yoga (Consult Doctor First)"
+            "Respiratory Issue" -> "Deep Breathing, Light Stretching"
             else -> "Stretching, Light Cardio"
         }
     }

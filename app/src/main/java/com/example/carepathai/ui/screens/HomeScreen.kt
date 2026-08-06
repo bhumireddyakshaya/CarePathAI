@@ -20,7 +20,6 @@ import androidx.navigation.NavHostController
 sealed class BottomNavItem(val title: String, val icon: ImageVector, val route: String) {
     object Home : BottomNavItem("Home", Icons.Default.Home, "home_tab")
     object Assessment : BottomNavItem("Assessment", Icons.Default.HealthAndSafety, "assessment_tab")
-    object Wellness : BottomNavItem("Wellness", Icons.Default.Favorite, "wellness_tab")
     object History : BottomNavItem("History", Icons.Default.History, "history_tab")
     object Profile : BottomNavItem("Profile", Icons.Default.Person, "profile_tab")
 }
@@ -32,7 +31,6 @@ fun HomeScreen(navController: NavHostController) {
     val items = listOf(
         BottomNavItem.Home,
         BottomNavItem.Assessment,
-        BottomNavItem.Wellness,
         BottomNavItem.History,
         BottomNavItem.Profile
     )
@@ -45,14 +43,13 @@ fun HomeScreen(navController: NavHostController) {
                         icon = { Icon(item.icon, contentDescription = item.title) },
                         label = { Text(item.title) },
                         selected = selectedItem == index,
-                        onClick = { selectedItem = index }
+                        onClick = { 
+                            if (selectedItem != index) {
+                                selectedItem = index
+                            }
+                        }
                     )
                 }
-            }
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = { navController.navigate("ai_chatbot") }) {
-                Icon(Icons.Default.Chat, contentDescription = "AI Assistant")
             }
         }
     ) { innerPadding ->
@@ -62,7 +59,7 @@ fun HomeScreen(navController: NavHostController) {
                     onSymptomCheckerClick = { selectedItem = 1 },
                     onMedicineClick = { navController.navigate("medicine_reminder") },
                     onEmergencyClick = { navController.navigate("emergency") },
-                    onHistoryClick = { selectedItem = 3 },
+                    onHistoryClick = { selectedItem = 2 },
                     onFoodClick = { navController.navigate("food_recommendations") },
                     onExerciseClick = { navController.navigate("exercise_recommendations") }
                 )
@@ -74,12 +71,8 @@ fun HomeScreen(navController: NavHostController) {
                         navController.navigate("ai_analysis/$encodedSymptoms")
                     }
                 )
-                2 -> WellnessTrackerScreen(
-                    onFoodRecommendationClick = { navController.navigate("food_recommendations") },
-                    onExerciseRecommendationClick = { navController.navigate("exercise_recommendations") }
-                )
-                3 -> HistoryScreen()
-                4 -> ProfileScreen(onLogout = {
+                2 -> HistoryScreen()
+                3 -> ProfileScreen(onLogout = {
                     navController.navigate("login") {
                         popUpTo("home") { inclusive = true }
                     }

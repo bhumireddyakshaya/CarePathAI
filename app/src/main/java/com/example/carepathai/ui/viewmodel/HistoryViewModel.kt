@@ -7,6 +7,7 @@ import com.example.carepathai.domain.repository.HealthHistoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,6 +18,7 @@ class HistoryViewModel @Inject constructor(
 ) : ViewModel() {
 
     val allHistory: StateFlow<List<HealthHistory>> = repository.getAllHistory()
+        .catch { e -> e.printStackTrace() }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     fun deleteHistory(history: HealthHistory) {

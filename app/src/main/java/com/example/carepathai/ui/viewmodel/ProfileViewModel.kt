@@ -8,6 +8,7 @@ import com.example.carepathai.domain.repository.HealthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,23 +21,60 @@ class ProfileViewModel @Inject constructor(
     private val _userProfile = MutableStateFlow(UserHealthProfile())
     val userProfile = _userProfile.asStateFlow()
 
+    private val _updateStatus = MutableStateFlow<String?>(null)
+    val updateStatus = _updateStatus.asStateFlow()
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
+
     init {
-        loadUserProfile()
+        authRepository.currentUser?.uid?.let { uid ->
+            _userProfile.value = _userProfile.value.copy(id = uid)
+            loadUserProfile()
+        }
     }
 
     private fun loadUserProfile() {
         authRepository.currentUser?.uid?.let { uid ->
             viewModelScope.launch {
-                repository.getUserProfile(uid).collect {
-                    _userProfile.value = it
-                }
+                _isLoading.value = true
+                repository.getUserProfile(uid)
+                    .catch { e -> 
+                        e.printStackTrace()
+                        _updateStatus.value = "Error loading profile: ${e.localizedMessage}"
+                        _isLoading.value = false
+                    }
+                    .collect { profile ->
+                        _userProfile.value = profile.copy(id = uid)
+                        _isLoading.value = false
+                    }
             }
         }
     }
 
     fun updateProfile(profile: UserHealthProfile) {
-        viewModelScope.launch {
-            repository.updateUserProfile(profile)
+        val uid = authRepository.currentUser?.uid ?: run {
+            _updateStatus.value = "Not logged in"
+            return
         }
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val profileToSave = profile.copy(id = uid)
+                repository.updateUserProfile(profileToSave)
+                _updateStatus.value = "Profile updated successfully!"
+                // Explicitly update local state to avoid flicker while waiting for sync
+                _userProfile.value = profileToSave
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _updateStatus.value = "Save failed: ${e.localizedMessage ?: "Unknown error"}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun clearStatus() {
+        _updateStatus.value = null
     }
 }
