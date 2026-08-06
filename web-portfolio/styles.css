@@ -112,6 +112,11 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes progressLoading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
 .top-app-bar {
     display: flex;
     align-items: center;

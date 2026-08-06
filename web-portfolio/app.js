@@ -92,9 +92,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Real-time listener for health_history subcollection
                 syncLocalHistoryToFirestore(user);
 
+                showProgressBar();
                 historyUnsubscribe = db.collection('users').doc(user.uid)
                     .collection('health_history')
                     .onSnapshot(snapshot => {
+                        hideProgressBar();
                         const records = [];
                         snapshot.forEach(doc => {
                             records.push({ id: doc.id, ...doc.data() });
@@ -103,7 +105,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         allHistoryRecords = records;
                         renderHistoryRecords(allHistoryRecords);
                     }, err => {
+                        hideProgressBar();
                         console.error("History snapshot error:", err);
+                        showErrorDialog("Health History Fetch Failed", err.message || "Could not retrieve health history from Firestore.");
                         allHistoryRecords = JSON.parse(localStorage.getItem('carepath_history') || '[]');
                         renderHistoryRecords(allHistoryRecords);
                     });
@@ -119,10 +123,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         renderMedicines(meds);
                     }, err => {
                         console.error("Medicine snapshot error:", err);
+                        showErrorDialog("Medicine Sync Failed", err.message || "Could not retrieve medicine reminders from Firestore.");
                     });
 
                 switchTab('home');
             } else {
+                hideProgressBar();
                 allHistoryRecords = JSON.parse(localStorage.getItem('carepath_history') || '[]');
                 renderHistoryRecords(allHistoryRecords);
                 renderMedicines([]);
@@ -727,6 +733,32 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(err => {
                 console.error("Error deleting medicine from Firestore:", err);
             });
+    };
+
+    // 6. UI Helpers (Progress Bar & Error Dialogs)
+    window.showProgressBar = function() {
+        const bar = document.getElementById('top-progress-bar');
+        if (bar) bar.style.display = 'block';
+    };
+
+    window.hideProgressBar = function() {
+        const bar = document.getElementById('top-progress-bar');
+        if (bar) bar.style.display = 'none';
+    };
+
+    window.showErrorDialog = function(title, message) {
+        const modal = document.getElementById('error-dialog-modal');
+        const titleElem = document.getElementById('error-dialog-title');
+        const msgElem = document.getElementById('error-dialog-message');
+
+        if (titleElem) titleElem.textContent = title || "Sync Error";
+        if (msgElem) msgElem.textContent = message || "An error occurred while fetching data.";
+        if (modal) modal.style.display = 'flex';
+    };
+
+    window.closeErrorDialog = function() {
+        const modal = document.getElementById('error-dialog-modal');
+        if (modal) modal.style.display = 'none';
     };
 
     // SOS Button

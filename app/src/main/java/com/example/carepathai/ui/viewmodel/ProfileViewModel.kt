@@ -35,7 +35,9 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun loadUserProfile() {
-        authRepository.currentUser?.uid?.let { uid ->
+        authRepository.currentUser?.let { user ->
+            val uid = user.uid
+            val email = user.email ?: ""
             viewModelScope.launch {
                 _isLoading.value = true
                 repository.getUserProfile(uid)
@@ -45,7 +47,18 @@ class ProfileViewModel @Inject constructor(
                         _isLoading.value = false
                     }
                     .collect { profile ->
-                        _userProfile.value = profile.copy(id = uid)
+                        if (profile.fullName.isEmpty() && profile.email.isEmpty()) {
+                            // Document likely missing, auto-create it with basic auth info
+                            val initialProfile = UserHealthProfile(
+                                id = uid,
+                                email = email,
+                                fullName = "User"
+                            )
+                            repository.updateUserProfile(initialProfile)
+                            _userProfile.value = initialProfile
+                        } else {
+                            _userProfile.value = profile.copy(id = uid)
+                        }
                         _isLoading.value = false
                     }
             }

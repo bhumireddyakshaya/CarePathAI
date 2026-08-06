@@ -41,6 +41,17 @@ class HealthHistoryRepositoryImpl @Inject constructor(
                     }
                 }
             } else {
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        val unsynced = healthHistoryDao.getUnsyncedHistory()
+                        unsynced.forEach { item ->
+                            insertHistory(item)
+                        }
+                    } catch (e: Exception) {
+                        Log.e("HealthHistoryRepo", "Error syncing local history to Firestore", e)
+                    }
+                }
+
                 roomCollectorJob = CoroutineScope(Dispatchers.IO).launch {
                     healthHistoryDao.getAllHistory().collect { roomList ->
                         trySend(roomList)

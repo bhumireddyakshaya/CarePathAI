@@ -12,6 +12,9 @@ interface HealthHistoryDao {
     @Query("SELECT * FROM health_history WHERE firestoreId = :firestoreId LIMIT 1")
     suspend fun getByFirestoreId(firestoreId: String): HealthHistory?
 
+    @Query("SELECT * FROM health_history WHERE firestoreId = '' OR firestoreId IS NULL")
+    suspend fun getUnsyncedHistory(): List<HealthHistory>
+
     @Query("DELETE FROM health_history WHERE firestoreId = :firestoreId")
     suspend fun deleteByFirestoreId(firestoreId: String)
 

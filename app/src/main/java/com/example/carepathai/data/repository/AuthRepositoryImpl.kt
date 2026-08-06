@@ -59,8 +59,9 @@ class AuthRepositoryImpl @Inject constructor(
                             trySend(Result.success(user))
                             close()
                         }
-                        .addOnFailureListener {
-                            trySend(Result.failure(it))
+                        .addOnFailureListener { err ->
+                            android.util.Log.e("AuthRepo", "Profile write warning on signup", err)
+                            trySend(Result.success(user))
                             close()
                         }
                 } else {
