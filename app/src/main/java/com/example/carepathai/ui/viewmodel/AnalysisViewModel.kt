@@ -20,6 +20,9 @@ class AnalysisViewModel @Inject constructor(
     private val _analysisResult = MutableStateFlow<HealthHistory?>(null)
     val analysisResult = _analysisResult.asStateFlow()
 
+    private val _statusMessage = MutableStateFlow<String?>(null)
+    val statusMessage = _statusMessage.asStateFlow()
+
     fun performAnalysis(symptoms: List<String>) {
         viewModelScope.launch {
             // Mocking AI Analysis based on symptoms
@@ -56,10 +59,16 @@ class AnalysisViewModel @Inject constructor(
             _analysisResult.value = history
             try {
                 historyRepository.insertHistory(history)
+                _statusMessage.value = "Assessment saved to Firebase successfully!"
             } catch (e: Exception) {
                 e.printStackTrace()
+                _statusMessage.value = "Firebase Save Error: ${e.localizedMessage ?: "Failed to save"}"
             }
         }
+    }
+
+    fun clearStatus() {
+        _statusMessage.value = null
     }
 
     private fun getFoodRecommendations(condition: String): String {

@@ -25,7 +25,21 @@ fun MedicineReminderScreen(
     onBack: (() -> Unit)? = null
 ) {
     val medicines by viewModel.allMedicines.collectAsState()
+    val statusMessage by viewModel.statusMessage.collectAsState()
     var showAddDialog by remember { mutableStateOf(false) }
+
+    if (statusMessage != null) {
+        AlertDialog(
+            onDismissRequest = { viewModel.clearStatus() },
+            title = { Text(if (statusMessage!!.contains("Error") || statusMessage!!.contains("Failed")) "Firebase Error" else "Success") },
+            text = { Text(statusMessage!!) },
+            confirmButton = {
+                TextButton(onClick = { viewModel.clearStatus() }) {
+                    Text("OK")
+                }
+            }
+        )
+    }
 
     Scaffold(
         topBar = {

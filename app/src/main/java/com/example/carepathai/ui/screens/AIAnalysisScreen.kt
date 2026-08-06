@@ -32,6 +32,20 @@ fun AIAnalysisScreen(
     viewModel: AnalysisViewModel = hiltViewModel()
 ) {
     val result by viewModel.analysisResult.collectAsState()
+    val statusMessage by viewModel.statusMessage.collectAsState()
+
+    if (statusMessage != null) {
+        AlertDialog(
+            onDismissRequest = { viewModel.clearStatus() },
+            title = { Text(if (statusMessage!!.contains("Error") || statusMessage!!.contains("Failed")) "Firebase Error" else "Success") },
+            text = { Text(statusMessage!!) },
+            confirmButton = {
+                TextButton(onClick = { viewModel.clearStatus() }) {
+                    Text("OK")
+                }
+            }
+        )
+    }
 
     LaunchedEffect(symptoms) {
         if (symptoms.isNotEmpty()) {

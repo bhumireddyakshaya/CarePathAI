@@ -23,7 +23,21 @@ fun HistoryScreen(
     viewModel: HistoryViewModel = hiltViewModel()
 ) {
     val historyList by viewModel.allHistory.collectAsState()
+    val statusMessage by viewModel.statusMessage.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
+
+    if (statusMessage != null) {
+        AlertDialog(
+            onDismissRequest = { viewModel.clearStatus() },
+            title = { Text(if (statusMessage!!.contains("Error") || statusMessage!!.contains("Failed")) "Firebase Error" else "Success") },
+            text = { Text(statusMessage!!) },
+            confirmButton = {
+                TextButton(onClick = { viewModel.clearStatus() }) {
+                    Text("OK")
+                }
+            }
+        )
+    }
 
     val filteredList = try {
         if (searchQuery.isEmpty()) {
