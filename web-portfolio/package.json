@@ -1,0 +1,20 @@
+{
+  "name": "carepathai-web",
+  "version": "1.0.0",
+  "description": "CarePathAI Web Application",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx -y http-server -p 8080 -c-1",
+    "start": "npx -y http-server -p 8080 -c-1"
+  },
+  "keywords": [
+    "health",
+    "carepathai",
+    "firebase"
+  ],
+  "author": "CarePathAI Team",
+  "license": "ISC",
+  "dependencies": {
+    "firebase": "^12.17.1"
+  }
+}

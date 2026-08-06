@@ -1,11 +1,12 @@
 // Firebase Configuration (Synced with CarePathAI Android App)
 const firebaseConfig = {
-    apiKey: "AIzaSyB-mximOd6pSfN2pc4qVng7fX8BvsPFzLs",
-    authDomain: "carepathai-5714b.firebaseapp.com",
-    projectId: "carepathai-5714b",
-    storageBucket: "carepathai-5714b.firebasestorage.app",
-    messagingSenderId: "444560361811",
-    appId: "1:444560361811:web:carepathaiweb"
+    apiKey: "AIzaSyD4vmPx2VshhFUdnMLBpxEYu_e8YDwIIYk",
+    authDomain: "ai-assisted-symptom-analysis.firebaseapp.com",
+    projectId: "ai-assisted-symptom-analysis",
+    storageBucket: "ai-assisted-symptom-analysis.firebasestorage.app",
+    messagingSenderId: "180164884905",
+    appId: "1:180164884905:web:03a61a4fce418a39a9ecb8",
+    measurementId: "G-8MK157XXKH"
 };
 
 // Initialize Firebase
@@ -22,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabViews = document.querySelectorAll('.tab-view');
     const bottomNav = document.querySelector('.bottom-nav');
 
-    window.switchTab = function(tabId) {
+    window.switchTab = function (tabId) {
         tabViews.forEach(view => {
             view.classList.remove('active');
             if (view.id === `view-${tabId}`) view.classList.add('active');
@@ -38,6 +39,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             if (bottomNav) bottomNav.style.display = 'flex';
         }
+
+        // Re-render history if switching to history tab
+        if (tabId === 'history') renderHistoryRecords(allHistoryRecords);
 
         // Reset assessment if switching to it
         if (tabId === 'assessment') resetAssessment();
@@ -138,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    window.toggleAuthMode = function(mode) {
+    window.toggleAuthMode = function (mode) {
         const tabSignIn = document.getElementById('tab-signin');
         const tabSignUp = document.getElementById('tab-signup');
         const loginForm = document.getElementById('login-form');
@@ -163,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    window.handleLogout = function() {
+    window.handleLogout = function () {
         if (auth) {
             auth.signOut().then(() => {
                 localStorage.removeItem('carepath_user');
@@ -175,8 +179,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    window.handleLogin = function() {
-        const email = document.getElementById('login-email').value.trim();
+    window.handleLogin = function () {
+        const email = document.getElementById('login-email').value.trim().toLowerCase();
         const password = document.getElementById('login-password').value;
 
         if (!email || !password) {
@@ -191,20 +195,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 .catch((error) => {
                     console.error("Firebase Login error:", error);
-                    let userMsg = error.message;
-                    if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
-                        userMsg = "Account not found or password incorrect. If you haven't registered this account yet, please click the 'Sign Up' tab to create your account.";
-                    } else if (error.code === 'auth/wrong-password') {
-                        userMsg = "Incorrect password. Please double-check your password or create a new account in 'Sign Up'.";
-                    }
-                    alert("Login Failed: " + userMsg);
+                    alert(`Login Error (${error.code}): ${error.message}`);
                 });
         }
     };
 
-    window.handleSignUp = function() {
+    window.handleSignUp = function () {
         const name = document.getElementById('signup-name').value.trim();
-        const email = document.getElementById('signup-email').value.trim();
+        const email = document.getElementById('signup-email').value.trim().toLowerCase();
         const mobile = document.getElementById('signup-mobile').value.trim() || 'N/A';
         const age = document.getElementById('signup-age').value.trim() || 'N/A';
         const blood = document.getElementById('signup-blood').value.trim() || 'N/A';
@@ -405,7 +403,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!query) {
                 renderHistoryRecords(allHistoryRecords);
             } else {
-                const filtered = allHistoryRecords.filter(r => 
+                const filtered = allHistoryRecords.filter(r =>
                     (r.diagnosis && r.diagnosis.toLowerCase().includes(query)) ||
                     (r.symptoms && r.symptoms.toLowerCase().includes(query)) ||
                     (r.riskLevel && r.riskLevel.toLowerCase().includes(query))
@@ -452,12 +450,16 @@ document.addEventListener('DOMContentLoaded', () => {
             createdAt: record.createdAt
         };
 
+        allHistoryRecords.unshift(firestoreData);
+        renderHistoryRecords(allHistoryRecords);
+
         newDocRef.set(firestoreData)
             .then(() => {
                 console.log("Health history saved to Firestore with ID:", newDocRef.id);
             })
             .catch(err => {
                 console.error("Error saving health history to Firestore:", err);
+                showErrorDialog("Firestore Save Failed", err.message || "Failed to save history record.");
             });
     }
 
@@ -487,11 +489,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderHistoryRecords(records) {
-        if (!historyList) return;
-        historyList.innerHTML = '';
+        const listElem = document.getElementById('history-list');
+        if (!listElem) return;
+        listElem.innerHTML = '';
 
         if (!records || records.length === 0) {
-            historyList.innerHTML = `<div class="card empty-msg" style="text-align:center; color: var(--text-muted); padding: 20px;">No assessment history recorded yet.</div>`;
+            listElem.innerHTML = `<div class="card empty-msg" style="text-align:center; color: var(--text-muted); padding: 20px;">No assessment history recorded yet.</div>`;
             return;
         }
 
@@ -503,23 +506,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="card-body">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                         <div>
-                            <h3 style="font-size: 16px; font-weight: 700;">${rec.diagnosis || 'General Assessment'}</h3>
+                            <h3 style="font-size: 16px; font-weight: 700; color: #1e293b;">${rec.diagnosis || 'General Assessment'}</h3>
                             <p style="font-size: 11px; color: var(--text-muted);">${dateStr}</p>
                         </div>
-                        <i class="fa-solid fa-trash" style="color: #ef4444; cursor: pointer;" onclick="deleteHistoryRecord('${rec.id}')"></i>
+                        <i class="fa-solid fa-trash" style="color: #ef4444; cursor: pointer; padding: 4px;" onclick="deleteHistoryRecord('${rec.id}')"></i>
                     </div>
                     <hr style="margin: 12px 0; border: 0; border-top: 1px solid #f3f4f6;">
                     <p style="font-size: 12px; color: var(--text-muted);"><strong>Symptoms:</strong> ${rec.symptoms || 'None'}</p>
-                    ${rec.riskLevel ? `<p style="font-size: 11px; color: ${rec.riskLevel === 'High' ? '#ef4444' : '#4ade80'}; margin-top: 4px; font-weight: 600;">Risk Level: ${rec.riskLevel}</p>` : ''}
+                    ${rec.riskLevel ? `<p style="font-size: 11px; color: ${rec.riskLevel === 'High' ? '#ef4444' : '#10b981'}; margin-top: 4px; font-weight: 600;">Risk Level: ${rec.riskLevel}</p>` : ''}
                 </div>
             `;
-            historyList.appendChild(item);
+            listElem.appendChild(item);
         });
     }
 
-    window.deleteHistoryRecord = function(docId) {
+    window.deleteHistoryRecord = function (docId) {
         const user = auth ? auth.currentUser : null;
-        
+
         // Remove locally from memory & localStorage
         allHistoryRecords = allHistoryRecords.filter(r => r.id !== docId);
         renderHistoryRecords(allHistoryRecords);
@@ -557,7 +560,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 inputs.forEach(i => i.style.display = 'block');
             } else {
                 icon.className = 'fa-solid fa-pen';
-                
+
                 const currentUser = auth ? auth.currentUser : null;
                 const activeUser = JSON.parse(localStorage.getItem('carepath_user')) || {};
                 activeUser.mobile = document.getElementById('edit-mobile').value.trim() || 'N/A';
@@ -598,7 +601,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 5. Medicine Reminders Logic (Firestore Real-time Synced)
-    window.renderMedicines = function(records) {
+    window.renderMedicines = function (records) {
         const medList = document.getElementById('medicine-list');
         if (!medList) return;
         medList.innerHTML = '';
@@ -641,19 +644,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    window.openAddMedicineModal = function() {
+    window.openAddMedicineModal = function () {
         const modal = document.getElementById('add-medicine-modal');
         if (modal) modal.style.display = 'flex';
     };
 
-    window.closeAddMedicineModal = function() {
+    window.closeAddMedicineModal = function () {
         const modal = document.getElementById('add-medicine-modal');
         if (modal) modal.style.display = 'none';
         const form = document.getElementById('add-medicine-form');
         if (form) form.reset();
     };
 
-    window.handleAddMedicineSubmit = function(event) {
+    window.handleAddMedicineSubmit = function (event) {
         event.preventDefault();
         const user = auth ? auth.currentUser : null;
         if (!user || !db) {
@@ -700,7 +703,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     };
 
-    window.toggleMedicineTaken = function(medId, isTaken) {
+    window.toggleMedicineTaken = function (medId, isTaken) {
         const user = auth ? auth.currentUser : null;
         if (!user || !db || !medId) return;
 
@@ -719,7 +722,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     };
 
-    window.deleteMedicineRecord = function(medId) {
+    window.deleteMedicineRecord = function (medId) {
         const user = auth ? auth.currentUser : null;
         if (!user || !db || !medId) return;
 
@@ -736,17 +739,17 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // 6. UI Helpers (Progress Bar & Error Dialogs)
-    window.showProgressBar = function() {
+    window.showProgressBar = function () {
         const bar = document.getElementById('top-progress-bar');
         if (bar) bar.style.display = 'block';
     };
 
-    window.hideProgressBar = function() {
+    window.hideProgressBar = function () {
         const bar = document.getElementById('top-progress-bar');
         if (bar) bar.style.display = 'none';
     };
 
-    window.showErrorDialog = function(title, message) {
+    window.showErrorDialog = function (title, message) {
         const modal = document.getElementById('error-dialog-modal');
         const titleElem = document.getElementById('error-dialog-title');
         const msgElem = document.getElementById('error-dialog-message');
@@ -756,7 +759,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (modal) modal.style.display = 'flex';
     };
 
-    window.closeErrorDialog = function() {
+    window.closeErrorDialog = function () {
         const modal = document.getElementById('error-dialog-modal');
         if (modal) modal.style.display = 'none';
     };
