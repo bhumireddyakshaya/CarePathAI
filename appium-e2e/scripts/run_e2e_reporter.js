@@ -6,7 +6,8 @@ const logger = require('../utilities/Logger');
 
 async function runMegaE2ESuite() {
     console.log('===============================================================');
-    console.log('  CarePathAI - Mega 1,100+ Web & Mobile Selenium E2E Suite    ');
+    console.log(' CarePathAI - Enterprise 1,500+ E2E Test Suite Execution Framework ');
+    console.log(' (Appium Mobile, Selenium Web, Field Validation, Security, Load)  ');
     console.log('===============================================================');
 
     excelReporter.reset();
