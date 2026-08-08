@@ -149,7 +149,7 @@ fun AIAnalysisScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Next Actions
+                // Recommended Next Actions
                 Text("Recommended Next Actions", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = Color.White)
                 Spacer(modifier = Modifier.height(12.dp))
                 
@@ -159,7 +159,63 @@ fun AIAnalysisScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // Recommended Food & Exercise Cards
+                // Gemini AI Food Recommendations Card
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A1A))
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(Icons.Default.Restaurant, contentDescription = null, tint = Color(0xFF38BDF8))
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                "Recommended Nutrition (Gemini AI)",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF38BDF8)
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            result?.foodRecommendations ?: "Balanced diet, hydration, and fresh vegetables.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color(0xFFCBD5E1)
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Gemini AI Exercise Plans Card
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A1A))
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(Icons.Default.FitnessCenter, contentDescription = null, tint = Color(0xFFA855F7))
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                "Recommended Exercise (Gemini AI)",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFFA855F7)
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            result?.exercisePlans ?: "Light walking, gentle stretching, and rest.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color(0xFFCBD5E1)
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Recommended Food & Exercise Action Buttons
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                     MiniRecommendationCard("Diet Plan", Icons.Default.Restaurant, Color(0xFF4CAF50), Modifier.weight(1f), onNavigateToFood)
                     MiniRecommendationCard("Exercises", Icons.Default.FitnessCenter, Color(0xFF2196F3), Modifier.weight(1f), onNavigateToExercise)

@@ -35,10 +35,10 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun signUp(email: String, password: String, name: String) {
+    fun signUp(email: String, password: String, name: String, mobileNumber: String = "") {
         viewModelScope.launch {
             _authState.value = AuthState.Loading
-            authRepository.signUp(email, password, name).collect { result ->
+            authRepository.signUp(email, password, name, mobileNumber).collect { result ->
                 result.onSuccess {
                     _authState.value = AuthState.Authenticated(it)
                 }.onFailure {

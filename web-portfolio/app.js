@@ -24,6 +24,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const bottomNav = document.querySelector('.bottom-nav');
 
     window.switchTab = function (tabId) {
+        if (tabId !== 'login' && auth && !auth.currentUser) {
+            tabId = 'login';
+        }
+
         tabViews.forEach(view => {
             view.classList.remove('active');
             if (view.id === `view-${tabId}`) view.classList.add('active');
@@ -180,50 +184,73 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     window.handleLogin = function () {
-        const email = document.getElementById('login-email').value.trim().toLowerCase();
-        const password = document.getElementById('login-password').value;
+        const emailInput = document.getElementById('login-email');
+        const passwordInput = document.getElementById('login-password');
+        const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+        const password = passwordInput ? passwordInput.value : '';
 
         if (!email || !password) {
-            alert('Please enter both email and password.');
+            showErrorDialog('Login Failed', 'Please enter both your email address and password.');
             return;
         }
 
+        showProgressBar();
         if (auth) {
             auth.signInWithEmailAndPassword(email, password)
                 .then((userCredential) => {
                     console.log("Firebase Login successful:", userCredential.user.email);
+                    hideProgressBar();
                 })
                 .catch((error) => {
+                    hideProgressBar();
                     console.error("Firebase Login error:", error);
-                    alert(`Login Error (${error.code}): ${error.message}`);
+                    let msg = error.message;
+                    if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+                        msg = 'Invalid email address or password. Please check your credentials and try again.';
+                    }
+                    showErrorDialog('Login Failed', msg);
+                    if (passwordInput) passwordInput.value = '';
+                    switchTab('login');
                 });
+        } else {
+            hideProgressBar();
+            showErrorDialog('System Error', 'Firebase Authentication service is unavailable.');
         }
     };
 
     window.handleSignUp = function () {
-        const name = document.getElementById('signup-name').value.trim();
-        const email = document.getElementById('signup-email').value.trim().toLowerCase();
-        const mobile = document.getElementById('signup-mobile').value.trim() || 'N/A';
-        const age = document.getElementById('signup-age').value.trim() || 'N/A';
-        const blood = document.getElementById('signup-blood').value.trim() || 'N/A';
-        const height = document.getElementById('signup-height').value.trim() || 'N/A';
-        const weight = document.getElementById('signup-weight').value.trim() || 'N/A';
-        const pass = document.getElementById('signup-password').value;
-        const confirmPass = document.getElementById('signup-confirm-password').value;
+        const nameInput = document.getElementById('signup-name');
+        const emailInput = document.getElementById('signup-email');
+        const mobileInput = document.getElementById('signup-mobile');
+        const passwordInput = document.getElementById('signup-password');
+        const confirmPassInput = document.getElementById('signup-confirm-password');
 
-        if (pass !== confirmPass) {
-            alert('Passwords do not match. Please verify your password.');
+        const name = nameInput ? nameInput.value.trim() : '';
+        const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+        const mobile = mobileInput ? mobileInput.value.trim() : '';
+        const pass = passwordInput ? passwordInput.value : '';
+        const confirmPass = confirmPassInput ? confirmPassInput.value : '';
+
+        if (!name || !email || !pass || !confirmPass) {
+            showErrorDialog('Sign Up Failed', 'Please fill in all required fields.');
             return;
         }
 
+        if (pass !== confirmPass) {
+            showErrorDialog('Sign Up Failed', 'Passwords do not match. Please verify your password.');
+            return;
+        }
+
+        if (pass.length < 6) {
+            showErrorDialog('Sign Up Failed', 'Password should be at least 6 characters long.');
+            return;
+        }
+
+        showProgressBar();
         if (auth) {
             auth.createUserWithEmailAndPassword(email, pass)
                 .then((userCredential) => {
                     const user = userCredential.user;
-                    const ageNum = parseInt(age) || 0;
-                    const heightNum = parseFloat(height) || 0;
-                    const weightNum = parseFloat(weight) || 0;
-
                     const userData = {
                         id: user.uid,
                         fullName: name,
@@ -231,11 +258,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         email: email,
                         mobileNumber: mobile,
                         mobile: mobile,
-                        age: ageNum,
-                        bloodGroup: blood,
-                        blood: blood,
-                        height: heightNum,
-                        weight: weightNum,
+                        age: 0,
+                        bloodGroup: "",
+                        blood: "",
+                        height: 0,
+                        weight: 0,
                         gender: "",
                         medicalHistory: [],
                         dietaryPreferences: "",
@@ -248,12 +275,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     return db.collection('users').doc(user.uid).set(userData);
                 })
                 .then(() => {
+                    hideProgressBar();
                     console.log("Firebase User registered & saved in Firestore successfully!");
                 })
                 .catch((error) => {
+                    hideProgressBar();
                     console.error("Firebase SignUp error:", error);
-                    alert("Sign Up Failed: " + error.message);
+                    showErrorDialog('Sign Up Failed', error.message);
                 });
+        } else {
+            hideProgressBar();
+            showErrorDialog('System Error', 'Firebase Authentication service is unavailable.');
         }
     };
 
@@ -288,12 +320,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (editWeight) editWeight.value = userData.weight !== 'N/A' ? userData.weight : '';
     }
 
-    // Initial Authentication Check
-    const savedUser = localStorage.getItem('carepath_user');
-    if (!savedUser) {
+    // Default to login tab until Firebase Auth state is resolved
+    if (!auth || !auth.currentUser) {
         switchTab('login');
-    } else {
-        updateUserProfile(JSON.parse(savedUser));
     }
 
     navItems.forEach(item => {
@@ -301,24 +330,55 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 2. Assessment Multi-step Logic
+    let currentAssessmentStep = 1;
     let selectedBodyPart = null;
     const bodyPartCards = document.querySelectorAll('.body-part-card');
     const btnNext1 = document.getElementById('next-1');
     const btnNext2 = document.getElementById('next-2');
+    const btnNext3 = document.getElementById('next-3');
     const progressBar = document.getElementById('assessment-progress');
+    const searchInput = document.getElementById('symptom-search-input');
+
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            const items = document.querySelectorAll('.symptom-check-item');
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(query) ? 'flex' : 'none';
+            });
+        });
+    }
+
+    window.handleAssessmentBack = function() {
+        if (currentAssessmentStep > 1) {
+            showStep(currentAssessmentStep - 1);
+        } else {
+            switchTab('home');
+        }
+    };
 
     function resetAssessment() {
         showStep(1);
         selectedBodyPart = null;
         bodyPartCards.forEach(c => c.classList.remove('active'));
-        btnNext1.disabled = true;
+        if (btnNext1) btnNext1.disabled = true;
         document.querySelectorAll('.symptom-check-item input').forEach(i => i.checked = false);
+        if (searchInput) searchInput.value = '';
     }
 
     function showStep(stepNum) {
+        currentAssessmentStep = stepNum;
+        const viewElem = document.getElementById('view-assessment');
+        if (viewElem) {
+            if (stepNum === 4) viewElem.classList.add('dark-mode');
+            else viewElem.classList.remove('dark-mode');
+        }
+
         document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-        document.getElementById(`step-${stepNum}`).classList.add('active');
-        progressBar.style.width = `${stepNum * 33.3}%`;
+        const target = document.getElementById(`step-${stepNum}`);
+        if (target) target.classList.add('active');
+        if (progressBar) progressBar.style.width = `${stepNum * 25}%`;
     }
 
     bodyPartCards.forEach(card => {
@@ -326,70 +386,212 @@ document.addEventListener('DOMContentLoaded', () => {
             bodyPartCards.forEach(c => c.classList.remove('active'));
             card.classList.add('active');
             selectedBodyPart = card.dataset.part;
-            btnNext1.disabled = false;
+            if (btnNext1) btnNext1.disabled = false;
         });
     });
 
-    btnNext1.addEventListener('click', () => showStep(2));
-
-    btnNext2.addEventListener('click', () => {
-        showStep(3);
+    if (btnNext1) btnNext1.addEventListener('click', () => showStep(2));
+    if (btnNext2) btnNext2.addEventListener('click', () => showStep(3));
+    if (btnNext3) btnNext3.addEventListener('click', () => {
+        showStep(4);
         runAIAnalysis();
     });
 
-    function runAIAnalysis() {
+    async function runAIAnalysis() {
         const resultContainer = document.getElementById('analysis-result');
         resultContainer.innerHTML = `
             <div class="loading-spinner">
                 <div class="spinner"></div>
-                <p>AI is analyzing your symptoms...</p>
+                <p style="color: white; font-weight: 600;">Gemini AI is analyzing your symptoms and building recommendations...</p>
             </div>
         `;
 
-        setTimeout(() => {
-            const checked = Array.from(document.querySelectorAll('.symptom-check-item input:checked'));
-            const symptoms = checked.map(i => i.nextElementSibling.textContent);
-            const isHighRisk = symptoms.some(s => s.toLowerCase().includes('chest') || s.toLowerCase().includes('palpitation'));
+        const checked = Array.from(document.querySelectorAll('.symptom-check-item input:checked'));
+        const symptomsList = checked.map(i => i.nextElementSibling ? i.nextElementSibling.textContent.trim() : i.parentElement.textContent.trim());
+        const symptomsStr = symptomsList.join(', ') || 'General Wellness Check';
 
-            const riskLevel = isHighRisk ? "High" : "Low";
-            const color = isHighRisk ? "#ef4444" : "#4ade80";
+        const severitySlider = document.getElementById('detail-severity-slider');
+        const severityVal = severitySlider ? parseInt(severitySlider.value) : 1;
+        const duration = document.getElementById('detail-duration') ? (document.getElementById('detail-duration').value.trim() || 'Few days') : 'Few days';
+        const notes = document.getElementById('detail-notes') ? document.getElementById('detail-notes').value.trim() : '';
 
-            resultContainer.innerHTML = `
-                <div style="text-align: center; padding-top: 20px;">
-                    <div style="width: 100px; height: 100px; border-radius: 50%; border: 8px solid ${color}; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px auto;">
-                        <span style="font-size: 24px; font-weight: 800; color: white;">85%</span>
+        const apiKey = "AIzaSyD4vmPx2VshhFUdnMLBpxEYu_e8YDwIIYk";
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        const prompt = `You are a clinical AI assistant for CarePathAI. Patient Symptoms: "${symptomsStr}". Duration: "${duration}". Severity (1-10): ${severityVal}. Additional Notes: "${notes}". Return ONLY a JSON object with keys: "diagnosis" (string), "riskLevel" ("Low", "Medium", or "High"), "foodRecommendations" (string), "exercisePlans" (string). Do not include markdown tags outside JSON.`;
+
+        let diagnosis = symptomsList.some(s => s.toLowerCase().includes('chest') || s.toLowerCase().includes('palpitation')) ? 'Cardiac Concern' : 'General Wellness';
+        let riskLevel = diagnosis === 'Cardiac Concern' ? 'High' : (severityVal >= 7 ? 'High' : (severityVal >= 4 ? 'Medium' : 'Low'));
+        let foodRecs = 'Balanced diet rich in leafy greens, almonds, and hydration.';
+        let exerciseRecs = 'Light cardiovascular activity 20 mins/day.';
+
+        try {
+            const resp = await fetch(geminiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }]
+                })
+            });
+
+            if (resp.ok) {
+                const data = await resp.json();
+                const candidates = data.candidates;
+                if (candidates && candidates.length > 0) {
+                    let rawText = candidates[0].content.parts[0].text.trim();
+                    if (rawText.startsWith('```json')) rawText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+                    else if (rawText.startsWith('```')) rawText = rawText.replace(/```/g, '').trim();
+
+                    const parsed = JSON.parse(rawText);
+                    if (parsed.diagnosis) diagnosis = parsed.diagnosis;
+                    if (parsed.riskLevel) riskLevel = parsed.riskLevel;
+                    if (parsed.foodRecommendations) foodRecs = parsed.foodRecommendations;
+                    if (parsed.exercisePlans) exerciseRecs = parsed.exercisePlans;
+                }
+            }
+        } catch (err) {
+            console.warn("Gemini API call warning (using fallback):", err);
+        }
+
+        const color = riskLevel === 'High' ? "#ef4444" : (riskLevel === 'Medium' ? '#f59e0b' : "#4ade80");
+
+        resultContainer.innerHTML = `
+            <div style="text-align: center; padding-top: 10px;">
+                <div class="dark-card" style="padding: 24px 16px; margin-bottom: 20px;">
+                    <div style="width: 90px; height: 90px; border-radius: 50%; border: 6px solid ${color}; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto 16px auto; background: rgba(0,0,0,0.4);">
+                        <span style="font-size: 22px; font-weight: 800; color: white;">85%</span>
+                        <span style="font-size: 10px; color: #94a3b8;">Confidence</span>
                     </div>
-                    <h3 style="font-size: 24px; margin-bottom: 8px; color: ${color};">${isHighRisk ? 'Cardiac Concern' : 'General Wellness'}</h3>
-                    <div style="display: inline-block; padding: 6px 16px; border-radius: 999px; background: ${color}33; color: ${color}; font-size: 12px; font-weight: 700; margin-bottom: 30px;">
+                    <p style="font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Possible Condition</p>
+                    <h3 style="font-size: 22px; font-weight: 800; margin-bottom: 8px; color: white;">${diagnosis}</h3>
+                    <div style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 14px; border-radius: 999px; background: ${color}22; color: ${color}; font-size: 12px; font-weight: 700;">
+                        <span style="width: 8px; height: 8px; border-radius: 50%; background: ${color}; display: inline-block;"></span>
                         Risk Level: ${riskLevel}
                     </div>
-
-                    <div class="dark-card" style="text-align: left;">
-                        <h4 style="font-size: 16px; margin-bottom: 12px;"><i class="fa-solid fa-brain" style="margin-right: 10px;"></i> AI Health Insights</h4>
-                        <p style="font-size: 14px; color: #94a3b8; line-height: 1.6;">
-                            Based on your symptoms (${symptoms.join(', ') || 'None'}), the AI suggests monitoring your condition.
-                            ${isHighRisk ? 'Immediate attention is recommended.' : 'Maintain hydration and rest.'}
-                        </p>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px;">
-                        <div class="insight-item" style="background: #1A1A1A; border: 1px solid #333; color: white;" onclick="switchTab('nutrition')">
-                            <i class="fa-solid fa-utensils"></i>
-                            <span>Diet Plan</span>
-                        </div>
-                        <div class="insight-item" style="background: #1A1A1A; border: 1px solid #333; color: white;" onclick="switchTab('exercise')">
-                            <i class="fa-solid fa-dumbbell"></i>
-                            <span>Exercise Plan</span>
-                        </div>
-                    </div>
-
-                    <button class="btn btn-primary btn-block" style="margin-top: 24px;" onclick="switchTab('home')">Back to Dashboard</button>
                 </div>
-            `;
 
-            // Save assessment record to Firestore
-            saveHistoryToFirestore(isHighRisk ? 'Cardiac Concern' : 'General Wellness', symptoms.join(', '), isHighRisk ? 'High' : 'Low');
-        }, 2000);
+                <div class="dark-card" style="text-align: left; margin-bottom: 20px;">
+                    <h4 style="font-size: 15px; font-weight: 700; margin-bottom: 8px; color: white; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-brain" style="color: var(--primary);"></i> AI Health Insights
+                    </h4>
+                    <p style="font-size: 13px; color: #cbd5e1; line-height: 1.6;">
+                        Based on your symptoms (${symptomsStr}) lasting ${duration} with severity score ${severityVal}/10, the AI suggests this might be related to ${diagnosis.toLowerCase()}. Monitor your symptoms closely.
+                    </p>
+                </div>
+
+                <div style="text-align: left; margin-bottom: 20px;">
+                    <h4 style="font-size: 15px; font-weight: 700; color: white; margin-bottom: 12px;">Recommended Next Actions</h4>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div style="display: flex; align-items: center; gap: 12px; font-size: 13px; color: #e2e8f0;">
+                            <i class="fa-solid fa-heart-pulse" style="color: #ef4444; width: 18px;"></i>
+                            <span>Monitor your vitals twice daily.</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px; font-size: 13px; color: #e2e8f0;">
+                            <i class="fa-solid fa-droplet" style="color: #3b82f6; width: 18px;"></i>
+                            <span>Increase fluid intake (at least 2.5L).</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px; font-size: 13px; color: #e2e8f0;">
+                            <i class="fa-solid fa-bed" style="color: #a855f7; width: 18px;"></i>
+                            <span>Ensure adequate rest (7-8 hours).</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dark-card" style="text-align: left; margin-bottom: 16px; border-left: 4px solid #38bdf8;">
+                    <h4 style="font-size: 14px; font-weight: 700; margin-bottom: 6px; color: #38bdf8;"><i class="fa-solid fa-utensils" style="margin-right: 8px;"></i> Recommended Nutrition (Gemini AI)</h4>
+                    <p style="font-size: 13px; color: #cbd5e1; line-height: 1.6;">${foodRecs}</p>
+                </div>
+
+                <div class="dark-card" style="text-align: left; margin-bottom: 24px; border-left: 4px solid #a855f7;">
+                    <h4 style="font-size: 14px; font-weight: 700; margin-bottom: 6px; color: #a855f7;"><i class="fa-solid fa-dumbbell" style="margin-right: 8px;"></i> Recommended Exercise (Gemini AI)</h4>
+                    <p style="font-size: 13px; color: #cbd5e1; line-height: 1.6;">${exerciseRecs}</p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                    <div class="insight-item" style="background: #1A1A1A; border: 1px solid #333; color: white; padding: 14px; border-radius: 12px; cursor: pointer; text-align: center;" onclick="switchTab('nutrition')">
+                        <i class="fa-solid fa-utensils" style="font-size: 20px; color: #4CAF50; margin-bottom: 6px; display: block;"></i>
+                        <span style="font-size: 13px; font-weight: 700;">Diet Plan</span>
+                    </div>
+                    <div class="insight-item" style="background: #1A1A1A; border: 1px solid #333; color: white; padding: 14px; border-radius: 12px; cursor: pointer; text-align: center;" onclick="switchTab('exercise')">
+                        <i class="fa-solid fa-dumbbell" style="font-size: 20px; color: #2196F3; margin-bottom: 6px; display: block;"></i>
+                        <span style="font-size: 13px; font-weight: 700;">Exercises</span>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary btn-block" style="margin-top: 12px; padding: 14px;" onclick="switchTab('home')">Back to Dashboard</button>
+            </div>
+        `;
+
+        // Update Nutrition AI and Exercise Plan sub views dynamically
+        updateDynamicNutritionAndExercise(foodRecs, exerciseRecs, diagnosis);
+
+        // Save assessment record to Firestore
+        saveHistoryToFirestore(diagnosis, symptomsStr, riskLevel, foodRecs, exerciseRecs);
+    }
+
+    function updateDynamicNutritionAndExercise(foodRecs, exerciseRecs, diagnosis) {
+        const nutInsight = document.getElementById('nutrition-insight-text');
+        const mealList = document.getElementById('dynamic-meal-list');
+        const exInsight = document.getElementById('exercise-insight-text');
+        const exList = document.getElementById('dynamic-exercise-list');
+
+        if (nutInsight) nutInsight.textContent = `“${foodRecs}”`;
+        if (exInsight) exInsight.textContent = `“${exerciseRecs}”`;
+
+        if (mealList) {
+            let meals = [
+                { type: 'BREAKFAST', title: 'Oatmeal with Almonds & Berries', desc: 'High in soluble fiber and antioxidants.' },
+                { type: 'LUNCH', title: 'Quinoa & Avocado Salad', desc: 'Plant protein and essential healthy fats.' },
+                { type: 'DINNER', title: 'Baked Fish or Tofu with Greens', desc: 'Lean protein with anti-inflammatory nutrients.' },
+                { type: 'IMMUNITY SNACK', title: 'Citrus Fruits & Ginger Tea', desc: 'Vitamin C boost and digestive support.' }
+            ];
+
+            if (diagnosis.toLowerCase().includes('fever') || diagnosis.toLowerCase().includes('infection')) {
+                meals = [
+                    { type: 'BREAKFAST', title: 'Fruit Smoothie Bowl with Honey', desc: 'Easy on digestion & rich in vitamins.' },
+                    { type: 'LUNCH', title: 'Warm Chicken or Vegetable Soup', desc: 'Provides hydration, electrolytes, and warmth.' },
+                    { type: 'DINNER', title: 'Steamed Rice with Soft Vegetables', desc: 'Gentle on stomach and easy to absorb.' },
+                    { type: 'IMMUNITY SNACK', title: 'Fresh Coconut Water & Orange Slices', desc: 'Electrolyte replenishment & Vitamin C.' }
+                ];
+            } else if (diagnosis.toLowerCase().includes('cardiac') || diagnosis.toLowerCase().includes('heart')) {
+                meals = [
+                    { type: 'BREAKFAST', title: 'Steel Cut Oats with Walnuts', desc: 'Omega-3 fatty acids for heart health.' },
+                    { type: 'LUNCH', title: 'Low-Sodium Quinoa & Spinach Salad', desc: 'Rich in potassium and magnesium.' },
+                    { type: 'DINNER', title: 'Grilled Salmon/Tofu with Broccoli', desc: 'Zero trans fats, supports clear arteries.' },
+                    { type: 'IMMUNITY SNACK', title: 'Unsalted Almonds & Green Tea', desc: 'Antioxidants for vascular protection.' }
+                ];
+            }
+
+            mealList.innerHTML = meals.map(m => `
+                <div class="dark-card" style="margin-bottom: 12px; padding: 18px;">
+                    <span style="font-size: 11px; font-weight: 800; color: #38bdf8; letter-spacing: 0.5px;">${m.type}</span>
+                    <h4 style="font-size: 16px; font-weight: 700; color: white; margin: 4px 0;">${m.title}</h4>
+                    <p style="font-size: 12px; color: #cbd5e1; opacity: 0.9;">${m.desc}</p>
+                </div>
+            `).join('');
+        }
+
+        if (exList) {
+            let exercises = [
+                { title: 'Brisk Walking', desc: '20-30 mins • Low to Medium Intensity' },
+                { title: 'Gentle Yoga & Stretching', desc: '15 mins • Low Intensity' },
+                { title: 'Deep Breathing Exercises', desc: '5-10 mins • Relaxation' }
+            ];
+
+            if (diagnosis.toLowerCase().includes('fever') || diagnosis.toLowerCase().includes('infection')) {
+                exercises = [
+                    { title: 'Complete Bed Rest', desc: 'Full recovery focus' },
+                    { title: 'Deep Diaphragmatic Breathing', desc: '5 mins • Low Intensity' },
+                    { title: 'Light In-Bed Stretching', desc: '5 mins • Very Light' }
+                ];
+            }
+
+            exList.innerHTML = exercises.map(e => `
+                <div class="dark-card" style="margin-bottom: 12px; padding: 18px;">
+                    <h4 style="font-size: 16px; font-weight: 700; color: white; margin-bottom: 4px;">${e.title}</h4>
+                    <p style="font-size: 12px; color: #a855f7; font-weight: 600;">${e.desc}</p>
+                </div>
+            `).join('');
+        }
     }
 
     // 3. History Management (Firestore & Local Storage Synced)
@@ -413,7 +615,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function saveHistoryToFirestore(diagnosis, symptoms, riskLevel) {
+    function saveHistoryToFirestore(diagnosis, symptoms, riskLevel, foodRecommendations, exercisePlans) {
         const user = auth ? auth.currentUser : null;
         const record = {
             id: 'local_' + Date.now(),
@@ -421,8 +623,8 @@ document.addEventListener('DOMContentLoaded', () => {
             symptoms: symptoms || 'None',
             diagnosis: diagnosis,
             riskLevel: riskLevel || 'Low',
-            foodRecommendations: 'Balanced diet rich in leafy greens and hydration.',
-            exercisePlans: 'Light cardiovascular activity 30 mins/day.',
+            foodRecommendations: foodRecommendations || 'Balanced diet rich in leafy greens and hydration.',
+            exercisePlans: exercisePlans || 'Light cardiovascular activity 30 mins/day.',
             createdAt: Date.now()
         };
 
@@ -488,7 +690,35 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.removeItem('carepath_history');
     }
 
+    function updateWellnessScore(records) {
+        const scoreElem = document.getElementById('wellness-score');
+        const msgElem = document.getElementById('wellness-message');
+        if (!scoreElem || !msgElem) return;
+
+        if (!records || records.length === 0) {
+            scoreElem.innerHTML = `100<small>/100</small>`;
+            msgElem.textContent = "Complete a symptom assessment to track your score.";
+            return;
+        }
+
+        const latest = records[0];
+        const risk = latest.riskLevel || 'Low';
+
+        if (risk === 'High') {
+            scoreElem.innerHTML = `50<small>/100</small>`;
+            msgElem.textContent = "High risk concern detected. Consult a healthcare professional.";
+        } else if (risk === 'Medium') {
+            scoreElem.innerHTML = `75<small>/100</small>`;
+            msgElem.textContent = "Moderate concern detected. Follow AI recommendations.";
+        } else {
+            scoreElem.innerHTML = `95<small>/100</small>`;
+            msgElem.textContent = "You're doing great! Keep up the healthy routine.";
+        }
+    }
+
     function renderHistoryRecords(records) {
+        updateWellnessScore(records);
+
         const listElem = document.getElementById('history-list');
         if (!listElem) return;
         listElem.innerHTML = '';
@@ -600,16 +830,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 5. Medicine Reminders Logic (Firestore Real-time Synced)
     window.renderMedicines = function (records) {
         const medList = document.getElementById('medicine-list');
-        if (!medList) return;
-        medList.innerHTML = '';
+        const adherenceText = document.getElementById('adherence-text');
+        const circlePath = document.getElementById('adherence-circle-path');
+        const upcomingReminder = document.getElementById('upcoming-reminder-text');
 
         if (!records || records.length === 0) {
-            medList.innerHTML = `<div class="card empty-msg" style="text-align:center; color: var(--text-muted); padding: 20px;">No medicine reminders added yet.</div>`;
+            if (adherenceText) adherenceText.textContent = "No medicines added yet";
+            if (circlePath) circlePath.setAttribute('stroke-dasharray', '0, 100');
+            if (upcomingReminder) upcomingReminder.textContent = "No upcoming medicine reminders";
+            if (medList) medList.innerHTML = `<div class="card empty-msg" style="text-align:center; color: var(--text-muted); padding: 20px;">No medicine reminders added yet.</div>`;
             return;
         }
+
+        const takenCount = records.filter(m => m.isTaken === true || m.isTaken === 'true').length;
+        const totalCount = records.length;
+        const percentage = Math.round((takenCount / totalCount) * 100);
+
+        if (adherenceText) adherenceText.textContent = `${takenCount} of ${totalCount} doses taken today`;
+        if (circlePath) circlePath.setAttribute('stroke-dasharray', `${percentage}, 100`);
+
+        if (upcomingReminder) {
+            const firstMed = records[0];
+            upcomingReminder.textContent = `${firstMed.name || 'Medicine'} - ${firstMed.dosage || 'Daily'}`;
+        }
+
+        if (!medList) return;
+        medList.innerHTML = '';
 
         records.forEach(med => {
             const item = document.createElement('div');

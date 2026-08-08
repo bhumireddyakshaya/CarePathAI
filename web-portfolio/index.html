@@ -47,8 +47,8 @@
                     <div class="card wellness-card">
                         <div class="card-body">
                             <span class="card-label">Daily Wellness Score</span>
-                            <div class="score-display">85<small>/100</small></div>
-                            <p>You're doing great! Keep it up.</p>
+                            <div class="score-display" id="wellness-score">100<small>/100</small></div>
+                            <p id="wellness-message">Complete a symptom assessment to track your score.</p>
                         </div>
                     </div>
 
@@ -58,12 +58,12 @@
                             <div class="progress-circle">
                                 <svg viewBox="0 0 36 36" class="circular-chart">
                                     <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                    <path class="circle" stroke-dasharray="75, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                    <path id="adherence-circle-path" class="circle" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
                                 </svg>
                             </div>
                             <div class="adherence-info">
                                 <h3>Medicine Adherence</h3>
-                                <p>3 of 4 doses taken today</p>
+                                <p id="adherence-text">No medicines added yet</p>
                             </div>
                         </div>
                     </div>
@@ -72,19 +72,18 @@
                 <div class="dashboard-grid">
                     <div>
                         <h2 class="section-title">Upcoming Reminders</h2>
-                        <div class="card reminder-card">
+                        <div class="card reminder-card" onclick="switchTab('medicine')">
                             <div class="card-body row">
                                 <i class="fa-solid fa-pills reminder-icon"></i>
                                 <div class="reminder-info">
                                     <h3>Medicine Reminder</h3>
-                                    <p>Paracetamol - 10:00 AM</p>
+                                    <p id="upcoming-reminder-text">No upcoming medicine reminders</p>
                                 </div>
                             </div>
                         </div>
 
                         <button class="btn-emergency" id="btn-sos">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
-                            Emergency Support
+                            <i class="fa-solid fa-triangle-exclamation"></i> Emergency SOS
                         </button>
                     </div>
 
@@ -112,16 +111,16 @@
                 </div>
             </section>
 
-            <!-- ASSESSMENT TAB -->
+            <!-- ASSESSMENT TAB VIEW -->
             <section class="tab-view" id="view-assessment">
                 <div class="top-app-bar">
-                    <button class="icon-btn" onclick="switchTab('home')"><i class="fa-solid fa-arrow-left"></i></button>
+                    <button class="icon-btn" onclick="handleAssessmentBack()"><i class="fa-solid fa-arrow-left"></i></button>
                     <h2>Symptom Assessment</h2>
                 </div>
 
                 <div class="assessment-container">
                     <div class="progress-bar-container">
-                        <div class="progress-bar" id="assessment-progress" style="width: 33%;"></div>
+                        <div class="progress-bar" id="assessment-progress" style="width: 25%;"></div>
                     </div>
 
                     <div id="assessment-steps">
@@ -143,26 +142,68 @@
                             <h3>Select your symptoms</h3>
                             <div class="search-box">
                                 <i class="fa-solid fa-search"></i>
-                                <input type="text" placeholder="Search symptoms...">
+                                <input type="text" id="symptom-search-input" placeholder="Search symptoms...">
                             </div>
-                            <div class="symptoms-list">
+                            <div class="symptoms-list" id="symptoms-list-container">
                                 <div class="category-label">General</div>
                                 <div class="symptom-check-item"><input type="checkbox" id="sym-fever"><label for="sym-fever">Fever</label></div>
-                                <div class="symptom-check-item"><input type="checkbox" id="sym-headache"><label for="sym-fever">Headache</label></div>
-                                <div class="symptom-check-item"><input type="checkbox" id="sym-fatigue"><label for="sym-fever">Fatigue</label></div>
+                                <div class="symptom-check-item"><input type="checkbox" id="sym-headache"><label for="sym-headache">Headache</label></div>
+                                <div class="symptom-check-item"><input type="checkbox" id="sym-fatigue"><label for="sym-fatigue">Fatigue & Chills</label></div>
+                                <div class="symptom-check-item"><input type="checkbox" id="sym-bodyache"><label for="sym-bodyache">Body Ache</label></div>
+
                                 <div class="category-label">Cardiovascular</div>
-                                <div class="symptom-check-item"><input type="checkbox" id="sym-chestpain"><label for="sym-fever">Chest Pain</label></div>
-                                <div class="symptom-check-item"><input type="checkbox" id="sym-palpitations"><label for="sym-fever">Palpitations</label></div>
+                                <div class="symptom-check-item"><input type="checkbox" id="sym-chestpain"><label for="sym-chestpain">Chest Pain</label></div>
+                                <div class="symptom-check-item"><input type="checkbox" id="sym-palpitations"><label for="sym-palpitations">Palpitations</label></div>
+                                <div class="symptom-check-item"><input type="checkbox" id="sym-dizziness"><label for="sym-dizziness">Dizziness & Fainting</label></div>
+
+                                <div class="category-label">Respiratory</div>
+                                <div class="symptom-check-item"><input type="checkbox" id="sym-breath"><label for="sym-breath">Shortness of Breath</label></div>
+                                <div class="symptom-check-item"><input type="checkbox" id="sym-cough"><label for="sym-cough">Persistent Cough</label></div>
+                                <div class="symptom-check-item"><input type="checkbox" id="sym-wheezing"><label for="sym-wheezing">Wheezing</label></div>
+
+                                <div class="category-label">Metabolic & Digestive</div>
+                                <div class="symptom-check-item"><input type="checkbox" id="sym-sugar"><label for="sym-sugar">High Blood Sugar Signs</label></div>
+                                <div class="symptom-check-item"><input type="checkbox" id="sym-thirst"><label for="sym-thirst">Excessive Thirst</label></div>
+                                <div class="symptom-check-item"><input type="checkbox" id="sym-nausea"><label for="sym-nausea">Nausea & Stomach Pain</label></div>
                             </div>
-                            <button class="btn btn-primary btn-block" id="next-2">Next</button>
+                            <button class="btn btn-primary btn-block" id="next-2">Next: Additional Details</button>
                         </div>
 
-                        <!-- Step 3: Analysis Result (BLACK THEME) -->
-                        <div class="step dark-mode" id="step-3">
+                        <!-- Step 3: Additional Details (Matched to Android App) -->
+                        <div class="step" id="step-3">
+                            <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 20px;">Additional Details</h3>
+                            
+                            <div class="form-group" style="margin-bottom: 20px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <label style="font-size: 14px; font-weight: 700; color: #1e293b;">Symptom Severity: <span id="severity-val-disp" style="color: var(--primary); font-weight: 800;">1</span></label>
+                                </div>
+                                <input type="range" id="detail-severity-slider" min="1" max="10" value="1" step="1" style="width: 100%; accent-color: var(--primary); cursor: pointer;" oninput="document.getElementById('severity-val-disp').textContent = this.value">
+                                <div style="display: flex; justify-content: space-between; font-size: 11px; color: #94a3b8; margin-top: 4px;">
+                                    <span>1 (Mild)</span>
+                                    <span>5 (Moderate)</span>
+                                    <span>10 (Severe)</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 20px;">
+                                <label style="display: block; font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 6px;">How long have you had these?</label>
+                                <input type="text" id="detail-duration" placeholder="e.g. 2 days, 1 week..." style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px;">
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 24px;">
+                                <label style="display: block; font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 6px;">Any additional notes?</label>
+                                <textarea id="detail-notes" rows="3" placeholder="Additional details or medical history..." style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 14px; font-family: inherit;"></textarea>
+                            </div>
+
+                            <button class="btn btn-primary btn-block" id="next-3">Analyze Symptoms</button>
+                        </div>
+
+                        <!-- Step 4: Analysis Result (BLACK THEME) -->
+                        <div class="step dark-mode" id="step-4">
                             <div class="analysis-result-content" id="analysis-result">
                                 <div class="loading-spinner">
                                     <div class="spinner"></div>
-                                    <p>AI is analyzing your symptoms...</p>
+                                    <p>Gemini AI is analyzing your symptoms and building recommendations...</p>
                                 </div>
                             </div>
                         </div>
@@ -196,8 +237,8 @@
                 <div class="profile-container">
                     <div class="profile-header">
                         <div class="avatar-circle"><i class="fa-solid fa-user"></i></div>
-                        <h2 id="disp-name">Akshaya Bhumireddy</h2>
-                        <p id="disp-email">akshaya@carepath.ai</p>
+                        <h2 id="disp-name">User Profile</h2>
+                        <p id="disp-email">user@example.com</p>
                     </div>
 
                     <div class="info-group">
@@ -207,16 +248,16 @@
                                 <i class="fa-solid fa-phone"></i>
                                 <div class="info-val">
                                     <label>Mobile</label>
-                                    <span id="val-mobile">8008487667</span>
-                                    <input type="text" id="edit-mobile" value="8008487667" style="display:none">
+                                    <span id="val-mobile">N/A</span>
+                                    <input type="text" id="edit-mobile" value="" style="display:none">
                                 </div>
                             </div>
                             <div class="info-row">
                                 <i class="fa-solid fa-cake-candles"></i>
                                 <div class="info-val">
                                     <label>Age</label>
-                                    <span id="val-age">24</span>
-                                    <input type="number" id="edit-age" value="24" style="display:none">
+                                    <span id="val-age">N/A</span>
+                                    <input type="number" id="edit-age" value="" style="display:none">
                                 </div>
                             </div>
                         </div>
@@ -229,24 +270,24 @@
                                 <i class="fa-solid fa-droplet"></i>
                                 <div class="info-val">
                                     <label>Blood Group</label>
-                                    <span id="val-blood">O+</span>
-                                    <input type="text" id="edit-blood" value="O+" style="display:none">
+                                    <span id="val-blood">N/A</span>
+                                    <input type="text" id="edit-blood" value="" style="display:none">
                                 </div>
                             </div>
                             <div class="info-row">
                                 <i class="fa-solid fa-ruler-vertical"></i>
                                 <div class="info-val">
                                     <label>Height (cm)</label>
-                                    <span id="val-height">165</span>
-                                    <input type="text" id="edit-height" value="165" style="display:none">
+                                    <span id="val-height">N/A</span>
+                                    <input type="text" id="edit-height" value="" style="display:none">
                                 </div>
                             </div>
                             <div class="info-row">
                                 <i class="fa-solid fa-weight-hanging"></i>
                                 <div class="info-val">
                                     <label>Weight (kg)</label>
-                                    <span id="val-weight">58</span>
-                                    <input type="text" id="edit-weight" value="58" style="display:none">
+                                    <span id="val-weight">N/A</span>
+                                    <input type="text" id="edit-weight" value="" style="display:none">
                                 </div>
                             </div>
                         </div>
@@ -259,14 +300,12 @@
             <!-- LOGIN / AUTHENTICATION TAB VIEW -->
             <section class="tab-view" id="view-login">
                 <div class="login-container">
-                    <div class="login-card">
-                        <div class="login-header">
-                            <i class="fa-solid fa-user-doctor login-logo"></i>
-                            <h2 id="auth-title">Welcome Back</h2>
-                            <p id="auth-subtitle">Sign in or create an account to access CarePathAI</p>
-                        </div>
-
-                        <!-- Auth Mode Selector Tabs -->
+                    <div class="login-header">
+                        <div class="login-logo"><i class="fa-solid fa-heart-pulse"></i></div>
+                        <h2>CarePathAI</h2>
+                        <p>Smart Health & Symptom Analyzer</p>
+                    </div>
+                    <div class="card login-card">
                         <div class="auth-tabs">
                             <button type="button" class="auth-tab active" id="tab-signin" onclick="toggleAuthMode('signin')">Sign In</button>
                             <button type="button" class="auth-tab" id="tab-signup" onclick="toggleAuthMode('signup')">Sign Up</button>
@@ -295,30 +334,11 @@
                                 <label><i class="fa-solid fa-envelope"></i> Email Address</label>
                                 <input type="email" id="signup-email" placeholder="name@example.com" required>
                             </div>
-                            <div class="form-grid-2">
-                                <div class="form-group">
-                                    <label><i class="fa-solid fa-phone"></i> Mobile</label>
-                                    <input type="text" id="signup-mobile" placeholder="Mobile Number">
-                                </div>
-                                <div class="form-group">
-                                    <label><i class="fa-solid fa-cake-candles"></i> Age</label>
-                                    <input type="number" id="signup-age" placeholder="Age" min="1" max="120">
-                                </div>
+                            <div class="form-group">
+                                <label><i class="fa-solid fa-phone"></i> Mobile Number</label>
+                                <input type="text" id="signup-mobile" placeholder="Mobile Number">
                             </div>
-                            <div class="form-grid-3">
-                                <div class="form-group">
-                                    <label><i class="fa-solid fa-droplet"></i> Blood</label>
-                                    <input type="text" id="signup-blood" placeholder="e.g. O+">
-                                </div>
-                                <div class="form-group">
-                                    <label><i class="fa-solid fa-ruler-vertical"></i> Height</label>
-                                    <input type="text" id="signup-height" placeholder="cm">
-                                </div>
-                                <div class="form-group">
-                                    <label><i class="fa-solid fa-weight-hanging"></i> Weight</label>
-                                    <input type="text" id="signup-weight" placeholder="kg">
-                                </div>
-                            </div>
+
                             <div class="form-group">
                                 <label><i class="fa-solid fa-lock"></i> Password</label>
                                 <input type="password" id="signup-password" placeholder="Create a password" required>
@@ -339,14 +359,13 @@
                     <button class="icon-btn" onclick="switchTab('home')"><i class="fa-solid fa-arrow-left"></i></button>
                     <h2>Nutrition AI</h2>
                 </div>
-                <div class="sub-view-content">
+                <div class="sub-view-content" id="nutrition-dynamic-container">
                     <div class="dark-card">
                         <h3>Daily Nutrition Insight</h3>
-                        <p>“Boost your immunity with Vitamin C-rich foods today.”</p>
+                        <p id="nutrition-insight-text">“Boost your immunity with Vitamin C-rich foods today.”</p>
                     </div>
-                    <div class="meal-list">
-                        <div class="dark-card"><span>BREAKFAST</span><h4>Oatmeal with Almonds</h4><p>320 kcal | 8g Protein</p></div>
-                        <div class="dark-card"><span>LUNCH</span><h4>Quinoa Salad</h4><p>450 kcal | 15g Protein</p></div>
+                    <div class="meal-list" id="dynamic-meal-list">
+                        <!-- Dynamic meal cards injected via JS -->
                     </div>
                 </div>
             </section>
@@ -356,14 +375,13 @@
                     <button class="icon-btn" onclick="switchTab('home')"><i class="fa-solid fa-arrow-left"></i></button>
                     <h2>Exercise Plan</h2>
                 </div>
-                <div class="sub-view-content">
+                <div class="sub-view-content" id="exercise-dynamic-container">
                     <div class="dark-card">
                         <h3>AI Wellness Insight</h3>
-                        <p>“Light movements and breathing exercises will help reduce fatigue.”</p>
+                        <p id="exercise-insight-text">“Light movements and breathing exercises will help reduce fatigue.”</p>
                     </div>
-                    <div class="exercise-list">
-                        <div class="dark-card"><h4>Deep Breathing</h4><p>5 mins • Low Intensity</p></div>
-                        <div class="dark-card"><h4>Brisk Walking</h4><p>20 mins • Medium Intensity</p></div>
+                    <div class="exercise-list" id="dynamic-exercise-list">
+                        <!-- Dynamic exercise cards injected via JS -->
                     </div>
                 </div>
             </section>

@@ -33,7 +33,7 @@ class AuthRepositoryImpl @Inject constructor(
         awaitClose()
     }
 
-    override fun signUp(email: String, password: String, name: String): Flow<Result<FirebaseUser>> = callbackFlow {
+    override fun signUp(email: String, password: String, name: String, mobileNumber: String): Flow<Result<FirebaseUser>> = callbackFlow {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener { authResult ->
                 val user = authResult.user
@@ -41,10 +41,13 @@ class AuthRepositoryImpl @Inject constructor(
                     val userData = hashMapOf(
                         "id" to user.uid,
                         "fullName" to name,
+                        "name" to name,
                         "email" to email,
-                        "mobileNumber" to "",
+                        "mobileNumber" to mobileNumber,
+                        "mobile" to mobileNumber,
                         "age" to 0,
                         "bloodGroup" to "",
+                        "blood" to "",
                         "gender" to "",
                         "height" to 0f,
                         "weight" to 0f,

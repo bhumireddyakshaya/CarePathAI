@@ -3,6 +3,7 @@ package com.example.carepathai.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.carepathai.data.local.entity.HealthHistory
+import com.example.carepathai.data.repository.GeminiRepository
 import com.example.carepathai.domain.repository.HealthHistoryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +15,8 @@ data class Recommendation(val title: String, val content: String)
 
 @HiltViewModel
 class AnalysisViewModel @Inject constructor(
-    private val historyRepository: HealthHistoryRepository
+    private val historyRepository: HealthHistoryRepository,
+    private val geminiRepository: GeminiRepository
 ) : ViewModel() {
 
     private val _analysisResult = MutableStateFlow<HealthHistory?>(null)
@@ -25,27 +27,38 @@ class AnalysisViewModel @Inject constructor(
 
     fun performAnalysis(symptoms: List<String>) {
         viewModelScope.launch {
-            // Mocking AI Analysis based on symptoms
-            val symptomsLower = symptoms.map { it.lowercase() }
-            
-            val diagnosis = if (symptomsLower.any { it.contains("chest") || it.contains("heart") || it.contains("palpitations") }) "Cardiac Concern"
-            else if (symptomsLower.any { it.contains("breath") || it.contains("wheezing") }) "Respiratory Issue"
-            else if (symptomsLower.any { it.contains("sugar") || it.contains("thirst") }) "Metabolic Risk"
-            else if (symptomsLower.any { it.contains("fever") || it.contains("chills") }) "Infection/Fever"
-            else if (symptomsLower.any { it.contains("headache") || it.contains("migraine") }) "Neurological"
-            else "General Wellness"
+            // Attempt Gemini AI Analysis
+            val geminiResult = geminiRepository.analyzeSymptomsWithGemini(symptoms)
 
-            val foodRecs = getFoodRecommendations(diagnosis)
-            val exerciseRecs = getExerciseRecommendations(diagnosis)
-            
-            val riskLevel = when (diagnosis) {
-                "Cardiac Concern", "Respiratory Issue" -> "High"
-                "Metabolic Risk", "Infection/Fever" -> "Medium"
-                else -> "Low"
+            val diagnosis: String
+            val foodRecs: String
+            val exerciseRecs: String
+            val finalRiskLevel: String
+
+            if (geminiResult != null) {
+                diagnosis = geminiResult.diagnosis
+                foodRecs = geminiResult.foodRecommendations
+                exerciseRecs = geminiResult.exercisePlans
+                finalRiskLevel = geminiResult.riskLevel
+            } else {
+                // Local rule-based fallback
+                val symptomsLower = symptoms.map { it.lowercase() }
+                diagnosis = if (symptomsLower.any { it.contains("chest") || it.contains("heart") || it.contains("palpitations") }) "Cardiac Concern"
+                else if (symptomsLower.any { it.contains("breath") || it.contains("wheezing") }) "Respiratory Issue"
+                else if (symptomsLower.any { it.contains("sugar") || it.contains("thirst") }) "Metabolic Risk"
+                else if (symptomsLower.any { it.contains("fever") || it.contains("chills") }) "Infection/Fever"
+                else if (symptomsLower.any { it.contains("headache") || it.contains("migraine") }) "Neurological"
+                else "General Wellness"
+
+                foodRecs = getFoodRecommendations(diagnosis)
+                exerciseRecs = getExerciseRecommendations(diagnosis)
+                val baseRisk = when (diagnosis) {
+                    "Cardiac Concern", "Respiratory Issue" -> "High"
+                    "Metabolic Risk", "Infection/Fever" -> "Medium"
+                    else -> "Low"
+                }
+                finalRiskLevel = if (symptoms.size > 4 && baseRisk == "Medium") "High" else baseRisk
             }
-            
-            // Override risk level if multiple severe symptoms are present
-            val finalRiskLevel = if (symptoms.size > 4 && riskLevel == "Medium") "High" else riskLevel
             
             val history = HealthHistory(
                 date = System.currentTimeMillis(),
@@ -59,7 +72,8 @@ class AnalysisViewModel @Inject constructor(
             _analysisResult.value = history
             try {
                 historyRepository.insertHistory(history)
-                _statusMessage.value = "Assessment saved to Firebase successfully!"
+                val sourceLabel = if (geminiResult != null) "Gemini AI" else "CarePath Engine"
+                _statusMessage.value = "Assessment ($sourceLabel) saved to Firebase successfully!"
             } catch (e: Exception) {
                 e.printStackTrace()
                 _statusMessage.value = "Firebase Save Error: ${e.localizedMessage ?: "Failed to save"}"

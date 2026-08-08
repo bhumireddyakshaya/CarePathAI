@@ -48,7 +48,7 @@ fun SignUpScreen(
 
     SignUpContent(
         authState = authState,
-        onSignUpClick = { email, password, fullName -> viewModel.signUp(email, password, fullName) },
+        onSignUpClick = { email, password, fullName, mobile -> viewModel.signUp(email, password, fullName, mobile) },
         onNavigateToLogin = onNavigateToLogin
     )
 }
@@ -56,7 +56,7 @@ fun SignUpScreen(
 @Composable
 fun SignUpContent(
     authState: AuthState,
-    onSignUpClick: (String, String, String) -> Unit,
+    onSignUpClick: (String, String, String, String) -> Unit,
     onNavigateToLogin: () -> Unit
 ) {
     var fullName by remember { mutableStateOf("") }
@@ -153,7 +153,7 @@ fun SignUpContent(
         Button(
             onClick = {
                 if (password == confirmPassword) {
-                    onSignUpClick(email, password, fullName)
+                    onSignUpClick(email, password, fullName, mobile)
                 } else {
                     Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show()
                 }
@@ -197,7 +197,7 @@ fun SignUpScreenPreview() {
     CarePathAITheme {
         SignUpContent(
             authState = AuthState.Idle,
-            onSignUpClick = { _, _, _ -> },
+            onSignUpClick = { _, _, _, _ -> },
             onNavigateToLogin = {}
         )
     }

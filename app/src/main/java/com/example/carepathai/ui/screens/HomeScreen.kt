@@ -17,6 +17,10 @@ import androidx.compose.ui.unit.dp
 import com.example.carepathai.ui.theme.CarePathAITheme
 import androidx.navigation.NavHostController
 
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.carepathai.data.local.entity.Medicine
+import com.example.carepathai.ui.viewmodel.HomeViewModel
+
 sealed class BottomNavItem(val title: String, val icon: ImageVector, val route: String) {
     object Home : BottomNavItem("Home", Icons.Default.Home, "home_tab")
     object Assessment : BottomNavItem("Assessment", Icons.Default.HealthAndSafety, "assessment_tab")
@@ -26,8 +30,13 @@ sealed class BottomNavItem(val title: String, val icon: ImageVector, val route: 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavHostController) {
+fun HomeScreen(
+    navController: NavHostController,
+    homeViewModel: HomeViewModel = hiltViewModel()
+) {
     var selectedItem by remember { mutableIntStateOf(0) }
+    val userMedicines by homeViewModel.userMedicines.collectAsState()
+    val healthHistory by homeViewModel.healthHistory.collectAsState()
     val items = listOf(
         BottomNavItem.Home,
         BottomNavItem.Assessment,
@@ -56,6 +65,8 @@ fun HomeScreen(navController: NavHostController) {
         Box(modifier = Modifier.padding(innerPadding)) {
             when (selectedItem) {
                 0 -> DashboardScreen(
+                    medicines = userMedicines,
+                    healthHistory = healthHistory,
                     onSymptomCheckerClick = { selectedItem = 1 },
                     onMedicineClick = { navController.navigate("medicine_reminder") },
                     onEmergencyClick = { navController.navigate("emergency") },
@@ -84,6 +95,8 @@ fun HomeScreen(navController: NavHostController) {
 
 @Composable
 fun DashboardScreen(
+    medicines: List<Medicine>,
+    healthHistory: List<com.example.carepathai.data.local.entity.HealthHistory> = emptyList(),
     onSymptomCheckerClick: () -> Unit,
     onMedicineClick: () -> Unit,
     onEmergencyClick: () -> Unit,
@@ -91,6 +104,25 @@ fun DashboardScreen(
     onFoodClick: () -> Unit,
     onExerciseClick: () -> Unit
 ) {
+    val totalCount = medicines.size
+    val takenCount = medicines.count { it.isTaken }
+    val progressRatio = if (totalCount > 0) takenCount.toFloat() / totalCount.toFloat() else 0f
+    val adherenceSubtext = if (totalCount > 0) "$takenCount of $totalCount doses taken today" else "No medicines added yet"
+
+    val latestHistory = healthHistory.firstOrNull()
+    val wellnessScore = when (latestHistory?.riskLevel) {
+        "High" -> "50/100"
+        "Medium" -> "75/100"
+        "Low" -> "95/100"
+        else -> "100/100"
+    }
+    val wellnessMessage = when (latestHistory?.riskLevel) {
+        "High" -> "High risk concern detected. Consult a healthcare professional."
+        "Medium" -> "Moderate concern detected. Follow AI recommendations."
+        "Low" -> "You're doing great! Keep up the healthy routine."
+        else -> "Complete a symptom assessment to track your score."
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -118,8 +150,8 @@ fun DashboardScreen(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text("Daily Wellness Score", fontWeight = FontWeight.Bold)
-                Text("85/100", style = MaterialTheme.typography.displaySmall)
-                Text("You're doing great! Keep it up.")
+                Text(wellnessScore, style = MaterialTheme.typography.displaySmall)
+                Text(wellnessMessage)
             }
         }
 
@@ -133,14 +165,14 @@ fun DashboardScreen(
         ) {
             Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
                 CircularProgressIndicator(
-                    progress = 0.75f,
+                    progress = { progressRatio },
                     modifier = Modifier.size(40.dp),
                     strokeWidth = 4.dp
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Column {
                     Text("Medicine Adherence", fontWeight = FontWeight.Bold)
-                    Text("3 of 4 doses taken today", style = MaterialTheme.typography.bodyMedium)
+                    Text(adherenceSubtext, style = MaterialTheme.typography.bodyMedium)
                 }
             }
         }
@@ -154,6 +186,14 @@ fun DashboardScreen(
         )
         Spacer(modifier = Modifier.height(12.dp))
         
+        val firstMed = medicines.firstOrNull()
+        val reminderText = if (firstMed != null) {
+            val timeStr = firstMed.morningTime ?: firstMed.afternoonTime ?: firstMed.eveningTime ?: firstMed.nightTime ?: "Today"
+            "${firstMed.name} - ${firstMed.dosage} ($timeStr)"
+        } else {
+            "No upcoming medicine reminders"
+        }
+
         Card(
             modifier = Modifier.fillMaxWidth(),
             onClick = onMedicineClick
@@ -163,7 +203,7 @@ fun DashboardScreen(
                 Spacer(modifier = Modifier.width(16.dp))
                 Column {
                     Text("Medicine Reminder", fontWeight = FontWeight.Bold)
-                    Text("Paracetamol - 10:00 AM", style = MaterialTheme.typography.bodyMedium)
+                    Text(reminderText, style = MaterialTheme.typography.bodyMedium)
                 }
             }
         }
@@ -228,6 +268,7 @@ fun DashboardCard(title: String, icon: ImageVector, modifier: Modifier = Modifie
 fun DashboardScreenPreview() {
     CarePathAITheme {
         DashboardScreen(
+            medicines = emptyList(),
             onSymptomCheckerClick = {},
             onMedicineClick = {},
             onEmergencyClick = {},
